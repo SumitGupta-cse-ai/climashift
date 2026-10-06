@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { Task } from '@/types';
-import { Plus, Trash2, Sliders, Shield, AlertCircle } from 'lucide-react';
+import { Plus, Trash2, Sliders, Shield, AlertCircle, HardHat, SunMedium, Settings2 } from 'lucide-react';
 
 export function TaskReviewGrid() {
   const { tasks, setTasks, executeReplan, isOptimizing, t, language } = useApp();
@@ -17,7 +17,7 @@ export function TaskReviewGrid() {
   const handleAddTask = () => {
     const newTask: Task = {
       id: `task-manual-${Date.now().toString().slice(-4)}`,
-      name: language === 'hi' ? 'नया साइट कार्य' : 'New Site Task',
+      name: language === 'hi' ? 'नया साइट कार्य' : 'New Construction Task',
       location: 'Tower B Exterior',
       workers: 6,
       duration: 2,
@@ -39,24 +39,24 @@ export function TaskReviewGrid() {
   };
 
   return (
-    <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-subtle space-y-4">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
+    <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-card space-y-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
         <div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <Sliders className="w-4 h-4 text-emerald-500" />
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
+            <Sliders className="w-4 h-4 text-emerald-600" />
             <span>{t.taskReviewTitle}</span>
-            <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">
-              {tasks.length} {language === 'hi' ? 'कार्य' : 'Activities'}
+            <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 font-mono">
+              {tasks.length} {language === 'hi' ? 'कार्य' : 'Tasks'}
             </span>
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400">
             {t.taskReviewSubtitle}
           </p>
         </div>
 
         <button
           onClick={handleAddTask}
-          className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition min-h-[36px] cursor-pointer"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-semibold text-slate-700 dark:text-slate-200 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5" />
           <span>{t.addManualTask}</span>
@@ -64,154 +64,209 @@ export function TaskReviewGrid() {
       </div>
 
       {tasks.length === 0 ? (
-        <div className="text-center py-12 border-2 border-dashed border-slate-200 dark:border-slate-800 rounded-xl space-y-3">
-          <AlertCircle className="w-8 h-8 text-slate-400 mx-auto" />
-          <p className="text-sm text-slate-500 dark:text-slate-400">
-            {language === 'hi' ? 'वर्तमान योजना में कोई कार्य नहीं है। ऊपर योजना लिखें या नया कार्य जोड़ें।' : 'No tasks in current plan. Type a plan above or add a task manually.'}
+        <div className="text-center py-10 border border-dashed border-slate-200 dark:border-slate-800 rounded-lg space-y-2">
+          <AlertCircle className="w-7 h-7 text-slate-400 mx-auto" />
+          <p className="text-xs text-slate-500">
+            {language === 'hi' ? 'वर्तमान योजना में कोई कार्य नहीं है।' : 'No tasks in current plan.'}
           </p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {tasks.map((task) => (
+        <div className="space-y-3.5">
+          {tasks.map((task, idx) => (
             <div
               key={task.id}
-              className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 hover:border-slate-300 dark:hover:border-slate-700 transition space-y-3"
+              className="p-3.5 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-3"
             >
-              <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                {/* Title and Location Inputs */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 flex-1 w-full">
-                  <div>
-                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.taskNameLabel}</label>
-                    <input
-                      type="text"
-                      value={task.name}
-                      onChange={(e) => handleUpdateTask(task.id, { name: e.target.value })}
-                      className="w-full text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.locationLabel}</label>
-                    <input
-                      type="text"
-                      value={task.location}
-                      onChange={(e) => handleUpdateTask(task.id, { location: e.target.value })}
-                      className="w-full text-xs font-semibold px-2.5 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                    />
-                  </div>
+              {/* Header: Name & Remove */}
+              <div className="flex items-center justify-between gap-2 border-b border-slate-200/60 dark:border-slate-700/60 pb-2">
+                <div className="flex items-center gap-2 flex-1">
+                  <span className="text-[10px] font-mono font-bold text-slate-400">#{idx + 1}</span>
+                  <input
+                    type="text"
+                    value={task.name}
+                    onChange={(e) => handleUpdateTask(task.id, { name: e.target.value })}
+                    className="text-xs font-bold text-slate-900 dark:text-white bg-transparent border-b border-dashed border-slate-300 dark:border-slate-700 focus:outline-none focus:border-emerald-500 flex-1 max-w-sm"
+                  />
                 </div>
 
                 <button
                   onClick={() => handleDeleteTask(task.id)}
-                  className="text-slate-400 hover:text-rose-500 p-1.5 rounded-lg transition self-end md:self-center cursor-pointer"
+                  className="text-slate-400 hover:text-rose-500 p-1 rounded transition cursor-pointer"
                   title="Remove task"
                 >
-                  <Trash2 className="w-4 h-4" />
+                  <Trash2 className="w-3.5 h-3.5" />
                 </button>
               </div>
 
-              {/* Task Attributes Controls */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2.5 pt-1 text-xs">
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.workersLabel}</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="100"
-                    value={task.workers}
-                    onChange={(e) => handleUpdateTask(task.id, { workers: parseInt(e.target.value, 10) || 1 })}
-                    className="w-full text-xs font-mono px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  />
+              {/* 3 Clear Functional Groups: TASK | EXPOSURE | OPERATIONS */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                {/* 1. TASK BASICS */}
+                <div className="p-2.5 rounded bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-slate-800 space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                    <HardHat className="w-3 h-3 text-slate-400" />
+                    <span>{language === 'hi' ? 'कार्य विवरण (Task)' : 'Task Details'}</span>
+                  </span>
+
+                  <div className="grid grid-cols-2 gap-2">
+                    <div className="col-span-2">
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.locationLabel}</label>
+                      <input
+                        type="text"
+                        value={task.location}
+                        onChange={(e) => handleUpdateTask(task.id, { location: e.target.value })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.workersLabel}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        value={task.workers}
+                        onChange={(e) => handleUpdateTask(task.id, { workers: parseInt(e.target.value, 10) || 1 })}
+                        className="w-full text-xs font-mono px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.durationLabel}</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="8"
+                        value={task.duration}
+                        onChange={(e) => {
+                          const dur = parseInt(e.target.value, 10) || 1;
+                          const startH = parseInt(task.originalStartTime.split(':')[0], 10);
+                          const endH = Math.min(19, startH + dur);
+                          handleUpdateTask(task.id, { 
+                            duration: dur,
+                            originalEndTime: `${endH.toString().padStart(2, '0')}:00`
+                          });
+                        }}
+                        className="w-full text-xs font-mono px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                    <div className="col-span-2">
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.plannedStartLabel}</label>
+                      <input
+                        type="time"
+                        value={task.originalStartTime}
+                        onChange={(e) => {
+                          const newStart = e.target.value;
+                          const startH = parseInt(newStart.split(':')[0], 10);
+                          const endH = Math.min(19, startH + task.duration);
+                          handleUpdateTask(task.id, { 
+                            originalStartTime: newStart,
+                            originalEndTime: `${endH.toString().padStart(2, '0')}:00`
+                          });
+                        }}
+                        className="w-full text-xs font-mono px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      />
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.durationLabel}</label>
-                  <input
-                    type="number"
-                    min="1"
-                    max="8"
-                    value={task.duration}
-                    onChange={(e) => {
-                      const dur = parseInt(e.target.value, 10) || 1;
-                      const startH = parseInt(task.originalStartTime.split(':')[0], 10);
-                      const endH = Math.min(19, startH + dur);
-                      handleUpdateTask(task.id, { 
-                        duration: dur,
-                        originalEndTime: `${endH.toString().padStart(2, '0')}:00`
-                      });
-                    }}
-                    className="w-full text-xs font-mono px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  />
+                {/* 2. EXPOSURE CHARACTERISTICS */}
+                <div className="p-2.5 rounded bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-slate-800 space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400 flex items-center gap-1">
+                    <SunMedium className="w-3 h-3 text-amber-500" />
+                    <span>{language === 'hi' ? 'पर्यावरणीय जोखिम (Exposure)' : 'Exposure Factors'}</span>
+                  </span>
+
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.environmentLabel}</label>
+                      <select
+                        value={task.indoorOutdoor}
+                        onChange={(e) => handleUpdateTask(task.id, { indoorOutdoor: e.target.value as any })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="outdoor">{language === 'hi' ? 'खुला मैदान (Outdoor)' : 'Outdoor'}</option>
+                        <option value="indoor">{language === 'hi' ? 'अंदर / बेसमेंट (Indoor)' : 'Indoor'}</option>
+                        <option value="semi-indoor">{language === 'hi' ? 'अर्ध-छाया (Semi-Indoor)' : 'Semi-Indoor'}</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.dustLabel}</label>
+                      <select
+                        value={task.dustPotential}
+                        onChange={(e) => handleUpdateTask(task.id, { dustPotential: e.target.value as any })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="high">{language === 'hi' ? 'अधिक (GRAP III प्रतिबंध)' : 'High (C&D Curb Trigger)'}</option>
+                        <option value="moderate">{language === 'hi' ? 'मध्यम' : 'Moderate'}</option>
+                        <option value="low">{language === 'hi' ? 'कम' : 'Low'}</option>
+                        <option value="none">{language === 'hi' ? 'शून्य' : 'None'}</option>
+                      </select>
+                    </div>
+
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{language === 'hi' ? 'श्रम तीव्रता (Intensity)' : 'Intensity'}</label>
+                      <select
+                        value={task.intensity}
+                        onChange={(e) => handleUpdateTask(task.id, { intensity: e.target.value as any })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="heavy">{language === 'hi' ? 'भारी शारीरिक श्रम (Heavy)' : 'Heavy Labor'}</option>
+                        <option value="moderate">{language === 'hi' ? 'मध्यम श्रम' : 'Moderate'}</option>
+                        <option value="light">{language === 'hi' ? 'हल्का कार्य' : 'Light'}</option>
+                      </select>
+                    </div>
+                  </div>
                 </div>
 
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.plannedStartLabel}</label>
-                  <input
-                    type="time"
-                    value={task.originalStartTime}
-                    onChange={(e) => {
-                      const newStart = e.target.value;
-                      const startH = parseInt(newStart.split(':')[0], 10);
-                      const endH = Math.min(19, startH + task.duration);
-                      handleUpdateTask(task.id, { 
-                        originalStartTime: newStart,
-                        originalEndTime: `${endH.toString().padStart(2, '0')}:00`
-                      });
-                    }}
-                    className="w-full text-xs font-mono px-2 py-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  />
-                </div>
+                {/* 3. OPERATIONAL CONSTRAINTS */}
+                <div className="p-2.5 rounded bg-white dark:bg-[#111827] border border-slate-200/80 dark:border-slate-800 space-y-2">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-sky-600 dark:text-sky-400 flex items-center gap-1">
+                    <Settings2 className="w-3 h-3 text-sky-500" />
+                    <span>{language === 'hi' ? 'परिचालन शर्तें (Operations)' : 'Operational Rules'}</span>
+                  </span>
 
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.environmentLabel}</label>
-                  <select
-                    value={task.indoorOutdoor}
-                    onChange={(e) => handleUpdateTask(task.id, { indoorOutdoor: e.target.value as any })}
-                    className="w-full text-xs font-semibold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  >
-                    <option value="outdoor">{language === 'hi' ? 'खुला मैदान (Outdoor)' : 'Outdoor'}</option>
-                    <option value="indoor">{language === 'hi' ? 'अंदर / बेसमेंट (Indoor)' : 'Indoor'}</option>
-                    <option value="semi-indoor">{language === 'hi' ? 'अर्ध-छाया (Semi-Indoor)' : 'Semi-Indoor'}</option>
-                  </select>
-                </div>
+                  <div className="space-y-2">
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.movableLabel}</label>
+                      <select
+                        value={task.movable ? 'true' : 'false'}
+                        onChange={(e) => handleUpdateTask(task.id, { movable: e.target.value === 'true' })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="true">{language === 'hi' ? 'हाँ (समय बदल सकते हैं)' : 'Yes (Movable Window)'}</option>
+                        <option value="false">{language === 'hi' ? 'नहीं (निश्चित समय)' : 'No (Locked Slot)'}</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.dustLabel}</label>
-                  <select
-                    value={task.dustPotential}
-                    onChange={(e) => handleUpdateTask(task.id, { dustPotential: e.target.value as any })}
-                    className="w-full text-xs font-semibold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  >
-                    <option value="high">{language === 'hi' ? 'अधिक (High - C&D प्रतिबंध)' : 'High (C&D Curb)'}</option>
-                    <option value="moderate">{language === 'hi' ? 'मध्यम (Moderate)' : 'Moderate'}</option>
-                    <option value="low">{language === 'hi' ? 'कम (Low)' : 'Low'}</option>
-                    <option value="none">{language === 'hi' ? 'शून्य (None)' : 'None'}</option>
-                  </select>
-                </div>
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{t.priorityLabel}</label>
+                      <select
+                        value={task.priority}
+                        onChange={(e) => handleUpdateTask(task.id, { priority: e.target.value as any })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="critical">{language === 'hi' ? 'अति महत्वपूर्ण (Critical)' : 'Critical'}</option>
+                        <option value="high">{language === 'hi' ? 'उच्च (High)' : 'High'}</option>
+                        <option value="normal">{language === 'hi' ? 'सामान्य' : 'Normal'}</option>
+                        <option value="low">{language === 'hi' ? 'कम' : 'Low'}</option>
+                      </select>
+                    </div>
 
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.movableLabel}</label>
-                  <select
-                    value={task.movable ? 'true' : 'false'}
-                    onChange={(e) => handleUpdateTask(task.id, { movable: e.target.value === 'true' })}
-                    className="w-full text-xs font-semibold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  >
-                    <option value="true">{language === 'hi' ? 'हाँ (बदल सकते हैं)' : 'Yes (Can Shift)'}</option>
-                    <option value="false">{language === 'hi' ? 'नहीं (निश्चित समय)' : 'No (Fixed Slot)'}</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="text-[10px] font-bold uppercase text-slate-400 block mb-0.5">{t.priorityLabel}</label>
-                  <select
-                    value={task.priority}
-                    onChange={(e) => handleUpdateTask(task.id, { priority: e.target.value as any })}
-                    className="w-full text-xs font-semibold px-2 py-1.5 rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
-                  >
-                    <option value="critical">{language === 'hi' ? 'अति महत्वपूर्ण' : 'Critical'}</option>
-                    <option value="high">{language === 'hi' ? 'उच्च' : 'High'}</option>
-                    <option value="normal">{language === 'hi' ? 'सामान्य' : 'Normal'}</option>
-                    <option value="low">{language === 'hi' ? 'कम' : 'Low'}</option>
-                  </select>
+                    <div>
+                      <label className="text-[10px] text-slate-500 block mb-0.5">{language === 'hi' ? 'निर्भरता (Dependencies)' : 'Preceding Task'}</label>
+                      <select
+                        value={task.dependencies[0] || ''}
+                        onChange={(e) => handleUpdateTask(task.id, { dependencies: e.target.value ? [e.target.value] : [] })}
+                        className="w-full text-xs px-2 py-1 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
+                      >
+                        <option value="">{language === 'hi' ? 'कोई नहीं' : 'None (Independent)'}</option>
+                        {tasks.filter(t => t.id !== task.id).map(t => (
+                          <option key={t.id} value={t.id}>
+                            Must follow: {t.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -219,19 +274,17 @@ export function TaskReviewGrid() {
         </div>
       )}
 
-      {/* Review Confirmation CTA */}
-      <div className="pt-4 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800">
-        <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
-          <Shield className="w-4 h-4 text-emerald-500 shrink-0" />
-          <span>
-            {language === 'hi' ? 'कार्यों को मौसम के खतरों और CAQM नियमों के विरुद्ध परखा जाएगा।' : 'Configured tasks will be processed through deterministic environmental hazard & CAQM curbs.'}
-          </span>
-        </div>
+      {/* Confirmation CTA */}
+      <div className="pt-3 flex flex-col sm:flex-row items-center justify-between gap-3 border-t border-slate-100 dark:border-slate-800">
+        <span className="text-[11px] text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
+          <Shield className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+          <span>{language === 'hi' ? 'टास्क सेटिंग्स के आधार पर शेड्यूलिंग इंजन सुरक्षा विश्लेषण करेगा।' : 'Safety optimization engine will evaluate based on configured constraints.'}</span>
+        </span>
 
         <button
           onClick={() => executeReplan()}
           disabled={isOptimizing || tasks.length === 0}
-          className="w-full sm:w-auto px-6 py-3 rounded-xl font-extrabold text-xs tracking-wider uppercase text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition shadow-md min-h-[44px] cursor-pointer"
+          className="w-full sm:w-auto px-5 py-2.5 rounded-lg font-bold text-xs uppercase tracking-wider text-white bg-emerald-600 hover:bg-emerald-700 transition shadow-subtle cursor-pointer disabled:opacity-50"
         >
           {isOptimizing ? t.evaluatingConstraints : t.replanMyDay}
         </button>

@@ -1,250 +1,259 @@
 import React, { useState } from 'react';
+import { useApp } from '@/context/AppContext';
 import { 
   Cpu, 
-  Cloud, 
   Server, 
   Database, 
   Radio, 
   BellRing, 
-  Layers, 
   ShieldCheck, 
-  ArrowRight, 
-  CheckCircle2,
+  ArrowDown, 
+  ArrowRight,
   Lock,
-  Globe
+  Globe,
+  Sparkles,
+  Layers,
+  Cloud
 } from 'lucide-react';
 
 export function AwsArchitectureView() {
-  const [selectedService, setSelectedService] = useState<string>('bedrock');
-
-  const awsServices = [
-    {
-      id: 'bedrock',
-      name: 'Amazon Bedrock',
-      role: 'Generative AI Foundation Model Ingestion',
-      icon: Cpu,
-      color: 'purple',
-      headline: 'Natural Language Work-Plan Understanding',
-      whyUsed: 'Decoupled AI engine specifically responsible for unstructured trade transcription and attribute parsing without hallucinating safety constraints.',
-      implementation: 'Claude 3.5 Sonnet / AWS Bedrock Runtime Invoke API with deterministic JSON schema validation.',
-      security: 'IAM role-based invocation, no prompt caching or model training on customer PII.'
-    },
-    {
-      id: 'lambda',
-      name: 'AWS Lambda',
-      role: 'Serverless Deterministic Solver & Business Logic',
-      icon: Server,
-      color: 'amber',
-      headline: 'Deterministic Optimization & Constraint Engine',
-      whyUsed: 'Stateless, zero-cold-start microservices executing the linear constraint optimization model against hourly AQI and heat indexes.',
-      implementation: 'Node.js / Python serverless functions wrapped in strict TypeScript types.',
-      security: 'VPC private subnet deployment with Least-Privilege IAM execution roles.'
-    },
-    {
-      id: 'apigateway',
-      name: 'Amazon API Gateway',
-      role: 'Secure Enterprise REST & WebSocket API',
-      icon: Globe,
-      color: 'sky',
-      headline: 'Managed API Ingestion & Rate Throttling',
-      whyUsed: 'Provides managed SSL termination, rate limiting, and CORS validation between supervisor mobile/web frontends and Lambda engines.',
-      implementation: 'HTTP APIs with JWT Authorizer and WAF inspection rules.',
-      security: 'AWS WAF token validation against DDoS and SQLi attacks.'
-    },
-    {
-      id: 'dynamodb',
-      name: 'Amazon DynamoDB',
-      role: 'Single-Digit Millisecond Audit & Plan Store',
-      icon: Database,
-      color: 'blue',
-      headline: 'Permanent Supervisor Decision & Compliance Log',
-      whyUsed: 'High-availability NoSQL database maintaining an immutable audit log of regulatory evaluations, approved schedules, and broadcast timestamps.',
-      implementation: 'Partition Key: SiteId, Sort Key: Timestamp/DecisionId with point-in-time recovery (PITR).',
-      security: 'KMS-managed customer master encryption keys (CMK) at rest.'
-    },
-    {
-      id: 'eventbridge',
-      name: 'Amazon EventBridge',
-      role: 'Statutory Telemetry Cron & Rules Sync',
-      icon: Radio,
-      color: 'rose',
-      headline: 'Hourly Environmental & Regulatory Ingestion',
-      whyUsed: 'Scheduled rules triggering continuous synchronization of CPCB / DPCC air quality stations and IMD meteorological feeds.',
-      implementation: 'EventBridge Scheduled Rules emitting hourly cron events into Lambda ingestion pipelines.',
-      security: 'Resource-based policies guaranteeing event origin authenticity.'
-    },
-    {
-      id: 'sns',
-      name: 'Amazon SNS',
-      role: 'Worker Broadcast & Push Notification Pipeline',
-      icon: BellRing,
-      color: 'emerald',
-      headline: 'SMS / WhatsApp Critical Shift Dispatch',
-      whyUsed: 'Scalable multi-channel fanout for broadcasting supervisor-approved schedule adjustments directly to workers and subcontractors.',
-      implementation: 'SNS Topic per site with subscription filtering based on trade tags (e.g. #masonry, #electrical).',
-      security: 'Phone number tokenization and strict rate limiting to prevent notification spam.'
-    },
-    {
-      id: 'amplify',
-      name: 'AWS Amplify & CloudFront',
-      role: 'Edge CDN Delivery & Fullstack Hosting',
-      icon: Cloud,
-      color: 'teal',
-      headline: 'Global High-Performance Edge Delivery',
-      whyUsed: 'Serves the responsive supervisor dashboard with sub-second asset latency, SSL certificates, and CI/CD git integration.',
-      implementation: 'Next.js App Router hybrid SSR/SSG hosting on AWS Amplify Gen 2.',
-      security: 'Edge HTTPS redirection and strict HTTP Content-Security-Policy headers.'
-    }
-  ];
-
-  const active = awsServices.find(s => s.id === selectedService) || awsServices[0];
-  const ActiveIcon = active.icon;
+  const { language } = useApp();
+  const [activeHighlight, setActiveHighlight] = useState<'bedrock' | 'lambda' | 'dynamodb' | 'eventbridge' | 'sns' | null>(null);
 
   return (
-    <div className="space-y-6">
-      {/* Overview Banner */}
-      <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-5 sm:p-6 shadow-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+    <div className="space-y-5 max-w-5xl">
+      {/* Top Banner */}
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
-            <Cpu className="w-6 h-6 text-emerald-500" />
-            <span>AWS Cloud Architecture & System Design</span>
+          <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+            <Cpu className="w-5 h-5 text-emerald-600" />
+            <span>{language === 'hi' ? 'AWS क्लाउड सिस्टम आर्किटेक्चर' : 'AWS Cloud System Architecture'}</span>
           </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Production-ready serverless cloud topology built for high-reliability industrial workforce safety.
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            {language === 'hi'
+              ? 'औद्योगिक सुरक्षा के लिए सर्वरलेस एवं शून्य-भ्रम (Zero Hallucination) आर्किटेक्चर।'
+              : 'Production serverless architecture decoupling AI understanding from deterministic safety decisions.'}
           </p>
         </div>
 
-        <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800 text-xs font-semibold">
-          <ShieldCheck className="w-4 h-4 text-emerald-500" />
-          <span>Zero Hallucination Architecture</span>
+        <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded bg-emerald-50 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800 text-xs font-semibold w-fit">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Deterministic Safety Separation</span>
         </div>
       </div>
 
-      {/* Cloud Topology Flowchart */}
-      <div className="bg-slate-950 border border-slate-800 rounded-2xl p-6 text-white shadow-elevated space-y-4">
-        <h3 className="text-xs font-mono uppercase tracking-wider text-slate-400">
-          Cloud Data & Decision Pipeline Architecture
+      {/* THREE-TIER RESPONSIBILITY BANNER */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+        <div className="p-3.5 rounded-lg border border-purple-200 dark:border-purple-900/60 bg-purple-50/50 dark:bg-purple-950/20 space-y-1">
+          <span className="text-[10px] font-mono font-bold uppercase text-purple-700 dark:text-purple-400 block">
+            1. WHAT AI (BEDROCK) DOES
+          </span>
+          <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+            Natural-language task parsing and trade attribute structuring only. <strong>Zero final safety or legal decisions.</strong>
+          </p>
+        </div>
+
+        <div className="p-3.5 rounded-lg border border-amber-200 dark:border-amber-900/60 bg-amber-50/50 dark:bg-amber-950/20 space-y-1">
+          <span className="text-[10px] font-mono font-bold uppercase text-amber-700 dark:text-amber-400 block">
+            2. WHAT DETERMINISTIC ENGINE DOES
+          </span>
+          <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+            Linear constraint solver calculating exposure scores, evaluating CAQM GRAP curbs, and scheduling safe shifts.
+          </p>
+        </div>
+
+        <div className="p-3.5 rounded-lg border border-emerald-200 dark:border-emerald-800 bg-emerald-50/50 dark:bg-emerald-950/20 space-y-1">
+          <span className="text-[10px] font-mono font-bold uppercase text-emerald-700 dark:text-emerald-400 block">
+            3. WHAT AWS INFRASTRUCTURE DOES
+          </span>
+          <p className="text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+            Serverless execution (Lambda), immutable decision logs (DynamoDB), and worker broadcast dispatch (SNS).
+          </p>
+        </div>
+      </div>
+
+      {/* AUTHENTIC SYSTEM FLOWCHART DIAGRAM */}
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-5 sm:p-6 shadow-card space-y-5">
+        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2.5">
+          <Layers className="w-4 h-4 text-slate-400" />
+          <span>End-to-End Operational Decision Flow</span>
         </h3>
 
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
-          {/* Step 1 */}
-          <div className="p-4 rounded-xl border border-purple-800/60 bg-purple-950/20 space-y-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-900/60 text-purple-300 font-bold">1. INTAKE</span>
-            <h4 className="text-sm font-bold text-white">Amazon Bedrock</h4>
-            <p className="text-xs text-slate-400">
-              Unstructured voice/text dictation transcribed into strongly typed JSON schema.
-            </p>
+        {/* FLOW STAGE 1: INGESTION */}
+        <div className="space-y-3">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+            [STAGE 1: WORK PLAN INGESTION]
           </div>
 
-          {/* Step 2 */}
-          <div className="p-4 rounded-xl border border-sky-800/60 bg-sky-950/20 space-y-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-900/60 text-sky-300 font-bold">2. TELEMETRY</span>
-            <h4 className="text-sm font-bold text-white">EventBridge + CPCB</h4>
-            <p className="text-xs text-slate-400">
-              Hourly automated ingestion of air quality and meteorological sensor feeds.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-xs">
+              <span className="font-bold text-slate-900 dark:text-white block">Construction Site Supervisor</span>
+              <span className="text-[11px] text-slate-500">Inputs spoken or raw text shift instructions.</span>
+            </div>
+
+            <div className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40 text-xs">
+              <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-white">
+                <Globe className="w-3.5 h-3.5 text-sky-500" />
+                <span>Amazon API Gateway</span>
+              </div>
+              <span className="text-[11px] text-slate-500">SSL termination, rate limiting, and CORS inspection.</span>
+            </div>
+
+            <div 
+              onMouseEnter={() => setActiveHighlight('bedrock')}
+              onMouseLeave={() => setActiveHighlight(null)}
+              className={`p-3 rounded-lg border text-xs transition cursor-pointer ${
+                activeHighlight === 'bedrock' 
+                  ? 'border-purple-500 bg-purple-50 dark:bg-purple-950/40 shadow-xs' 
+                  : 'border-purple-200 dark:border-purple-900/60 bg-purple-50/40 dark:bg-purple-950/20'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 font-bold text-purple-700 dark:text-purple-300">
+                <Cpu className="w-3.5 h-3.5" />
+                <span>Amazon Bedrock (Claude 3.5 Sonnet)</span>
+              </div>
+              <span className="text-[11px] text-slate-600 dark:text-slate-400">
+                Structures raw dictation into JSON tasks with duration & crew counts.
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex justify-center text-slate-300 dark:text-slate-700">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* FLOW STAGE 2: DETERMINISTIC OPTIMIZATION */}
+        <div className="space-y-3">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+            [STAGE 2: CONSTRAINTS & DETERMINISTIC ENGINE]
           </div>
 
-          {/* Step 3 */}
-          <div className="p-4 rounded-xl border border-amber-800/60 bg-amber-950/20 space-y-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-900/60 text-amber-300 font-bold">3. SOLVER</span>
-            <h4 className="text-sm font-bold text-white">AWS Lambda</h4>
-            <p className="text-xs text-slate-400">
-              Deterministic mathematical optimization applying CAQM statutory rules and shift penalties.
-            </p>
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-2.5 text-xs">
+            <div className="p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+              <span className="font-semibold block text-[11px]">Telemetry Feeds</span>
+              <span className="text-[10px] text-slate-500">Hourly AQI, PM2.5, Heat Index</span>
+            </div>
+
+            <div className="p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+              <span className="font-semibold block text-[11px]">Regulatory Rules</span>
+              <span className="text-[10px] text-slate-500">CAQM GRAP Stage I–IV Orders</span>
+            </div>
+
+            <div className="p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+              <span className="font-semibold block text-[11px]">Task Precedence</span>
+              <span className="text-[10px] text-slate-500">Duration & Trade Dependencies</span>
+            </div>
+
+            <div className="p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/40">
+              <span className="font-semibold block text-[11px]">Crew Capacities</span>
+              <span className="text-[10px] text-slate-500">Shift Window 07:00–19:00</span>
+            </div>
           </div>
 
-          {/* Step 4 */}
-          <div className="p-4 rounded-xl border border-emerald-800/60 bg-emerald-950/20 space-y-2">
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-900/60 text-emerald-300 font-bold">4. BROADCAST</span>
-            <h4 className="text-sm font-bold text-white">Amazon SNS + DDB</h4>
-            <p className="text-xs text-slate-400">
-              Supervisor signs off; immutable audit logged in DynamoDB; SMS queued via SNS.
+          <div 
+            onMouseEnter={() => setActiveHighlight('lambda')}
+            onMouseLeave={() => setActiveHighlight(null)}
+            className={`p-3.5 rounded-lg border text-xs text-center transition cursor-pointer ${
+              activeHighlight === 'lambda' 
+                ? 'border-amber-500 bg-amber-50 dark:bg-amber-950/40 shadow-xs' 
+                : 'border-amber-200 dark:border-amber-900/60 bg-amber-50/40 dark:bg-amber-950/20'
+            }`}
+          >
+            <div className="flex items-center justify-center gap-2 font-bold text-amber-800 dark:text-amber-300">
+              <Server className="w-4 h-4" />
+              <span>AWS Lambda — Deterministic Optimization Solver Microservice</span>
+            </div>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 mt-1 max-w-xl mx-auto">
+              Executes linear risk minimization equation, filters restricted time windows, applies shift penalties, and yields the explainable before-vs-after schedule.
             </p>
+          </div>
+        </div>
+
+        <div className="flex justify-center text-slate-300 dark:text-slate-700">
+          <ArrowDown className="w-4 h-4" />
+        </div>
+
+        {/* FLOW STAGE 3: APPROVAL & NOTIFICATION */}
+        <div className="space-y-3">
+          <div className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400">
+            [STAGE 3: PERSISTENCE & WORKER NOTIFICATION]
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+            <div 
+              onMouseEnter={() => setActiveHighlight('dynamodb')}
+              onMouseLeave={() => setActiveHighlight(null)}
+              className={`p-3 rounded-lg border text-xs transition cursor-pointer ${
+                activeHighlight === 'dynamodb' 
+                  ? 'border-sky-500 bg-sky-50 dark:bg-sky-950/40 shadow-xs' 
+                  : 'border-sky-200 dark:border-sky-900/60 bg-sky-50/40 dark:bg-sky-950/20'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 font-bold text-sky-800 dark:text-sky-300">
+                <Database className="w-3.5 h-3.5" />
+                <span>Amazon DynamoDB</span>
+              </div>
+              <span className="text-[11px] text-slate-600 dark:text-slate-400">
+                Immutable audit store recording supervisor sign-off, decision timestamp, and telemetry snapshots.
+              </span>
+            </div>
+
+            <div 
+              onMouseEnter={() => setActiveHighlight('sns')}
+              onMouseLeave={() => setActiveHighlight(null)}
+              className={`p-3 rounded-lg border text-xs transition cursor-pointer ${
+                activeHighlight === 'sns' 
+                  ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-950/40 shadow-xs' 
+                  : 'border-emerald-200 dark:border-emerald-800 bg-emerald-50/40 dark:bg-emerald-950/20'
+              }`}
+            >
+              <div className="flex items-center gap-1.5 font-bold text-emerald-800 dark:text-emerald-300">
+                <BellRing className="w-3.5 h-3.5" />
+                <span>Amazon SNS</span>
+              </div>
+              <span className="text-[11px] text-slate-600 dark:text-slate-400">
+                Multi-channel broadcast topic delivering approved schedule notifications to site mobile endpoints.
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Interactive Service Inspector */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Services List Column */}
-        <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-4 shadow-subtle space-y-2">
-          <div className="text-xs font-bold uppercase tracking-wider text-slate-400 px-2 py-1">
-            AWS Architecture Components
+      {/* COMPACT SECTION: WHY AWS? */}
+      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3">
+        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-1.5">
+          <Cloud className="w-4 h-4 text-emerald-600" />
+          <span>Why AWS for ClimaShift?</span>
+        </h3>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+          <div className="p-3 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-1">
+            <span className="font-bold text-slate-900 dark:text-white block">Amazon Bedrock</span>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+              Extracts messy supervisor voice transcripts into typed data with enterprise data privacy.
+            </p>
           </div>
 
-          {awsServices.map((service) => {
-            const Icon = service.icon;
-            const isSelected = selectedService === service.id;
-            return (
-              <button
-                key={service.id}
-                onClick={() => setSelectedService(service.id)}
-                className={`w-full flex items-center justify-between p-3 rounded-xl text-left transition min-h-[48px] ${
-                  isSelected
-                    ? 'bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white border border-slate-300 dark:border-slate-700 font-bold'
-                    : 'text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800/50'
-                }`}
-              >
-                <div className="flex items-center gap-3">
-                  <div className={`p-2 rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-800 dark:text-slate-200`}>
-                    <Icon className="w-4 h-4" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-bold block">{service.name}</span>
-                    <span className="text-[10px] text-slate-400 block truncate max-w-[160px]">{service.role}</span>
-                  </div>
-                </div>
-                <ArrowRight className={`w-3.5 h-3.5 ${isSelected ? 'text-emerald-500' : 'text-slate-300'}`} />
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Selected Service Detailed View */}
-        <div className="lg:col-span-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-subtle space-y-5">
-          <div className="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-4">
-            <div className="p-3 rounded-2xl bg-emerald-50 dark:bg-emerald-950/60 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-              <ActiveIcon className="w-6 h-6" />
-            </div>
-            <div>
-              <h3 className="text-lg font-bold text-slate-900 dark:text-white">
-                {active.name}
-              </h3>
-              <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400">
-                {active.headline}
-              </p>
-            </div>
+          <div className="p-3 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-1">
+            <span className="font-bold text-slate-900 dark:text-white block">AWS Lambda</span>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+              Serverless execution of the linear solver with sub-second response times and zero server maintenance.
+            </p>
           </div>
 
-          <div className="space-y-4 text-xs">
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-1">
-                Strategic Rationale & Architectural Necessity
-              </h4>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                {active.whyUsed}
-              </p>
-            </div>
+          <div className="p-3 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-1">
+            <span className="font-bold text-slate-900 dark:text-white block">Amazon DynamoDB</span>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+              Provides millisecond latency and point-in-time recovery for legal compliance and decision records.
+            </p>
+          </div>
 
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-1">
-                Technical Implementation
-              </h4>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                {active.implementation}
-              </p>
-            </div>
-
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white uppercase tracking-wider text-[11px] mb-1 flex items-center gap-1.5">
-                <Lock className="w-3.5 h-3.5 text-emerald-500" />
-                <span>Security & Compliance Guardrails</span>
-              </h4>
-              <p className="text-slate-600 dark:text-slate-300 leading-relaxed bg-slate-50 dark:bg-slate-800/40 p-3.5 rounded-xl border border-slate-200/60 dark:border-slate-800">
-                {active.security}
-              </p>
-            </div>
+          <div className="p-3 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30 space-y-1">
+            <span className="font-bold text-slate-900 dark:text-white block">Amazon EventBridge</span>
+            <p className="text-[11px] text-slate-600 dark:text-slate-400 leading-relaxed">
+              Orchestrates hourly automated syncing of official environmental stations and CAQM rule updates.
+            </p>
           </div>
         </div>
       </div>
