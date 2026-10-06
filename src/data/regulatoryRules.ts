@@ -1,0 +1,80 @@
+import { RegulatoryRule } from '@/types';
+
+export const OFFICIAL_REGULATORY_RULES: RegulatoryRule[] = [
+  {
+    id: 'CAQM-GRAP-III-01',
+    name: 'Prohibition on Non-Essential Construction & Earthwork',
+    jurisdiction: 'Delhi-NCR (CAQM)',
+    source: 'Commission for Air Quality Management Statutory Direction No. 77 / Revised GRAP Schedule',
+    effectiveDate: '2024-11-15',
+    revisionDate: '2024-12-01',
+    grapStageTrigger: 'STAGE_3',
+    affectedKeywords: ['excavation', 'earthwork', 'boring', 'drilling', 'demolition'],
+    requiresHighDust: true,
+    action: 'RESTRICT',
+    description: 'Complete halt on earthwork, excavation, drilling, and major demolition across non-exempt C&D projects during Severe AQI (GRAP Stage III).',
+    exceptions: ['Railway projects', 'Metro rail services', 'Airports and ISBT', 'National defense/healthcare infrastructure'],
+    severity: 'critical',
+    lastVerified: '2026-10-06 18:30 IST'
+  },
+  {
+    id: 'CAQM-GRAP-III-02',
+    name: 'Curbs on Dry Plastering, Painting, and Cutting Activities',
+    jurisdiction: 'Delhi-NCR (CAQM)',
+    source: 'CAQM Order GRAP-III / Section 12 Air (Prevention & Control of Pollution) Act',
+    effectiveDate: '2024-11-15',
+    grapStageTrigger: 'STAGE_3',
+    affectedKeywords: ['plastering', 'painting', 'stone cutting', 'tile cutting'],
+    requiresHighDust: false,
+    action: 'RESTRICT',
+    description: 'Outdoor open-air plastering, dry sanding, spraying, and masonry cutting generate high respirable particulate matter during Stage III and must be suspended unless enclosed with wet suppression.',
+    exceptions: ['Fully enclosed indoor finishing with dust extraction equipment and active air scrubbing'],
+    severity: 'critical',
+    lastVerified: '2026-10-06 18:30 IST'
+  },
+  {
+    id: 'CAQM-GRAP-II-01',
+    name: 'Mandatory Dust Mitigation & Continuous Water Sprinkling for Material Transfer',
+    jurisdiction: 'Delhi-NCR (CAQM)',
+    source: 'CPCB Guidelines on Environmental Management in Construction & Demolition',
+    effectiveDate: '2024-10-22',
+    grapStageTrigger: 'STAGE_2',
+    affectedKeywords: ['unloading', 'material unloading', 'loading', 'cement handling', 'debris'],
+    requiresHighDust: true,
+    action: 'MANDATE_PROTECT',
+    description: 'Bulk material unloading and cement bag transfer require continuous anti-smog gun deployment, mist cannon spray, and sealed tarpaulin covers.',
+    exceptions: ['Enclosed hopper unloading'],
+    severity: 'warning',
+    lastVerified: '2026-10-06 18:30 IST'
+  },
+  {
+    id: 'NDMA-HEAT-01',
+    name: 'National Disaster Management Guidelines for Extreme Heat & Solar Exposure',
+    jurisdiction: 'National (NDMA / MoHFW)',
+    source: 'NDMA National Action Plan for Heatwave Prevention & Management 2024',
+    effectiveDate: '2024-04-01',
+    grapStageTrigger: 'NONE',
+    affectedKeywords: ['roofing', 'steel fixing', 'welding', 'exterior inspection', 'concreting'],
+    requiresHighDust: false,
+    action: 'MANDATE_PROTECT',
+    description: 'Strenuous outdoor metabolic labor during peak heat index (>40°C or WBGT >30°C) requires mandatory shift adjustments, 15-minute shaded rest cycles every hour, oral rehydration points, and PPE modifications.',
+    exceptions: ['Temperature-controlled or actively shaded workspaces'],
+    severity: 'warning',
+    lastVerified: '2026-10-06 18:30 IST'
+  },
+  {
+    id: 'CAQM-GRAP-IV-01',
+    name: 'Emergency Construction Moratorium (Severe+ AQI > 450)',
+    jurisdiction: 'Delhi-NCR (CAQM)',
+    source: 'CAQM Emergency GRAP-IV Protocol under Section 14',
+    effectiveDate: '2024-11-18',
+    grapStageTrigger: 'STAGE_4',
+    affectedKeywords: ['excavation', 'concrete work', 'plastering', 'painting', 'welding', 'drilling', 'unloading', 'cleanup'],
+    requiresHighDust: false,
+    action: 'RESTRICT',
+    description: 'Emergency suspension of all outdoor construction, structural, and finishing activities. Only critical linear public utility work with explicit cabinet exemption allowed.',
+    exceptions: ['Critical hospital repair', 'Disaster emergency works'],
+    severity: 'critical',
+    lastVerified: '2026-10-06 18:30 IST'
+  }
+];
