@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Task } from '@/types';
 import { StatusBadge } from '@/components/common/StatusBadge';
 import { ExplainabilityDrawer } from './ExplainabilityDrawer';
 import { ApprovalModal } from './ApprovalModal';
@@ -9,18 +8,14 @@ import {
   Users, 
   MapPin, 
   Clock, 
-  ArrowRight, 
   Sparkles, 
-  HelpCircle, 
   Send, 
-  CheckCircle2, 
   Info,
-  Calendar,
-  Layers
+  Calendar
 } from 'lucide-react';
 
 export function BeforeAfterView() {
-  const { replanResult, siteProfile, setActiveNav } = useApp();
+  const { replanResult, siteProfile, setActiveNav, t, language } = useApp();
 
   const [selectedTaskId, setSelectedTaskId] = useState<string | null>(null);
   const [showApprovalModal, setShowApprovalModal] = useState(false);
@@ -29,15 +24,19 @@ export function BeforeAfterView() {
     return (
       <div className="text-center py-16 bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4">
         <Sparkles className="w-10 h-10 text-emerald-500 mx-auto" />
-        <h3 className="text-lg font-bold text-slate-900 dark:text-white">No active replan evaluation</h3>
+        <h3 className="text-lg font-bold text-slate-900 dark:text-white">
+          {language === 'hi' ? 'कोई सक्रिय रीप्लान उपलब्ध नहीं है' : 'No active replan evaluation'}
+        </h3>
         <p className="text-sm text-slate-500 max-w-md mx-auto">
-          Please run the optimizer from the Dashboard or Work Plan tab to evaluate tasks against current environmental conditions.
+          {language === 'hi'
+            ? 'कृपया वर्तमान मौसम परिस्थितियों के अनुसार कार्य योजना की जांच करने के लिए कार्य योजना टैब से रीप्लान चलाएं।'
+            : 'Please run the optimizer from the Dashboard or Work Plan tab to evaluate tasks against current environmental conditions.'}
         </p>
         <button
           onClick={() => setActiveNav('plan')}
-          className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-emerald-500 text-slate-950"
+          className="px-5 py-2.5 rounded-xl font-bold text-xs uppercase bg-emerald-500 text-slate-950 cursor-pointer"
         >
-          Go to Work Plan
+          {t.editPlanBtn}
         </button>
       </div>
     );
@@ -53,23 +52,23 @@ export function BeforeAfterView() {
         <div className="space-y-1">
           <div className="flex items-center gap-2 flex-wrap">
             <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-              Work Plan Successfully Optimized
+              {t.replanHeaderTitle}
             </h2>
             <span className="text-xs font-mono font-semibold px-2.5 py-0.5 rounded-full bg-emerald-100 dark:bg-emerald-950/70 text-emerald-800 dark:text-emerald-300 border border-emerald-300 dark:border-emerald-800">
-              Evaluated {replanResult.generatedAt}
+              {language === 'hi' ? 'सत्यापित समय:' : 'Evaluated'} {replanResult.generatedAt}
             </span>
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            {siteProfile.name} • {siteProfile.jurisdiction} • Status: {siteProfile.grapStage.replace('_', ' ')}
+            {siteProfile.name} • {siteProfile.jurisdiction} • {siteProfile.grapStage.replace('_', ' ')}
           </p>
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           <button
             onClick={() => setActiveNav('plan')}
-            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition min-h-[44px]"
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition min-h-[44px] cursor-pointer"
           >
-            Edit Constraints
+            {t.editConstraintsBtn}
           </button>
 
           <button
@@ -77,7 +76,7 @@ export function BeforeAfterView() {
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition shadow-md min-h-[44px] cursor-pointer"
           >
             <Send className="w-3.5 h-3.5" />
-            <span>Review & Notify Workers</span>
+            <span>{t.reviewNotifyBtn}</span>
           </button>
         </div>
       </div>
@@ -93,11 +92,11 @@ export function BeforeAfterView() {
             <div className="flex items-center gap-2">
               <Calendar className="w-4 h-4 text-slate-400" />
               <h3 className="font-bold text-sm tracking-tight text-slate-700 dark:text-slate-300 uppercase">
-                Original Input Schedule (Before)
+                {t.beforeTitle}
               </h3>
             </div>
             <span className="text-xs font-mono text-slate-400">
-              {originalTasks.length} Planned
+              {originalTasks.length} {language === 'hi' ? 'योजनाबद्ध' : 'Planned'}
             </span>
           </div>
 
@@ -113,7 +112,7 @@ export function BeforeAfterView() {
                       {task.name}
                     </h4>
                     <span className="text-[11px] font-mono text-slate-500 dark:text-slate-400">
-                      Sector: {task.location}
+                      {task.location}
                     </span>
                   </div>
 
@@ -125,11 +124,11 @@ export function BeforeAfterView() {
                 <div className="flex flex-wrap items-center gap-3 text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-200/40 dark:border-slate-700/40">
                   <span className="flex items-center gap-1">
                     <Users className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{task.workers} workers</span>
+                    <span>{task.workers} {language === 'hi' ? 'श्रमिक' : 'workers'}</span>
                   </span>
                   <span className="flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-slate-400" />
-                    <span>{task.duration}h duration</span>
+                    <span>{task.duration}{language === 'hi' ? 'घंटे' : 'h'}</span>
                   </span>
                   <span className="text-[11px] font-medium text-slate-400">
                     {task.indoorOutdoor.toUpperCase()} • {task.dustPotential.toUpperCase()} DUST
@@ -146,7 +145,7 @@ export function BeforeAfterView() {
             <div className="flex items-center gap-2">
               <Sparkles className="w-4 h-4 text-emerald-500" />
               <h3 className="font-bold text-sm tracking-tight text-emerald-700 dark:text-emerald-400 uppercase">
-                Optimized Safety Schedule (After)
+                {t.afterTitle}
               </h3>
             </div>
             <span className="text-xs font-semibold px-2 py-0.5 rounded bg-emerald-100 dark:bg-emerald-950 text-emerald-800 dark:text-emerald-300 font-mono">
@@ -194,7 +193,7 @@ export function BeforeAfterView() {
                     <div className="sm:text-right shrink-0">
                       {isRestricted ? (
                         <span className="text-xs font-mono font-bold px-2 py-0.5 rounded bg-rose-200 dark:bg-rose-900 text-rose-900 dark:text-rose-200">
-                          ACTIVITY SUSPENDED
+                          {language === 'hi' ? 'कार्य स्थगित (रोक)' : 'ACTIVITY SUSPENDED'}
                         </span>
                       ) : (
                         <div className="space-y-0.5">
@@ -207,7 +206,7 @@ export function BeforeAfterView() {
                           </span>
                           {isMoved && (
                             <div className="text-[10px] text-amber-700 dark:text-amber-400 font-medium">
-                              (Shifted from {task.originalStartTime})
+                              ({language === 'hi' ? 'पहले' : 'Shifted from'} {task.originalStartTime})
                             </div>
                           )}
                         </div>
@@ -224,9 +223,9 @@ export function BeforeAfterView() {
                         e.stopPropagation();
                         setSelectedTaskId(task.id);
                       }}
-                      className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline shrink-0 flex items-center gap-1"
+                      className="text-[11px] font-semibold text-emerald-600 dark:text-emerald-400 hover:underline shrink-0 flex items-center gap-1 cursor-pointer"
                     >
-                      <span>Explain</span>
+                      <span>{language === 'hi' ? 'कारण देखें' : 'Explain'}</span>
                       <Info className="w-3 h-3" />
                     </button>
                   </div>

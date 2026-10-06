@@ -13,26 +13,35 @@ const config: Config = {
         brand: {
           50: "#f0fdf4",
           100: "#dcfce7",
-          500: "#22c55e",
-          600: "#16a34a",
-          700: "#15803d",
-          800: "#166534",
-          900: "#14532d",
+          500: "#10b981",
+          600: "#059669",
+          700: "#047857",
+          800: "#065f46",
+          900: "#064e3b",
         },
         risk: {
-          continue: "#10b981",    // Green
-          reschedule: "#f59e0b",  // Amber
-          protect: "#f97316",     // Orange
-          restricted: "#ef4444",  // Red
-          manual: "#8b5cf6",      // Purple/Indigo
+          continue: "#10b981",
+          reschedule: "#f59e0b",
+          protect: "#f97316",
+          restricted: "#ef4444",
+          manual: "#8b5cf6",
         }
       },
       fontFamily: {
-        sans: ["var(--font-inter)", "system-ui", "-apple-system", "sans-serif"],
-        mono: ["var(--font-mono)", "ui-monospace", "monospace"],
+        sans: [
+          "'Plus Jakarta Sans'",
+          "'Inter'",
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "'Segoe UI'",
+          "Roboto",
+          "'Noto Sans Devanagari'",
+          "sans-serif",
+        ],
+        mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       boxShadow: {
-        subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.04)",
         card: "0 1px 3px 0 rgba(0, 0, 0, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.08)",
         elevated: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1)",
       }

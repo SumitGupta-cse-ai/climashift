@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
-import { Settings, ShieldCheck, Cpu, Sliders, CheckCircle, Database } from 'lucide-react';
+import { LanguageToggle } from '@/components/common/LanguageToggle';
+import { Settings, Sliders, Cpu, Languages } from 'lucide-react';
 
 export function SettingsView() {
-  const { siteProfile, setSiteProfile, sitesList, showToast, resetToDemo } = useApp();
+  const { siteProfile, setSiteProfile, sitesList, showToast, resetToDemo, language } = useApp();
 
   const [awsRegion, setAwsRegion] = useState('ap-south-1 (Mumbai)');
   const [bedrockModel, setBedrockModel] = useState('anthropic.claude-3-5-sonnet-20241022-v2:0');
@@ -12,7 +13,12 @@ export function SettingsView() {
   const [safetyThresholdAQI, setSafetyThresholdAQI] = useState(380);
 
   const handleSave = () => {
-    showToast('Site operational parameters updated successfully.', 'success');
+    showToast(
+      language === 'hi' 
+        ? 'साइट सेटिंग्स सफलतापूर्वक सहेज ली गई हैं।' 
+        : 'Site operational parameters updated successfully.', 
+      'success'
+    );
   };
 
   return (
@@ -21,10 +27,12 @@ export function SettingsView() {
         <div>
           <h2 className="text-xl sm:text-2xl font-extrabold tracking-tight text-slate-900 dark:text-white flex items-center gap-2.5">
             <Settings className="w-6 h-6 text-emerald-500" />
-            <span>Site Settings & Environmental Controls</span>
+            <span>{language === 'hi' ? 'साइट सेटिंग्स एवं पर्यावरण नियंत्रण' : 'Site Settings & Environmental Controls'}</span>
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-            Configure telemetry sources, regulatory jurisdiction thresholds, and AWS service integrations.
+            {language === 'hi'
+              ? 'मौसम डेटा स्रोत, कानूनी अधिकार क्षेत्र और AWS क्लाउड सेवाओं को कॉन्फ़िगर करें।'
+              : 'Configure telemetry sources, regulatory jurisdiction thresholds, and AWS service integrations.'}
           </p>
         </div>
 
@@ -32,7 +40,7 @@ export function SettingsView() {
           onClick={handleSave}
           className="px-5 py-2.5 rounded-xl text-xs font-bold uppercase tracking-wider bg-emerald-400 hover:bg-emerald-300 text-slate-950 transition shadow-xs cursor-pointer min-h-[44px]"
         >
-          Save Changes
+          {language === 'hi' ? 'सेव करें' : 'Save Changes'}
         </button>
       </div>
 
@@ -40,13 +48,13 @@ export function SettingsView() {
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-subtle space-y-6">
         <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
           <Sliders className="w-4 h-4 text-emerald-500" />
-          <span>Operational Thresholds & Site Profile</span>
+          <span>{language === 'hi' ? 'परिचालन सीमाएं एवं साइट प्रोफ़ाइल' : 'Operational Thresholds & Site Profile'}</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
           <div>
             <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Active Project Site
+              {language === 'hi' ? 'सक्रिय प्रोजेक्ट साइट' : 'Active Project Site'}
             </label>
             <select
               value={siteProfile.id}
@@ -64,7 +72,7 @@ export function SettingsView() {
 
           <div>
             <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Regulatory Jurisdiction
+              {language === 'hi' ? 'कानूनी अधिकार क्षेत्र' : 'Regulatory Jurisdiction'}
             </label>
             <input
               type="text"
@@ -76,7 +84,7 @@ export function SettingsView() {
 
           <div>
             <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Heavy Outdoor Work AQI Action Threshold
+              {language === 'hi' ? 'खुले में भारी कार्य के लिए AQI सीमा' : 'Heavy Outdoor Work AQI Action Threshold'}
             </label>
             <input
               type="number"
@@ -85,13 +93,24 @@ export function SettingsView() {
               className="w-full text-xs font-mono p-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white"
             />
             <span className="text-[10px] text-slate-400 mt-1 block">
-              Default: 380 AQI (Mandates task shifting or suspension for non-exempt trades).
+              {language === 'hi'
+                ? 'डिफ़ॉल्ट: 380 AQI (गैर-छूट वाले बाहरी कार्यों पर रोक या समय परिवर्तन)।'
+                : 'Default: 380 AQI (Mandates task shifting or suspension for non-exempt trades).'}
             </span>
           </div>
 
           <div>
             <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Appearance & Theme
+              {language === 'hi' ? 'भाषा (Language)' : 'Language'}
+            </label>
+            <div className="pt-0.5">
+              <LanguageToggle />
+            </div>
+          </div>
+
+          <div>
+            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
+              {language === 'hi' ? 'थीम (दिखावट)' : 'Appearance & Theme'}
             </label>
             <div className="pt-0.5">
               <ThemeToggle />
@@ -104,7 +123,7 @@ export function SettingsView() {
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl p-6 shadow-subtle space-y-6">
         <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
           <Cpu className="w-4 h-4 text-purple-500" />
-          <span>Amazon Bedrock & Cloud Integrations</span>
+          <span>{language === 'hi' ? 'Amazon Bedrock और क्लाउड सेवाएं' : 'Amazon Bedrock & Cloud Integrations'}</span>
         </h3>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
@@ -135,8 +154,12 @@ export function SettingsView() {
 
         <div className="flex items-center justify-between p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/30 text-xs">
           <div>
-            <span className="font-bold text-slate-900 dark:text-white block">Amazon SNS Worker Broadcast Integration</span>
-            <span className="text-[11px] text-slate-500">Allow queued notification payloads to dispatch to site mobile endpoints.</span>
+            <span className="font-bold text-slate-900 dark:text-white block">
+              {language === 'hi' ? 'श्रमिकों को SMS ब्रॉडकास्ट (Amazon SNS)' : 'Amazon SNS Worker Broadcast Integration'}
+            </span>
+            <span className="text-[11px] text-slate-500">
+              {language === 'hi' ? 'स्वीकृत कार्य शेड्यूल को श्रमिकों के फोन पर भेजने की अनुमति दें।' : 'Allow queued notification payloads to dispatch to site mobile endpoints.'}
+            </span>
           </div>
 
           <input
@@ -151,15 +174,19 @@ export function SettingsView() {
       {/* Demo Reset Safety Button */}
       <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div>
-          <span className="font-bold text-slate-900 dark:text-white block">Reset Benchmark Demo Environment</span>
-          <span className="text-[11px] text-slate-500">Restores standard Tower B Commercial site tasks and default GRAP Stage III conditions.</span>
+          <span className="font-bold text-slate-900 dark:text-white block">
+            {language === 'hi' ? 'मानक डेमो वातावरण रीसेट करें' : 'Reset Benchmark Demo Environment'}
+          </span>
+          <span className="text-[11px] text-slate-500">
+            {language === 'hi' ? 'टावर B के सभी मानक कार्यों और GRAP Stage III को पुनर्स्थापित करें।' : 'Restores standard Tower B Commercial site tasks and default GRAP Stage III conditions.'}
+          </span>
         </div>
 
         <button
           onClick={resetToDemo}
-          className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[40px]"
+          className="px-4 py-2 rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 min-h-[40px] cursor-pointer"
         >
-          Reset to Demo
+          {language === 'hi' ? 'डेमो रीसेट करें' : 'Reset to Demo'}
         </button>
       </div>
     </div>

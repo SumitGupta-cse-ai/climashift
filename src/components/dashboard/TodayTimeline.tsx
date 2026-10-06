@@ -4,9 +4,8 @@ import { StatusBadge } from '@/components/common/StatusBadge';
 import { Users, MapPin, Clock, ArrowRight, ShieldCheck, AlertCircle } from 'lucide-react';
 
 export function TodayTimeline() {
-  const { tasks, replanResult, setActiveNav } = useApp();
+  const { tasks, replanResult, setActiveNav, t, language } = useApp();
 
-  // If replan result exists, match tasks to show current operational state
   const displayTasks = tasks.map(t => {
     const rec = replanResult?.recommendedTasks.find(r => r.id === t.id);
     return rec || t;
@@ -17,21 +16,21 @@ export function TodayTimeline() {
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-            <span>Today's Work Schedule</span>
+            <span>{t.todayScheduleTitle}</span>
             <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 font-normal">
-              {displayTasks.length} Planned Activities
+              {displayTasks.length} {language === 'hi' ? 'कार्य नियोजित' : 'Planned Activities'}
             </span>
           </h3>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Real-time status overview of tasks scheduled across site sectors.
+            {language === 'hi' ? 'सभी सेक्टरों में आज के कार्यों की वास्तविक स्थिति।' : 'Real-time status overview of tasks scheduled across site sectors.'}
           </p>
         </div>
 
         <button
           onClick={() => setActiveNav('replan')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline min-h-[36px]"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline min-h-[36px] cursor-pointer"
         >
-          <span>View Side-by-Side Optimization</span>
+          <span>{t.viewSideBySide}</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
@@ -72,11 +71,11 @@ export function TodayTimeline() {
                     </span>
                     <span className="flex items-center gap-1">
                       <Users className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>{task.workers} Workers</span>
+                      <span>{task.workers} {language === 'hi' ? 'श्रमिक' : 'Workers'}</span>
                     </span>
                     <span className="flex items-center gap-1">
                       <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                      <span>{task.duration} Hours duration</span>
+                      <span>{task.duration} {language === 'hi' ? 'घंटे' : 'Hours'}</span>
                     </span>
                   </div>
                 </div>
@@ -84,11 +83,11 @@ export function TodayTimeline() {
                 <div className="flex items-center gap-3 sm:text-right shrink-0">
                   <div>
                     <div className="text-xs font-mono font-semibold text-slate-500 dark:text-slate-400">
-                      Original: {task.originalStartTime} – {task.originalEndTime}
+                      {language === 'hi' ? 'मूल समय:' : 'Original:'} {task.originalStartTime} – {task.originalEndTime}
                     </div>
                     {isShifted && (
                       <div className="text-xs font-mono font-bold text-amber-600 dark:text-amber-400 flex items-center sm:justify-end gap-1">
-                        <span>➔ Recommended: {task.recommendedStartTime} – {task.recommendedEndTime}</span>
+                        <span>➔ {language === 'hi' ? 'नया समय:' : 'Recommended:'} {task.recommendedStartTime} – {task.recommendedEndTime}</span>
                       </div>
                     )}
                   </div>

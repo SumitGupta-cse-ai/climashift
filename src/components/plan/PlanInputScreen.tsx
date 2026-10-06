@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { parseWorkPlanPrompt } from '@/lib/bedrockParser';
 import { TaskReviewGrid } from './TaskReviewGrid';
-import { Sparkles, Bot, ArrowRight, Wand2, RefreshCw } from 'lucide-react';
+import { Bot, ArrowRight, Wand2, RefreshCw, Sparkles } from 'lucide-react';
 
 export function PlanInputScreen() {
-  const { tasks, setTasks, executeReplan, isOptimizing, showToast } = useApp();
+  const { tasks, setTasks, executeReplan, isOptimizing, showToast, t, language } = useApp();
 
   const [promptText, setPromptText] = useState(
-    'Tomorrow morning 8 workers will do plastering on Tower B from 11 AM. Bulk cement and sand unloading is planned at 10 AM with 6 workers. After lunch 6 workers will do electrical wiring in the basement. Scaffolding safety inspection is set for 1 PM with 2 supervisors. Podium housekeeping with 4 workers at 2 PM.'
+    language === 'hi'
+      ? 'कल सुबह 8 मजदूर टावर B पर 11 बजे प्लास्टर करेंगे। 10 बजे नॉर्थ गेट पर 6 मजदूर सीमेंट अनलोडिंग करेंगे। लंच के बाद बेसमेंट में 6 मजदूर बिजली की वायरिंग करेंगे।'
+      : 'Tomorrow morning 8 workers will do plastering on Tower B from 11 AM. Bulk cement and sand unloading is planned at 10 AM with 6 workers. After lunch 6 workers will do electrical wiring in the basement. Scaffolding safety inspection is set for 1 PM with 2 supervisors. Podium housekeeping with 4 workers at 2 PM.'
   );
 
   const [isParsing, setIsParsing] = useState(false);
@@ -19,16 +21,22 @@ export function PlanInputScreen() {
 
   const presetPlans = [
     {
-      title: 'Benchmark Demo Plan (Tower B Commercial)',
-      text: 'Tomorrow morning 8 workers will do plastering on Tower B from 11 AM. Bulk cement and sand unloading is planned at 10 AM with 6 workers. After lunch 6 workers will do electrical wiring in the basement. Scaffolding safety inspection is set for 1 PM with 2 supervisors. Podium housekeeping with 4 workers at 2 PM.'
+      title: language === 'hi' ? 'मानक डेमो योजना (टावर B)' : 'Benchmark Demo Plan (Tower B Commercial)',
+      text: language === 'hi'
+        ? 'कल सुबह 8 मजदूर टावर B पर 11 बजे प्लास्टर करेंगे। 10 बजे 6 मजदूर सीमेंट अनलोडिंग करेंगे। लंच के बाद 6 मजदूर बेसमेंट में वायरिंग करेंगे।'
+        : 'Tomorrow morning 8 workers will do plastering on Tower B from 11 AM. Bulk cement and sand unloading is planned at 10 AM with 6 workers. After lunch 6 workers will do electrical wiring in the basement. Scaffolding safety inspection is set for 1 PM with 2 supervisors. Podium housekeeping with 4 workers at 2 PM.'
     },
     {
-      title: 'Excavation & Heavy Earthwork (GRAP Trigger)',
-      text: '8 workers will do foundation excavation at North Gate from 9 AM. 6 workers will do outdoor plastering and mortar mixing at 11 AM. After lunch 4 workers will do interior conduit wiring.'
+      title: language === 'hi' ? 'खुदाई और धूल कार्य (GRAP III प्रतिबंध)' : 'Excavation & Heavy Earthwork (GRAP Trigger)',
+      text: language === 'hi'
+        ? 'कल 8 मजदूर नॉर्थ गेट पर सुबह 9 बजे नींव की खुदाई करेंगे। 11 बजे 6 मजदूर खुले में दीवार की पुट्टी और प्लास्टर करेंगे।'
+        : '8 workers will do foundation excavation at North Gate from 9 AM. 6 workers will do outdoor plastering and mortar mixing at 11 AM. After lunch 4 workers will do interior conduit wiring.'
     },
     {
-      title: 'Solar Exposure & Structural Concreting',
-      text: '12 workers will pour concrete on open roof deck starting at 12 PM. 4 workers will do facade welding from 10 AM. 5 workers do basement equipment maintenance.'
+      title: language === 'hi' ? 'अत्यधिक गर्मी और छत पर काम' : 'Solar Exposure & Structural Concreting',
+      text: language === 'hi'
+        ? 'दोपहर 12 बजे 12 मजदूर खुली छत पर कंक्रीट स्लैब डालेंगे। 4 मजदूर सुबह 10 बजे वेल्डिंग करेंगे।'
+        : '12 workers will pour concrete on open roof deck starting at 12 PM. 4 workers will do facade welding from 10 AM. 5 workers do basement equipment maintenance.'
     }
   ];
 
@@ -43,7 +51,12 @@ export function PlanInputScreen() {
         source: result.source === 'amazon-bedrock-claude' ? 'Amazon Bedrock (Claude 3.5 Sonnet)' : 'Deterministic NLP Fallback Parser',
         latency: result.parsingLatencyMs
       });
-      showToast(`Successfully extracted ${result.tasks.length} structured construction tasks!`, 'success');
+      showToast(
+        language === 'hi'
+          ? `${result.tasks.length} कार्य सफलतापूर्वक निकाल लिए गए हैं!`
+          : `Successfully extracted ${result.tasks.length} structured construction tasks!`,
+        'success'
+      );
     } catch {
       showToast('Error parsing text prompt. Reverting to deterministic template.', 'error');
     } finally {
@@ -62,13 +75,13 @@ export function PlanInputScreen() {
             </div>
             <div>
               <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span>Natural Language Work-Plan Intake</span>
+                <span>{t.planIntakeTitle}</span>
                 <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-100 dark:bg-purple-950 text-purple-800 dark:text-purple-300 font-bold border border-purple-300 dark:border-purple-800">
                   Amazon Bedrock
                 </span>
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Dictate or type raw shift instructions. AI extracts structured trades, crews, and duration.
+                {t.planIntakeSubtitle}
               </p>
             </div>
           </div>
@@ -83,7 +96,7 @@ export function PlanInputScreen() {
         {/* Text Input Area */}
         <div className="space-y-2">
           <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-            Supervisor Daily Work Plan (Voice / Text Transcript)
+            {t.supervisorTranscriptLabel}
           </label>
           <div className="relative">
             <textarea
@@ -99,14 +112,14 @@ export function PlanInputScreen() {
         {/* Preset Prompt Buttons */}
         <div className="space-y-1.5">
           <div className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-            Quick Load Demo Work-Plans:
+            {t.loadDemoPlans}
           </div>
           <div className="flex flex-wrap gap-2">
             {presetPlans.map((preset, idx) => (
               <button
                 key={idx}
                 onClick={() => setPromptText(preset.text)}
-                className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition font-medium min-h-[36px]"
+                className="text-xs px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 transition font-medium min-h-[36px] cursor-pointer"
               >
                 {preset.title}
               </button>
@@ -124,12 +137,12 @@ export function PlanInputScreen() {
             {isParsing ? (
               <>
                 <RefreshCw className="w-4 h-4 animate-spin" />
-                <span>Extracting Structured Tasks...</span>
+                <span>{t.extractingBtn}</span>
               </>
             ) : (
               <>
                 <Wand2 className="w-4 h-4" />
-                <span>GENERATE STRUCTURED PLAN</span>
+                <span>{t.generatePlanBtn}</span>
               </>
             )}
           </button>
@@ -140,7 +153,7 @@ export function PlanInputScreen() {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl font-bold text-xs uppercase tracking-wider text-slate-950 bg-gradient-to-r from-emerald-400 to-teal-300 hover:from-emerald-300 hover:to-teal-200 transition shadow-md min-h-[44px] cursor-pointer"
           >
             <Sparkles className="w-4 h-4 text-slate-950" />
-            <span>REPLAN MY DAY NOW</span>
+            <span>{t.replanMyDay}</span>
             <ArrowRight className="w-4 h-4 stroke-[2.5]" />
           </button>
         </div>

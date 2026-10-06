@@ -5,6 +5,7 @@ import { Task, SiteProfile, ReplanResult, EnvironmentalWindow } from '@/types';
 import { DEFAULT_SITE_PROFILE, SITES_LIST, generateHourlyEnvironmentalWindows } from '@/data/mockEnvironment';
 import { getStandardDemoTasks } from '@/lib/bedrockParser';
 import { runDeterministicScheduler } from '@/lib/schedulingEngine';
+import { Language, translations, Translations } from '@/lib/i18n';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
 export type AppNavView = 'dashboard' | 'plan' | 'replan' | 'activity' | 'architecture' | 'settings';
@@ -25,6 +26,9 @@ export interface DecisionLogEntry {
 interface AppContextType {
   theme: ThemeMode;
   setTheme: (t: ThemeMode) => void;
+  language: Language;
+  setLanguage: (l: Language) => void;
+  t: Translations;
   activeNav: AppNavView;
   setActiveNav: (v: AppNavView) => void;
   siteProfile: SiteProfile;
@@ -48,6 +52,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [theme, setThemeState] = useState<ThemeMode>('dark');
+  const [language, setLanguageState] = useState<Language>('en');
   const [activeNav, setActiveNav] = useState<AppNavView>('dashboard');
   const [siteProfile, setSiteProfile] = useState<SiteProfile>(DEFAULT_SITE_PROFILE);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -61,14 +66,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     generateHourlyEnvironmentalWindows(DEFAULT_SITE_PROFILE.currentAQI, DEFAULT_SITE_PROFILE.grapStage)
   );
 
-  // Initialize theme from localStorage or system preference
+  const t = translations[language] || translations.en;
+
+  // Initialize theme and language from localStorage
   useEffect(() => {
     const savedTheme = localStorage.getItem('climashift-theme') as ThemeMode;
     if (savedTheme) {
       setThemeState(savedTheme);
       applyThemeToDoc(savedTheme);
     } else {
-      applyThemeToDoc('dark'); // Default to sleek dark mode
+      applyThemeToDoc('dark'); // Default to dark mode
+    }
+
+    const savedLang = localStorage.getItem('climashift-lang') as Language;
+    if (savedLang === 'en' || savedLang === 'hi') {
+      setLanguageState(savedLang);
     }
 
     // Initialize demo tasks
@@ -80,7 +92,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const initialResult = runDeterministicScheduler(initialTasks, initialWindows, siteProfile);
     setReplanResult(initialResult);
 
-    // Load decision logs from storage if available
+    // Load decision logs from storage
     const savedLogs = localStorage.getItem('climashift-logs');
     if (savedLogs) {
       try {
@@ -101,24 +113,29 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   }, [siteProfile]);
 
-  const applyThemeToDoc = (t: ThemeMode) => {
+  const applyThemeToDoc = (tMode: ThemeMode) => {
     const root = document.documentElement;
-    if (t === 'dark') {
+    if (tMode === 'dark') {
       root.classList.add('dark');
-    } else if (t === 'light') {
+    } else if (tMode === 'light') {
       root.classList.remove('dark');
     } else {
-      // System
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (prefersDark) root.classList.add('dark');
       else root.classList.remove('dark');
     }
   };
 
-  const setTheme = (t: ThemeMode) => {
-    setThemeState(t);
-    localStorage.setItem('climashift-theme', t);
-    applyThemeToDoc(t);
+  const setTheme = (tMode: ThemeMode) => {
+    setThemeState(tMode);
+    localStorage.setItem('climashift-theme', tMode);
+    applyThemeToDoc(tMode);
+  };
+
+  const setLanguage = (lang: Language) => {
+    setLanguageState(lang);
+    localStorage.setItem('climashift-lang', lang);
+    showToast(lang === 'hi' ? 'भाषा बदलकर हिंदी कर दी गई है।' : 'Language changed to English.', 'info');
   };
 
   const showToast = (text: string, type: 'success' | 'warning' | 'info' | 'error' = 'info') => {
@@ -132,7 +149,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setIsOptimizing(true);
     const tasksToProcess = customTasks || tasks;
     
-    // Simulate brief deterministic analysis latency (400ms) for polished user feedback
     setTimeout(() => {
       const windows = generateHourlyEnvironmentalWindows(siteProfile.currentAQI, siteProfile.grapStage);
       const result = runDeterministicScheduler(tasksToProcess, windows, siteProfile);
@@ -140,7 +156,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       setTasks(tasksToProcess);
       setIsOptimizing(false);
       setActiveNav('replan');
-      showToast('Schedule successfully evaluated against environmental constraints!', 'success');
+      showToast(
+        language === 'hi'
+          ? 'कार्य योजना को मौसम व कानूनी नियमों के अनुसार सफलतापूर्वक रीप्लान किया गया!'
+          : 'Schedule successfully evaluated against environmental constraints!',
+        'success'
+      );
     }, 450);
   };
 
@@ -158,7 +179,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setEnvironmentalWindows(windows);
     const result = runDeterministicScheduler(demoTasks, windows, DEFAULT_SITE_PROFILE);
     setReplanResult(result);
-    showToast('Demo scenario reset to Tower B commercial site benchmark.', 'info');
+    showToast(language === 'hi' ? 'डेमो योजना पुनः स्थापित की गई।' : 'Demo scenario reset to Tower B commercial site benchmark.', 'info');
   };
 
   return (
@@ -166,6 +187,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       value={{
         theme,
         setTheme,
+        language,
+        setLanguage,
+        t,
         activeNav,
         setActiveNav,
         siteProfile,

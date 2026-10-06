@@ -20,7 +20,7 @@ interface KeywordRule {
 
 const TASK_HEURISTICS: KeywordRule[] = [
   {
-    keywords: ['plaster', 'plastering', 'render', 'wall putty'],
+    keywords: ['plaster', 'plastering', 'render', 'wall putty', 'प्लास्टर', 'पुट्टी'],
     name: 'Exterior Plastering',
     indoorOutdoor: 'outdoor',
     dustPotential: 'high',
@@ -29,7 +29,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['N95 Respirators', 'Wet misting sprayers', 'Protective eyewear']
   },
   {
-    keywords: ['unload', 'unloading', 'offload', 'cement bags', 'material transfer', 'delivery'],
+    keywords: ['unload', 'unloading', 'offload', 'cement bags', 'cement', 'material transfer', 'delivery', 'अनलोडिंग', 'सीमेंट', 'सामान'],
     name: 'Material & Cement Unloading',
     indoorOutdoor: 'outdoor',
     dustPotential: 'high',
@@ -38,7 +38,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['Anti-smog mist cannon', 'Sealed tarpaulin covers', 'Heavy-duty particulate masks']
   },
   {
-    keywords: ['electrical', 'wiring', 'conduit', 'cable', 'switchboard', 'lighting'],
+    keywords: ['electrical', 'wiring', 'conduit', 'cable', 'switchboard', 'lighting', 'वायरिंग', 'बिजली', 'तार'],
     name: 'Basement Electrical Wiring',
     indoorOutdoor: 'indoor',
     dustPotential: 'low',
@@ -47,7 +47,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['Standard hardhat', 'High-visibility vest', 'Insulated hand tools']
   },
   {
-    keywords: ['inspect', 'inspection', 'survey', 'quality check', 'qa/qc', 'supervision'],
+    keywords: ['inspect', 'inspection', 'survey', 'quality check', 'qa/qc', 'supervision', 'निरीक्षण', 'जांच', 'सर्वे'],
     name: 'Outdoor Perimeter Inspection',
     indoorOutdoor: 'outdoor',
     dustPotential: 'low',
@@ -56,7 +56,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['UV protective eyewear', 'Hydration pack', 'Sun visor']
   },
   {
-    keywords: ['excavate', 'excavation', 'earthwork', 'digging', 'trenching'],
+    keywords: ['excavate', 'excavation', 'earthwork', 'digging', 'trenching', 'खुदाई', 'नींव', 'मिट्टी'],
     name: 'Foundation Trench Excavation',
     indoorOutdoor: 'outdoor',
     dustPotential: 'high',
@@ -65,7 +65,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['Anti-dust water sprinkler', 'N95 Respirators', 'Vibration gloves']
   },
   {
-    keywords: ['clean', 'cleanup', 'debris', 'housekeeping', 'sweeping'],
+    keywords: ['clean', 'cleanup', 'debris', 'housekeeping', 'sweeping', 'सफाई', 'कचरा'],
     name: 'Site Housekeeping & Debris Clearance',
     indoorOutdoor: 'semi-indoor',
     dustPotential: 'moderate',
@@ -74,7 +74,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['Continuous wet sweeping', 'Dust containment tarps']
   },
   {
-    keywords: ['concrete', 'concreting', 'slab pour', 'casting'],
+    keywords: ['concrete', 'concreting', 'slab pour', 'casting', 'कंक्रीट', 'ढलाई', 'स्लैब'],
     name: 'Structural Slab Concreting',
     indoorOutdoor: 'outdoor',
     dustPotential: 'moderate',
@@ -83,7 +83,7 @@ const TASK_HEURISTICS: KeywordRule[] = [
     defaultControls: ['Thermal stress relief rotations', 'Continuous misting', 'Chemical splash goggles']
   },
   {
-    keywords: ['weld', 'welding', 'fabrication', 'grinding'],
+    keywords: ['weld', 'welding', 'fabrication', 'grinding', 'वेल्डिंग'],
     name: 'Structural Steel Welding & Grinding',
     indoorOutdoor: 'semi-indoor',
     dustPotential: 'moderate',
@@ -152,23 +152,23 @@ export async function parseWorkPlanPrompt(promptText: string): Promise<ParseResu
       };
     }
 
-    // Extract worker count: e.g. "8 workers", "8 guys", "12 crew", "team of 6"
-    const workerMatch = clauseLower.match(/(\d+)\s*(?:workers|guys|men|people|crew|labourers|laborers)/i) ||
+    // Extract worker count: e.g. "8 workers", "8 मजदूर", "6 श्रमिक"
+    const workerMatch = clauseLower.match(/(\d+)\s*(?:workers|guys|men|people|crew|labourers|laborers|मजदूर|श्रमिक|बंदे|आदमी)/i) ||
                         clauseLower.match(/(?:team of|crew of)\s*(\d+)/i);
     const workers = workerMatch ? parseInt(workerMatch[1], 10) : (idx === 0 ? 8 : 4);
 
-    // Extract location: e.g. "Tower B", "Basement", "Block A", "Roof", "Perimeter", "North Gate"
+    // Extract location: e.g. "Tower B", "Basement", "टावर B", "गेट 2", "छत"
     let location = 'Site Perimeter';
-    if (/tower\s*[a-z0-9]+/i.test(clause)) {
-      location = clause.match(/tower\s*[a-z0-9]+/i)![0].toUpperCase();
-    } else if (/basement/i.test(clause)) {
+    if (/tower\s*[a-z0-9]+/i.test(clause) || /टावर\s*[a-z0-9]+/i.test(clause)) {
+      location = (clause.match(/tower\s*[a-z0-9]+/i) || clause.match(/टावर\s*[a-z0-9]+/i))![0].toUpperCase();
+    } else if (/basement/i.test(clause) || /बेसमेंट/i.test(clause)) {
       location = 'Basement Level -1';
-    } else if (/ground floor|podium/i.test(clause)) {
+    } else if (/ground floor|podium|मैदान/i.test(clause)) {
       location = 'Ground Podium Area';
-    } else if (/roof|terrace/i.test(clause)) {
+    } else if (/roof|terrace|छत/i.test(clause)) {
       location = 'Roof Level / Terrace';
-    } else if (/gate\s*[a-z0-9]+/i.test(clause)) {
-      location = clause.match(/gate\s*[a-z0-9]+/i)![0].toUpperCase();
+    } else if (/gate\s*[a-z0-9]+/i.test(clause) || /गेट\s*[a-z0-9]+/i.test(clause)) {
+      location = (clause.match(/gate\s*[a-z0-9]+/i) || clause.match(/गेट\s*[a-z0-9]+/i))![0].toUpperCase();
     } else if (matchedArchetype.indoorOutdoor === 'indoor') {
       location = 'Internal Core / Basement';
     } else {
@@ -177,18 +177,19 @@ export async function parseWorkPlanPrompt(promptText: string): Promise<ParseResu
 
     // Extract time of day preference if explicitly specified
     let startHour = currentHour;
-    if (clauseLower.includes('morning') || clauseLower.includes('9 am') || clauseLower.includes('9:00')) {
+    if (clauseLower.includes('morning') || clauseLower.includes('सुबह') || clauseLower.includes('9 am') || clauseLower.includes('9:00') || clauseLower.includes('9 बजे')) {
       startHour = 9;
-    } else if (clauseLower.includes('10 am') || clauseLower.includes('10:00')) {
+    } else if (clauseLower.includes('10 am') || clauseLower.includes('10:00') || clauseLower.includes('10 बजे')) {
       startHour = 10;
-    } else if (clauseLower.includes('11 am') || clauseLower.includes('11:00')) {
+    } else if (clauseLower.includes('11 am') || clauseLower.includes('11:00') || clauseLower.includes('11 बजे')) {
       startHour = 11;
-    } else if (clauseLower.includes('lunch') || clauseLower.includes('after lunch') || clauseLower.includes('1 pm') || clauseLower.includes('13:00')) {
+    } else if (clauseLower.includes('12 pm') || clauseLower.includes('12:00') || clauseLower.includes('12 बजे')) {
+      startHour = 12;
+    } else if (clauseLower.includes('lunch') || clauseLower.includes('लंच') || clauseLower.includes('after lunch') || clauseLower.includes('1 pm') || clauseLower.includes('13:00') || clauseLower.includes('1 बजे')) {
       startHour = 13;
-    } else if (clauseLower.includes('afternoon') || clauseLower.includes('2 pm') || clauseLower.includes('14:00')) {
+    } else if (clauseLower.includes('afternoon') || clauseLower.includes('दोपहर') || clauseLower.includes('2 pm') || clauseLower.includes('14:00') || clauseLower.includes('2 बजे')) {
       startHour = 14;
-    } else if (clauseLower.includes('evening') || clauseLower.includes('4 pm') || clauseLower.includes('16:00')) {
-      startHour = 16;
+    } else if (clauseLower.includes('evening') || clauseLower.includes('शाम') || clauseLower.includes('4 pm') || clauseLower.includes('16:00') || clauseLower.includes('4 बजे')) {
     }
 
     const duration = matchedArchetype.defaultDuration;

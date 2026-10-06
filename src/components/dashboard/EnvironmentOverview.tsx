@@ -3,59 +3,58 @@ import { useApp } from '@/context/AppContext';
 import { Wind, Thermometer, Flame, Droplets, Scale } from 'lucide-react';
 
 export function EnvironmentOverview() {
-  const { siteProfile, environmentalWindows } = useApp();
+  const { siteProfile, environmentalWindows, t, language } = useApp();
 
-  // Determine current window (e.g. current or 11:00 peak)
   const currentWindow = environmentalWindows.find(w => w.hour === 11) || environmentalWindows[0];
 
   const cards = [
     {
-      title: 'Air Quality (AQI)',
+      title: t.cardAqi,
       value: siteProfile.currentAQI.toString(),
       unit: 'PM2.5 / PM10',
-      status: siteProfile.currentAQI > 400 ? 'Severe+' : siteProfile.currentAQI > 300 ? 'Severe' : 'Poor',
+      status: siteProfile.currentAQI > 400 ? 'Severe+' : siteProfile.currentAQI > 300 ? (language === 'hi' ? 'गंभीर (Severe)' : 'Severe') : (language === 'hi' ? 'खराब (Poor)' : 'Poor'),
       statusColor: 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900',
       icon: Wind,
       detail: `PM2.5: ${currentWindow.pm25} µg/m³ • PM10: ${currentWindow.pm10} µg/m³`,
       source: 'DPCC Continuous Ambient Station'
     },
     {
-      title: 'Ambient Temperature',
+      title: t.cardTemp,
       value: `${siteProfile.currentTemp}°`,
       unit: 'Celsius',
-      status: siteProfile.currentTemp >= 40 ? 'Extreme Heat' : siteProfile.currentTemp >= 35 ? 'High Temperature' : 'Moderate',
+      status: siteProfile.currentTemp >= 40 ? (language === 'hi' ? 'अत्यधिक गर्मी' : 'Extreme Heat') : (language === 'hi' ? 'उच्च तापमान' : 'High Temperature'),
       statusColor: 'text-amber-600 dark:text-amber-400 bg-amber-50 dark:bg-amber-950/40 border-amber-200 dark:border-amber-900',
       icon: Thermometer,
-      detail: `Diurnal peak: 41°C between 13:00 - 15:00`,
+      detail: language === 'hi' ? 'दोपहर 13:00 - 15:00 अधिकतम 41°C' : 'Diurnal peak: 41°C between 13:00 - 15:00',
       source: 'IMD Automatic Weather Station'
     },
     {
-      title: 'Heat Index / Solar Stress',
+      title: t.cardHeatIndex,
       value: `${currentWindow.heatIndex}°C`,
-      unit: 'Apparent Temp',
-      status: currentWindow.heatRisk,
+      unit: language === 'hi' ? 'अनुभूत तापमान' : 'Apparent Temp',
+      status: currentWindow.heatRisk === 'Danger' ? (language === 'hi' ? 'खतरा (Danger)' : 'Danger') : (language === 'hi' ? 'सावधानी (Caution)' : 'Caution'),
       statusColor: currentWindow.heatRisk === 'Danger' 
         ? 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900' 
         : 'text-orange-600 dark:text-orange-400 bg-orange-50 dark:bg-orange-950/40 border-orange-200 dark:border-orange-900',
       icon: Flame,
-      detail: 'Solar radiation peak 12:00–14:30',
+      detail: language === 'hi' ? 'सौर विकिरण शिखर: 12:00–14:30' : 'Solar radiation peak 12:00–14:30',
       source: 'NDMA Heat Stress Matrix'
     },
     {
-      title: 'Relative Humidity',
+      title: t.cardHumidity,
       value: `${siteProfile.currentHumidity}%`,
-      unit: 'Moisture Level',
-      status: siteProfile.currentHumidity > 65 ? 'Elevated' : 'Normal',
+      unit: language === 'hi' ? 'नमी स्तर' : 'Moisture Level',
+      status: siteProfile.currentHumidity > 65 ? (language === 'hi' ? 'अधिक' : 'Elevated') : (language === 'hi' ? 'सामान्य' : 'Normal'),
       statusColor: 'text-sky-600 dark:text-sky-400 bg-sky-50 dark:bg-sky-950/40 border-sky-200 dark:border-sky-900',
       icon: Droplets,
       detail: `Wind: ${currentWindow.windSpeed} km/h • Rain: ${currentWindow.rainProb}%`,
       source: 'Surface Meteorological Sensor'
     },
     {
-      title: 'Regulatory Mandate',
+      title: t.cardRegulatory,
       value: siteProfile.grapStage.replace('_', ' '),
       unit: siteProfile.jurisdiction,
-      status: 'Mandatory Restrictions Active',
+      status: language === 'hi' ? 'सख्त कानूनी प्रतिबंध लागू' : 'Mandatory Restrictions Active',
       statusColor: 'text-rose-600 dark:text-rose-400 bg-rose-50 dark:bg-rose-950/40 border-rose-200 dark:border-rose-900',
       icon: Scale,
       detail: 'CAQM Direction 77 (Non-essential C&D Curbs)',
@@ -74,7 +73,7 @@ export function EnvironmentOverview() {
               className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl p-4 shadow-subtle hover:border-slate-300 dark:hover:border-slate-700 transition"
             >
               <div className="flex items-center justify-between text-slate-500 dark:text-slate-400 mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider">{card.title}</span>
+                <span className="text-[11px] font-bold uppercase tracking-wider">{card.title}</span>
                 <Icon className="w-4 h-4 text-slate-400" />
               </div>
 
@@ -107,21 +106,21 @@ export function EnvironmentOverview() {
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-slate-900 dark:text-white">
-              Diurnal Environmental Exposure & Safe Work Windows (07:00 – 19:00)
+              {t.diurnalTitle}
             </h4>
             <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              Evaluated composite risk combining particulate index (AQI) and wet-bulb heat index.
+              {t.diurnalSubtitle}
             </p>
           </div>
           <div className="flex items-center gap-3 text-[11px] text-slate-600 dark:text-slate-400">
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> Lower Risk (&lt;50)
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> {language === 'hi' ? 'कम जोखिम (<50)' : 'Lower Risk (<50)'}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> Caution (50–65)
+              <span className="w-2.5 h-2.5 rounded-full bg-amber-500"></span> {language === 'hi' ? 'सावधानी (50–65)' : 'Caution (50–65)'}
             </span>
             <span className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span> High Risk (&gt;65)
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-500"></span> {language === 'hi' ? 'उच्च जोखिम (>65)' : 'High Risk (>65)'}
             </span>
           </div>
         </div>
@@ -140,7 +139,7 @@ export function EnvironmentOverview() {
               <div key={w.hour} className="flex flex-col items-center">
                 <div 
                   className={`w-full h-12 rounded border flex flex-col justify-end p-1 transition-all ${colorBg}`}
-                  title={`${w.timeLabel}: AQI ${w.aqi}, Temp ${w.temperature}°C, Heat Index ${w.heatIndex}°C, Composite Risk: ${w.environmentalRiskScore}/100`}
+                  title={`${w.timeLabel}: AQI ${w.aqi}, Temp ${w.temperature}°C, Heat Index ${w.heatIndex}°C, Risk: ${w.environmentalRiskScore}/100`}
                 >
                   <div 
                     className={`w-full rounded-xs ${isHigh ? 'bg-rose-500' : isMed ? 'bg-amber-500' : 'bg-emerald-500'}`} 

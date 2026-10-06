@@ -9,8 +9,7 @@ import {
   Copy, 
   Check, 
   AlertTriangle,
-  Building,
-  Users
+  Building
 } from 'lucide-react';
 
 interface ApprovalModalProps {
@@ -19,16 +18,20 @@ interface ApprovalModalProps {
 }
 
 export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
-  const { addDecisionLog, showToast, setActiveNav } = useApp();
+  const { addDecisionLog, showToast, setActiveNav, t, language } = useApp();
   
-  const [supervisorNotes, setSupervisorNotes] = useState('Reviewed environmental constraints; morning plastering window approved.');
+  const [supervisorNotes, setSupervisorNotes] = useState(
+    language === 'hi' 
+      ? 'मौसम और कानूनी प्रतिबंधों की समीक्षा की गई; सुबह का संशोधित शेड्यूल स्वीकृत है।' 
+      : 'Reviewed environmental constraints; morning plastering window approved.'
+  );
   const [copied, setCopied] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleCopyMessage = () => {
     navigator.clipboard.writeText(replanResult.notificationPreviewText);
     setCopied(true);
-    showToast('Advisory message copied to clipboard!', 'info');
+    showToast(language === 'hi' ? 'संदेश क्लिपबोर्ड पर कॉपी हो गया!' : 'Advisory message copied to clipboard!', 'info');
     setTimeout(() => setCopied(false), 2500);
   };
 
@@ -36,7 +39,6 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
     setIsSubmitting(true);
 
     setTimeout(() => {
-      // Create permanent audit entry
       addDecisionLog({
         id: `DEC-${Date.now().toString().slice(-6)}`,
         timestamp: new Date().toLocaleString(),
@@ -53,7 +55,12 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
       replanResult.approvalStatus = 'approved';
       setIsSubmitting(false);
       onClose();
-      showToast('Work plan approved! Notification preview queued for dispatch.', 'success');
+      showToast(
+        language === 'hi' 
+          ? 'कार्य योजना स्वीकृत! श्रमिकों को सूचना प्रेषित करने के लिए तैयार है।' 
+          : 'Work plan approved! Notification preview queued for dispatch.', 
+        'success'
+      );
       setActiveNav('activity');
     }, 600);
   };
@@ -69,17 +76,17 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
             </div>
             <div>
               <h3 className="font-bold text-base text-slate-900 dark:text-white">
-                Supervisor Approval & Worker Notification
+                {t.approvalModalTitle}
               </h3>
               <p className="text-xs text-slate-500 dark:text-slate-400">
-                Explicit sign-off required prior to site broadcast dispatch.
+                {t.approvalModalSubtitle}
               </p>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-lg"
+            className="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 p-2 rounded-lg cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -94,9 +101,9 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
               <span className="font-semibold text-slate-800 dark:text-slate-200">{replanResult.siteProfile.name}</span>
             </div>
             <div className="flex items-center gap-4 text-slate-600 dark:text-slate-400">
-              <span><strong>{replanResult.impactMetrics.tasksRescheduled}</strong> Tasks Moved</span>
-              <span><strong>{replanResult.impactMetrics.restrictedTasksFlagged}</strong> Statutory Curbs</span>
-              <span><strong>{replanResult.impactMetrics.highRiskWorkerHoursAvoided}</strong> Worker-Hours Avoided</span>
+              <span><strong>{replanResult.impactMetrics.tasksRescheduled}</strong> {t.impactTasksRescheduled}</span>
+              <span><strong>{replanResult.impactMetrics.restrictedTasksFlagged}</strong> {t.impactCurbsEnforced}</span>
+              <span><strong>{replanResult.impactMetrics.highRiskWorkerHoursAvoided}</strong> {language === 'hi' ? 'घंटे बचाए' : 'Hours Saved'}</span>
             </div>
           </div>
 
@@ -105,15 +112,15 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 flex items-center gap-1.5">
                 <MessageSquare className="w-4 h-4 text-emerald-500" />
-                <span>Site Dispatch Preview (SMS / WhatsApp / Radio Broadcast)</span>
+                <span>{t.dispatchPreviewLabel}</span>
               </label>
 
               <button
                 onClick={handleCopyMessage}
-                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-600 dark:text-emerald-400 hover:underline cursor-pointer"
               >
                 {copied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                <span>{copied ? 'Copied' : 'Copy Text'}</span>
+                <span>{copied ? (language === 'hi' ? 'कॉपी हुआ' : 'Copied') : (language === 'hi' ? 'कॉपी करें' : 'Copy Text')}</span>
               </button>
             </div>
 
@@ -123,14 +130,14 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
 
             <div className="flex items-center gap-1.5 text-[11px] text-slate-400">
               <span className="w-2 h-2 rounded-full bg-amber-400"></span>
-              <span>Amazon SNS / Twilio Integration Mode: <strong>Preview & Demo Dispatch</strong></span>
+              <span>Amazon SNS / Twilio: <strong>{language === 'hi' ? 'पूर्वावलोकन एवं डेमो प्रेषण' : 'Preview & Demo Dispatch'}</strong></span>
             </div>
           </div>
 
           {/* Supervisor Sign-Off Notes */}
           <div className="space-y-1.5">
             <label className="text-xs font-semibold text-slate-700 dark:text-slate-300">
-              Supervisor Verification & Log Notes
+              {t.supervisorRemarksLabel}
             </label>
             <textarea
               rows={2}
@@ -145,7 +152,7 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
           <div className="p-3 rounded-lg bg-amber-50/50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800/40 text-xs text-amber-800 dark:text-amber-300 flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
             <p className="leading-relaxed">
-              <strong>Human-in-the-loop Protocol:</strong> No schedule changes or worker messages are dispatched without this explicit supervisor confirmation.
+              {t.humanInLoopNotice}
             </p>
           </div>
         </div>
@@ -154,9 +161,9 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
         <div className="px-6 py-4 border-t border-slate-100 dark:border-slate-800 flex flex-col sm:flex-row items-center justify-end gap-3 bg-slate-50/50 dark:bg-slate-900/50">
           <button
             onClick={onClose}
-            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition min-h-[44px]"
+            className="w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs font-semibold text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-800 transition min-h-[44px] cursor-pointer"
           >
-            Back to Edit Schedule
+            {t.backToEditBtn}
           </button>
 
           <button
@@ -165,11 +172,11 @@ export function ApprovalModal({ replanResult, onClose }: ApprovalModalProps) {
             className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-extrabold text-xs uppercase tracking-wider text-slate-950 bg-emerald-400 hover:bg-emerald-300 transition shadow-md min-h-[44px] cursor-pointer"
           >
             {isSubmitting ? (
-              <span>Registering Audit Record...</span>
+              <span>{language === 'hi' ? 'रिकॉर्ड सहेजा जा रहा है...' : 'Registering Audit Record...'}</span>
             ) : (
               <>
                 <Send className="w-4 h-4" />
-                <span>Approve & Notify Workers</span>
+                <span>{t.approveBroadcastBtn}</span>
               </>
             )}
           </button>

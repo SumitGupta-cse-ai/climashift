@@ -1,7 +1,8 @@
 import React from 'react';
 import { TaskExplanation } from '@/types';
+import { useApp } from '@/context/AppContext';
 import { StatusBadge } from '@/components/common/StatusBadge';
-import { HelpCircle, Wind, HardHat, Scale, ArrowRight, ShieldCheck, X } from 'lucide-react';
+import { HelpCircle, Wind, HardHat, Scale, ShieldCheck } from 'lucide-react';
 
 interface ExplainabilityDrawerProps {
   explanation: TaskExplanation | null;
@@ -14,11 +15,10 @@ export function ExplainabilityDrawer({
   explanation,
   allExplanations,
   onSelectTask,
-  onClose
 }: ExplainabilityDrawerProps) {
-  // If no single explanation is actively selected, show list of explainability summaries
-  const activeExp = explanation || allExplanations[0];
+  const { t, language } = useApp();
 
+  const activeExp = explanation || allExplanations[0];
   if (!activeExp) return null;
 
   return (
@@ -30,13 +30,13 @@ export function ExplainabilityDrawer({
           </div>
           <div>
             <h3 className="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>Deterministic Explainability Audit</span>
+              <span>{t.whyMovedTitle}</span>
               <span className="text-xs px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 font-mono">
-                Why was this moved?
+                {language === 'hi' ? 'गणितीय विश्लेषण' : 'Why was this moved?'}
               </span>
             </h3>
             <p className="text-xs text-slate-500 dark:text-slate-400">
-              Inspect mathematical trade-offs, environmental telemetry, and statutory citations.
+              {t.whyMovedSubtitle}
             </p>
           </div>
         </div>
@@ -47,13 +47,13 @@ export function ExplainabilityDrawer({
             <button
               key={exp.taskId}
               onClick={() => onSelectTask(exp.taskId)}
-              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition ${
+              className={`text-xs px-3 py-1.5 rounded-lg font-semibold transition cursor-pointer ${
                 activeExp.taskId === exp.taskId
                   ? 'bg-emerald-600 text-white shadow-xs'
                   : 'bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:bg-slate-200 dark:hover:bg-slate-700'
               }`}
             >
-              {exp.taskName.split(' ')[0]} {exp.moved ? '• Shifted' : ''}
+              {exp.taskName.split(' ')[0]} {exp.moved ? `• ${t.statusReschedule}` : ''}
             </button>
           ))}
         </div>
@@ -75,7 +75,7 @@ export function ExplainabilityDrawer({
           </div>
 
           <div className="text-xs font-mono bg-white dark:bg-slate-900 p-2 rounded-lg border border-slate-200 dark:border-slate-800 sm:text-right">
-            <div className="text-slate-400">Time Shift Analysis:</div>
+            <div className="text-slate-400">{language === 'hi' ? 'समय परिवर्तन तुलना:' : 'Time Shift Analysis:'}</div>
             <div className="font-bold text-slate-800 dark:text-slate-200">
               {activeExp.originalTime} ➔ {activeExp.recommendedTime}
             </div>
@@ -88,7 +88,7 @@ export function ExplainabilityDrawer({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
               <Wind className="w-4 h-4 text-sky-500" />
-              <span>Environmental Factor</span>
+              <span>{t.envFactor}</span>
             </div>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {activeExp.environmentalFactor}
@@ -99,7 +99,7 @@ export function ExplainabilityDrawer({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
               <HardHat className="w-4 h-4 text-amber-500" />
-              <span>Task & Exposure Factor</span>
+              <span>{t.taskFactor}</span>
             </div>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {activeExp.taskFactor}
@@ -110,7 +110,7 @@ export function ExplainabilityDrawer({
           <div className="p-4 rounded-xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 space-y-2">
             <div className="flex items-center gap-2 text-xs font-bold uppercase text-slate-500 dark:text-slate-400">
               <Scale className="w-4 h-4 text-rose-500" />
-              <span>Regulatory Rule Factor</span>
+              <span>{t.regFactor}</span>
             </div>
             <p className="text-xs text-slate-700 dark:text-slate-300 leading-relaxed">
               {activeExp.regulatoryFactor}
@@ -122,7 +122,7 @@ export function ExplainabilityDrawer({
         <div className="p-3.5 rounded-xl border border-emerald-200 dark:border-emerald-800/60 bg-emerald-50/50 dark:bg-emerald-950/20 text-xs flex items-start gap-2.5 text-emerald-900 dark:text-emerald-200">
           <ShieldCheck className="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" />
           <div>
-            <span className="font-bold">Mitigation Impact:</span> {activeExp.mitigationImpact}
+            <span className="font-bold">{t.mitigationImpact}:</span> {activeExp.mitigationImpact}
           </div>
         </div>
       </div>
