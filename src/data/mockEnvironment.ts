@@ -9,10 +9,10 @@ export const DEFAULT_SITE_PROFILE: SiteProfile = {
   currentAQI: 395,
   currentTemp: 34,
   currentHumidity: 58,
-  weatherCondition: 'Haze / Severe Particulate Inversion',
+  weatherCondition: 'Winter Smog / Atmospheric Inversion',
   dataSource: 'CPCB / DPCC Continuous Ambient Air Monitoring Station (CAAMS)',
-  isDemoData: true, // Clearly indicated as Demo / Fallback Data per guidelines
-  lastUpdated: '10 min ago (07:15 IST)'
+  isDemoData: true, // Clearly indicated as Demo Scenario / Fallback Data
+  lastUpdated: '07:15 IST (Benchmark Archetype)'
 };
 
 export const SITES_LIST: SiteProfile[] = [
@@ -29,7 +29,7 @@ export const SITES_LIST: SiteProfile[] = [
     weatherCondition: 'Moderate Smog / High PM10',
     dataSource: 'Haryana State Pollution Control Board (HSPCB)',
     isDemoData: true,
-    lastUpdated: '14 min ago (07:11 IST)'
+    lastUpdated: '07:11 IST (Benchmark Archetype)'
   },
   {
     id: 'site-mumbai-metro',
@@ -43,7 +43,7 @@ export const SITES_LIST: SiteProfile[] = [
     weatherCondition: 'High Humidity / Heat Index Caution',
     dataSource: 'SAFAR Mumbai Air Quality Network',
     isDemoData: true,
-    lastUpdated: '5 min ago (07:20 IST)'
+    lastUpdated: '07:20 IST (Benchmark Archetype)'
   }
 ];
 

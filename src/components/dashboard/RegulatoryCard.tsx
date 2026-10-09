@@ -1,7 +1,7 @@
 import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { OFFICIAL_REGULATORY_RULES } from '@/data/regulatoryRules';
-import { Scale, CheckCircle2, AlertOctagon, FileText, ExternalLink, HelpCircle } from 'lucide-react';
+import { Scale, AlertOctagon, CheckCircle2, ExternalLink } from 'lucide-react';
 
 export function RegulatoryCard() {
   const { siteProfile, t, language } = useApp();
@@ -20,78 +20,75 @@ export function RegulatoryCard() {
   });
 
   return (
-    <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-card space-y-4">
-      {/* Top Status Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-5 sm:p-6 shadow-sm space-y-4">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
         <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-rose-50 dark:bg-rose-950/60 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-900 flex items-center justify-center shrink-0">
-            <Scale className="w-4 h-4" />
-          </div>
+          <Scale className="w-4 h-4 text-[#087F5B]" />
           <div>
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-2">
-              <span>{t.regulatoryTitle}</span>
-              <span className="text-[10px] font-mono uppercase px-1.5 py-0.2 rounded bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 font-bold border border-rose-200 dark:border-rose-800">
-                {siteProfile.grapStage.replace('_', ' ')}
-              </span>
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-[#171A1F] dark:text-[#F2F4F7]">
+              Regulatory Compliance Status (CAQM / GRAP)
             </h3>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400">
-              {t.regulatorySubtitle}
+            <p className="text-xs text-[#667085] dark:text-[#98A2B3] mt-0.5">
+              Commission for Air Quality Management • Graded Response Action Plan
             </p>
           </div>
         </div>
 
-        <div className="text-[11px] text-slate-500 dark:text-slate-400 sm:text-right font-medium">
-          <div>{siteProfile.jurisdiction}</div>
-          <div className="text-[10px] text-slate-400">Verified: 2026-10-06 18:30 IST</div>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-medium px-2 py-0.5 rounded bg-[#FEEFEF] text-[#D64545] border border-[#FBC8C8] dark:bg-[#2D1818] dark:text-[#F87171] dark:border-[#4E2424]">
+            {siteProfile.grapStage.replace('_', ' ')} ACTIVE
+          </span>
+          <span className="text-[11px] font-mono text-[#667085] dark:text-[#98A2B3]">
+            {siteProfile.jurisdiction}
+          </span>
         </div>
       </div>
 
-      {/* Rules Grid */}
-      <div className="space-y-2.5">
-        <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-          {language === 'hi' ? 'सक्रिय प्रतिबंध एवं वैधानिक नियम' : 'Applicable Statutory Restraints'}
-        </div>
-
+      {/* Rules List - Restrained Enterprise Format */}
+      <div className="space-y-3">
         {activeRules.map((rule) => {
-          const isRestricted = rule.action === 'RESTRICT';
+          const isRestricted = rule.status === 'RESTRICTED';
+
           return (
             <div 
               key={rule.id}
-              className="p-3 rounded-lg border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-800/30 space-y-1.5"
+              className="p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] space-y-2.5 text-xs"
             >
               <div className="flex items-start justify-between gap-3">
-                <div className="flex items-center gap-2">
-                  {isRestricted ? (
-                    <AlertOctagon className="w-4 h-4 text-rose-500 shrink-0 mt-0.5" />
-                  ) : (
-                    <CheckCircle2 className="w-4 h-4 text-amber-500 shrink-0 mt-0.5" />
-                  )}
-                  <div>
-                    <h4 className="text-xs font-bold text-slate-900 dark:text-white">
-                      {rule.name}
-                    </h4>
-                    <span className="text-[10px] text-slate-500 font-mono">
-                      {rule.id} • {rule.source}
-                    </span>
+                <div className="space-y-0.5">
+                  <div className="font-semibold text-sm text-[#171A1F] dark:text-[#F5F7FA]">
+                    {rule.name}
+                  </div>
+                  <div className="text-[11px] font-mono text-[#667085] dark:text-[#A7B2C1]">
+                    Ref: {rule.ruleRef} • Authority: {rule.source}
                   </div>
                 </div>
 
-                <span className={`text-[9px] font-bold uppercase px-1.5 py-0.5 rounded border shrink-0 ${
+                <span className={`text-[11px] font-semibold uppercase px-2 py-0.5 rounded border shrink-0 ${
                   isRestricted
-                    ? 'bg-rose-100 dark:bg-rose-950 text-rose-800 dark:text-rose-300 border-rose-300 dark:border-rose-800'
-                    : 'bg-amber-100 dark:bg-amber-950 text-amber-800 dark:text-amber-300 border-amber-300 dark:border-amber-800'
+                    ? 'bg-[#FEEFEF] text-[#D94A4A] border-[#FBC8C8] dark:bg-[#2D1818] dark:text-[#F87171] dark:border-[#4E2424]'
+                    : 'bg-[#FEF7EB] text-[#D99A24] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]'
                 }`}>
-                  {isRestricted ? (language === 'hi' ? 'प्रतिबंधित' : 'RESTRICTED') : (language === 'hi' ? 'सुरक्षा अनिवार्य' : 'REVIEW REQUIRED')}
+                  {rule.status}
                 </span>
               </div>
 
-              <p className="text-[11px] text-slate-600 dark:text-slate-300 pl-6 leading-relaxed">
-                {rule.description}
-              </p>
+              {/* Grid: Affected Activity & Restriction */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                <div className="p-2 rounded bg-white dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C]">
+                  <span className="font-medium text-[#667085] dark:text-[#A7B2C1] block text-[10px] uppercase">Affected Activities</span>
+                  <span className="text-[#171A1F] dark:text-[#F5F7FA] font-medium">{rule.affectedActivity}</span>
+                </div>
+                <div className="p-2 rounded bg-white dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C]">
+                  <span className="font-medium text-[#667085] dark:text-[#A7B2C1] block text-[10px] uppercase">Statutory Restriction</span>
+                  <span className="text-[#171A1F] dark:text-[#F5F7FA] font-medium">{rule.restriction}</span>
+                </div>
+              </div>
 
               {rule.exceptions && rule.exceptions.length > 0 && (
-                <div className="pl-6 text-[10px] text-slate-500">
-                  <span className="font-semibold text-slate-700 dark:text-slate-300">{language === 'hi' ? 'छूट:' : 'Exceptions:'}</span> {rule.exceptions.join(', ')}
+                <div className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">
+                  <strong>Permitted Exceptions:</strong> {rule.exceptions.join(', ')}
                 </div>
               )}
             </div>
@@ -99,18 +96,18 @@ export function RegulatoryCard() {
         })}
       </div>
 
-      {/* Authoritative Disclaimer */}
-      <div className="p-2.5 rounded-lg bg-slate-100/70 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-800 text-[10px] text-slate-500 dark:text-slate-400 flex items-center justify-between gap-2">
-        <span>
-          <strong>Notice:</strong> Verify current site-specific requirements with your safety officer. ClimaShift applies configured CAQM directions.
-        </span>
+      {/* Controlled Regulatory Notice */}
+      <div className="p-3 rounded-lg bg-[#F7F8FA] dark:bg-[#07111C] border border-[#E4E7EC] dark:border-[#26384C] text-xs text-[#667085] dark:text-[#A7B2C1] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <strong className="text-[#171A1F] dark:text-[#F2F4F7]">Operational Boundary:</strong> ClimaShift provides risk-aware hazard scheduling recommendations based on published orders. Adjustments require supervisor operational sign-off.
+        </div>
         <a 
           href="https://caqm.nic.in" 
           target="_blank" 
           rel="noreferrer"
-          className="inline-flex items-center gap-1 text-emerald-600 dark:text-emerald-400 font-semibold hover:underline shrink-0"
+          className="inline-flex items-center gap-1 text-[#087F5B] font-medium hover:underline shrink-0"
         >
-          <span>Portal</span>
+          <span>CAQM Gazette Portal</span>
           <ExternalLink className="w-3 h-3" />
         </a>
       </div>

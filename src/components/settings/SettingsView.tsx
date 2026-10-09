@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { ThemeToggle } from '@/components/common/ThemeToggle';
 import { LanguageToggle } from '@/components/common/LanguageToggle';
-import { Settings, Sliders, Palette, BellRing, Database, Scale, RotateCcw, Check, Sparkles } from 'lucide-react';
+import { Settings, Sliders, Palette, BellRing, Database, Scale, RotateCcw, Check, Sparkles, Building, Clock, Globe } from 'lucide-react';
 
 export function SettingsView() {
   const { siteProfile, setSiteProfile, sitesList, showToast, resetToDemo, language } = useApp();
+
+  const [activeTab, setActiveTab] = useState<'general' | 'appearance' | 'telemetry' | 'notifications' | 'demo'>('general');
 
   // General state
   const [workingHoursStart, setWorkingHoursStart] = useState('07:00');
@@ -17,7 +19,7 @@ export function SettingsView() {
   
   // Notifications state
   const [requireExplicitSignOff, setRequireExplicitSignOff] = useState(true);
-  const [snsNotificationsEnabled, setSnsNotificationsEnabled] = useState(true);
+  const [snsNotificationsEnabled, setSNSNotificationsEnabled] = useState(true);
   
   // Track changes
   const [hasChanges, setHasChanges] = useState(false);
@@ -36,239 +38,293 @@ export function SettingsView() {
     if (!hasChanges) setHasChanges(true);
   };
 
+  const navItems = [
+    { id: 'general', label: language === 'hi' ? 'सामान्य पैरामीटर' : 'General Site Parameters', icon: Sliders },
+    { id: 'appearance', label: language === 'hi' ? 'दिखावट एवं भाषा' : 'Appearance & Language', icon: Palette },
+    { id: 'telemetry', label: language === 'hi' ? 'पर्यावरणीय टेलीमेट्री' : 'Environmental Telemetry', icon: Database },
+    { id: 'notifications', label: language === 'hi' ? 'अधिसूचना एवं अनुमोदन' : 'Notifications & Sign-Off', icon: BellRing },
+    { id: 'demo', label: language === 'hi' ? 'डेमो सैंडबॉक्स' : 'Demo & Benchmarks', icon: RotateCcw }
+  ];
+
   return (
-    <div className="space-y-4 max-w-4xl">
-      {/* Header */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-card flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+    <div className="space-y-6 w-full">
+      {/* Top Header */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-base sm:text-lg font-bold tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
-            <Settings className="w-5 h-5 text-emerald-600" />
-            <span>{language === 'hi' ? 'साइट सेटिंग्स एवं परिचालन नियंत्रण' : 'Site Configuration & Policy Settings'}</span>
-          </h2>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#171A1F] dark:text-[#F5F7FA]">
+            {language === 'hi' ? 'साइट सेटिंग्स एवं परिचालन नियंत्रण' : 'Site Configuration & Policy Settings'}
+          </h1>
+          <p className="text-sm text-[#667085] dark:text-[#A7B2C1] mt-1">
             {language === 'hi'
               ? 'कार्य सीमाएं, मौसम डेटा स्रोत और अधिसूचना प्राथमिकताएं कॉन्फ़िगर करें।'
-              : 'Configure operational hours, statutory thresholds, telemetry sources, and notification rules.'}
+              : 'Configure operational shift windows, statutory thresholds, telemetry cadence, and human sign-off policies.'}
           </p>
         </div>
 
         <button
           onClick={handleSave}
           disabled={!hasChanges}
-          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition min-h-[38px] cursor-pointer shadow-subtle ${
+          className={`px-5 py-2.5 rounded-lg text-xs font-semibold transition min-h-[40px] shadow-sm cursor-pointer ${
             hasChanges
-              ? 'bg-emerald-600 hover:bg-emerald-700 text-white'
-              : 'bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed border border-slate-200 dark:border-slate-700'
+              ? 'bg-[#16B878] hover:bg-[#139c65] text-white'
+              : 'bg-[#F7F8FA] dark:bg-[#122235] text-[#667085] cursor-not-allowed border border-[#E4E7EC] dark:border-[#26384C]'
           }`}
         >
           {language === 'hi' ? 'सेव करें' : 'Save Changes'}
         </button>
       </div>
 
-      {/* 1. GENERAL SECTION */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3.5">
-        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-          <Sliders className="w-4 h-4 text-emerald-600" />
-          <span>{language === 'hi' ? 'सामान्य सेटिंग्स (General)' : '1. General Site Parameters'}</span>
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              {language === 'hi' ? 'सक्रिय निर्माण साइट' : 'Active Construction Project Site'}
-            </label>
-            <select
-              value={siteProfile.id}
-              onChange={(e) => {
-                const s = sitesList.find(x => x.id === e.target.value);
-                if (s) {
-                  setSiteProfile(s);
-                  markChanged();
-                }
-              }}
-              className="w-full text-xs font-medium p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-            >
-              {sitesList.map(s => (
-                <option key={s.id} value={s.id}>{s.name} ({s.location})</option>
-              ))}
-            </select>
+      {/* Two-Column Enterprise Settings Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+        {/* Left Navigation Column */}
+        <div className="md:col-span-4 space-y-1.5">
+          <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-2 shadow-sm space-y-1">
+            {navItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id as any)}
+                  className={`w-full flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-xs font-semibold text-left transition cursor-pointer ${
+                    isActive
+                      ? 'bg-[#EBF8F2] dark:bg-[#0E3A31] text-[#16B878] border border-[#C3ECD8] dark:border-[#1E4B39]'
+                      : 'text-[#667085] dark:text-[#A7B2C1] hover:bg-[#F7F8FA] dark:hover:bg-[#122235] hover:text-[#171A1F] dark:hover:text-[#F5F7FA]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4 shrink-0" />
+                  <span>{item.label}</span>
+                </button>
+              );
+            })}
           </div>
 
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              {language === 'hi' ? 'कानूनी अधिकार क्षेत्र' : 'Statutory Jurisdiction'}
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={siteProfile.jurisdiction}
-              className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-500 cursor-not-allowed"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              {language === 'hi' ? 'कार्य समय (Working Hours)' : 'Permitted Shift Window'}
-            </label>
-            <div className="flex items-center gap-2">
-              <input
-                type="time"
-                value={workingHoursStart}
-                onChange={(e) => { setWorkingHoursStart(e.target.value); markChanged(); }}
-                className="w-full text-xs font-mono p-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-              />
-              <span className="text-slate-400">to</span>
-              <input
-                type="time"
-                value={workingHoursEnd}
-                onChange={(e) => { setWorkingHoursEnd(e.target.value); markChanged(); }}
-                className="w-full text-xs font-mono p-1.5 rounded border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              {language === 'hi' ? 'भाषा (Language)' : 'Display Language'}
-            </label>
-            <div className="pt-0.5">
-              <LanguageToggle />
+          <div className="p-4 rounded-xl border border-[#E4E7EC] dark:border-[#26384C] bg-[#FFFFFF] dark:bg-[#0D1B2A] text-xs space-y-2">
+            <span className="font-bold text-[11px] uppercase tracking-wider text-[#667085] dark:text-[#A7B2C1]">Active Profile</span>
+            <div className="space-y-1">
+              <div className="font-semibold text-[#171A1F] dark:text-[#F5F7FA]">{siteProfile.name}</div>
+              <div className="text-[#667085] dark:text-[#A7B2C1] font-mono text-[11px]">{siteProfile.jurisdiction}</div>
+              <div className="text-[#16B878] font-bold text-[11px] uppercase">{siteProfile.grapStage.replace('_', ' ')} ACTIVE</div>
             </div>
           </div>
         </div>
-      </div>
 
-      {/* 2. APPEARANCE */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3.5">
-        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-          <Palette className="w-4 h-4 text-purple-600" />
-          <span>{language === 'hi' ? 'थीम एवं दिखावट (Appearance)' : '2. Appearance & Contrast'}</span>
-        </h3>
+        {/* Right Settings Form Column */}
+        <div className="md:col-span-8">
+          {/* TAB 1: GENERAL PARAMETERS */}
+          {activeTab === 'general' && (
+            <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-6 shadow-sm space-y-5">
+              <div className="border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
+                <h2 className="text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">General Site Parameters</h2>
+                <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">Project identification, operational shift hours, and statutory location.</p>
+              </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div>
-            <span className="font-semibold text-slate-800 dark:text-slate-200 block">
-              {language === 'hi' ? 'डार्क / लाइट मोड चयन' : 'Theme Mode Selection'}
-            </span>
-            <span className="text-slate-500 text-[11px]">
-              {language === 'hi' ? 'उच्च कंट्रास्ट के साथ स्क्रीन मोड चुनें।' : 'Select high-contrast dark, crisp light, or system preference.'}
-            </span>
-          </div>
+              <div className="space-y-4 text-xs">
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Active Construction Project Site
+                  </label>
+                  <select
+                    value={siteProfile.id}
+                    onChange={(e) => {
+                      const s = sitesList.find(x => x.id === e.target.value);
+                      if (s) {
+                        setSiteProfile(s);
+                        markChanged();
+                      }
+                    }}
+                    className="w-full text-xs font-medium p-2.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] focus:outline-none focus:border-[#16B878]"
+                  >
+                    {sitesList.map(s => (
+                      <option key={s.id} value={s.id}>{s.name} ({s.location})</option>
+                    ))}
+                  </select>
+                </div>
 
-          <ThemeToggle />
-        </div>
-      </div>
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Statutory Jurisdiction & Authority
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={siteProfile.jurisdiction}
+                    className="w-full text-xs p-2.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#122235] text-[#667085] dark:text-[#A7B2C1] cursor-not-allowed font-medium font-mono"
+                  />
+                </div>
 
-      {/* 3. ENVIRONMENTAL DATA */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3.5">
-        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-          <Database className="w-4 h-4 text-sky-600" />
-          <span>{language === 'hi' ? 'पर्यावरणीय डेटा स्रोत (Environmental Data)' : '3. Environmental Data & Telemetry'}</span>
-        </h3>
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Telemetry Data Source
-            </label>
-            <input
-              type="text"
-              readOnly
-              value={siteProfile.dataSource}
-              className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-800 bg-slate-100 dark:bg-slate-800/50 text-slate-500 cursor-not-allowed"
-            />
-          </div>
-
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Telemetry Refresh Polling Interval
-            </label>
-            <select
-              value={refreshInterval}
-              onChange={(e) => { setRefreshInterval(e.target.value); markChanged(); }}
-              className="w-full text-xs p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-            >
-              <option value="5">Every 5 minutes (Real-time)</option>
-              <option value="15">Every 15 minutes (Standard)</option>
-              <option value="30">Every 30 minutes</option>
-              <option value="60">Hourly</option>
-            </select>
-          </div>
-
-          <div>
-            <label className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-              Outdoor Heavy Work AQI Alert Threshold
-            </label>
-            <input
-              type="number"
-              value={safetyThresholdAQI}
-              onChange={(e) => { setSafetyThresholdAQI(parseInt(e.target.value, 10)); markChanged(); }}
-              className="w-full text-xs font-mono p-2 rounded-md border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 text-slate-900 dark:text-white"
-            />
-            <span className="text-[10px] text-slate-400 mt-1 block">Default: 380 AQI.</span>
-          </div>
-        </div>
-      </div>
-
-      {/* 4. NOTIFICATIONS */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3.5">
-        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-          <BellRing className="w-4 h-4 text-amber-600" />
-          <span>{language === 'hi' ? 'अधिसूचना एवं अनुमोदन (Notifications)' : '4. Worker Notification Rules'}</span>
-        </h3>
-
-        <div className="space-y-2 text-xs">
-          <div className="flex items-center justify-between p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-            <div>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 block">Require Explicit Supervisor Sign-Off</span>
-              <span className="text-[11px] text-slate-500">Prevent automated schedule shifts without human supervisor approval.</span>
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Permitted Daily Shift Window
+                  </label>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="time"
+                      value={workingHoursStart}
+                      onChange={(e) => { setWorkingHoursStart(e.target.value); markChanged(); }}
+                      className="w-full text-xs font-mono p-2 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] focus:outline-none focus:border-[#16B878]"
+                    />
+                    <span className="text-[#667085] text-xs">to</span>
+                    <input
+                      type="time"
+                      value={workingHoursEnd}
+                      onChange={(e) => { setWorkingHoursEnd(e.target.value); markChanged(); }}
+                      className="w-full text-xs font-mono p-2 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] focus:outline-none focus:border-[#16B878]"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            <input
-              type="checkbox"
-              checked={requireExplicitSignOff}
-              onChange={(e) => { setRequireExplicitSignOff(e.target.checked); markChanged(); }}
-              className="w-4 h-4 text-emerald-600 rounded cursor-pointer"
-            />
-          </div>
+          )}
 
-          <div className="flex items-center justify-between p-2.5 rounded border border-slate-200 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/30">
-            <div>
-              <span className="font-semibold text-slate-800 dark:text-slate-200 block">Amazon SNS Worker Broadcast Integration</span>
-              <span className="text-[11px] text-slate-500">Enable queued SMS/WhatsApp dispatch preview upon supervisor approval.</span>
+          {/* TAB 2: APPEARANCE & LANGUAGE */}
+          {activeTab === 'appearance' && (
+            <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-6 shadow-sm space-y-5">
+              <div className="border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
+                <h2 className="text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">Appearance & Language</h2>
+                <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">High-contrast visual themes and localized bilingual display.</p>
+              </div>
+
+              <div className="space-y-4 text-xs">
+                <div className="flex items-center justify-between p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C]">
+                  <div>
+                    <span className="font-semibold text-xs text-[#171A1F] dark:text-[#F5F7FA] block">Display Language (Bilingual)</span>
+                    <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">Switch between English and Hindi for supervisors and crew.</span>
+                  </div>
+                  <LanguageToggle />
+                </div>
+
+                <div className="flex items-center justify-between p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C]">
+                  <div>
+                    <span className="font-semibold text-xs text-[#171A1F] dark:text-[#F5F7FA] block">Theme Mode Selection</span>
+                    <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">Select high-contrast dark mode or clean enterprise light mode.</span>
+                  </div>
+                  <ThemeToggle />
+                </div>
+              </div>
             </div>
-            <input
-              type="checkbox"
-              checked={snsNotificationsEnabled}
-              onChange={(e) => { setSnsNotificationsEnabled(e.target.checked); markChanged(); }}
-              className="w-4 h-4 text-emerald-600 rounded cursor-pointer"
-            />
-          </div>
-        </div>
-      </div>
+          )}
 
-      {/* 5. DEMO & BENCHMARK */}
-      <div className="bg-white dark:bg-[#111827] border border-slate-200 dark:border-slate-800 rounded-xl p-4 sm:p-5 shadow-subtle space-y-3">
-        <h3 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider flex items-center gap-2 border-b border-slate-100 dark:border-slate-800 pb-2">
-          <RotateCcw className="w-4 h-4 text-slate-500" />
-          <span>{language === 'hi' ? 'डेमो व बेंचमार्क रीसेट (Demo Mode)' : '5. Demonstration & Benchmark Controls'}</span>
-        </h3>
+          {/* TAB 3: ENVIRONMENTAL TELEMETRY */}
+          {activeTab === 'telemetry' && (
+            <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-6 shadow-sm space-y-5">
+              <div className="border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
+                <h2 className="text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">Environmental Telemetry</h2>
+                <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">Station ingestion sources, polling frequency, and site thresholds.</p>
+              </div>
 
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-          <div>
-            <span className="font-semibold text-slate-800 dark:text-slate-200 block">
-              {language === 'hi' ? 'मानक टावर B परिदृश्य रीसेट करें' : 'Reset Standard Tower B Scenario'}
-            </span>
-            <span className="text-[11px] text-slate-500">
-              {language === 'hi' ? 'मानक कार्य योजना और GRAP III परिस्थितियों को पुनर्स्थापित करें।' : 'Restores benchmark tasks (plastering, unloading, wiring) and GRAP Stage III conditions.'}
-            </span>
-          </div>
+              <div className="space-y-4 text-xs">
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Telemetry Ingestion Source
+                  </label>
+                  <input
+                    type="text"
+                    readOnly
+                    value={siteProfile.dataSource}
+                    className="w-full text-xs p-2.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#122235] text-[#667085] dark:text-[#A7B2C1] cursor-not-allowed font-medium"
+                  />
+                </div>
 
-          <button
-            onClick={resetToDemo}
-            className="px-3 py-1.5 rounded-md text-xs font-medium text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
-          >
-            {language === 'hi' ? 'डेमो रीसेट करें' : 'Reset Demo Benchmark'}
-          </button>
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Sensor Polling Refresh Frequency
+                  </label>
+                  <select
+                    value={refreshInterval}
+                    onChange={(e) => { setRefreshInterval(e.target.value); markChanged(); }}
+                    className="w-full text-xs font-medium p-2.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] focus:outline-none focus:border-[#16B878]"
+                  >
+                    <option value="5">Every 5 minutes (Real-time)</option>
+                    <option value="15">Every 15 minutes (Standard)</option>
+                    <option value="30">Every 30 minutes</option>
+                    <option value="60">Hourly</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="font-semibold text-[#171A1F] dark:text-[#F5F7FA] block mb-1.5">
+                    Site Operational AQI Alert Threshold
+                  </label>
+                  <input
+                    type="number"
+                    value={safetyThresholdAQI}
+                    onChange={(e) => { setSafetyThresholdAQI(parseInt(e.target.value, 10)); markChanged(); }}
+                    className="w-full sm:w-64 text-xs font-mono p-2.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] focus:outline-none focus:border-[#16B878]"
+                  />
+                  <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1] mt-1 block">
+                    Default: 380 AQI. Operational alert threshold configured by supervisor; does not alter statutory CAQM classifications.
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 4: NOTIFICATIONS & SIGN-OFF */}
+          {activeTab === 'notifications' && (
+            <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-6 shadow-sm space-y-5">
+              <div className="border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
+                <h2 className="text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">Worker Notification & Sign-Off Rules</h2>
+                <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">Control automated broadcasts and mandatory supervisor sign-off requirements.</p>
+              </div>
+
+              <div className="space-y-3 text-xs">
+                <div className="flex items-center justify-between p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C]">
+                  <div>
+                    <span className="font-semibold text-xs text-[#171A1F] dark:text-[#F5F7FA] block">Require Explicit Supervisor Sign-Off</span>
+                    <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">Never dispatch automated shift alterations without human sign-off.</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={requireExplicitSignOff}
+                    onChange={(e) => { setRequireExplicitSignOff(e.target.checked); markChanged(); }}
+                    className="w-4 h-4 rounded text-[#16B878] focus:ring-[#16B878] cursor-pointer"
+                  />
+                </div>
+
+                <div className="flex items-center justify-between p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C]">
+                  <div>
+                    <span className="font-semibold text-xs text-[#171A1F] dark:text-[#F5F7FA] block">Worker Advisory Broadcast Preview (Amazon SNS Ready)</span>
+                    <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">Generate copyable SMS/WhatsApp shift advisory preview upon supervisor sign-off.</span>
+                  </div>
+                  <input
+                    type="checkbox"
+                    checked={snsNotificationsEnabled}
+                    onChange={(e) => { setSNSNotificationsEnabled(e.target.checked); markChanged(); }}
+                    className="w-4 h-4 rounded text-[#16B878] focus:ring-[#16B878] cursor-pointer"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* TAB 5: DEMO & BENCHMARKS */}
+          {activeTab === 'demo' && (
+            <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-6 shadow-sm space-y-5">
+              <div className="border-b border-[#E4E7EC] dark:border-[#26384C] pb-3">
+                <h2 className="text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">Demonstration & Benchmark Controls</h2>
+                <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">Reset simulator state to standard hackathon presentation scenarios.</p>
+              </div>
+
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-xs">
+                <div>
+                  <span className="font-semibold text-xs text-[#171A1F] dark:text-[#F5F7FA] block">
+                    Reset Standard Tower B Benchmark
+                  </span>
+                  <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1] mt-0.5 block">
+                    Restores benchmark shift tasks (plastering, unloading, wiring) and GRAP Stage III conditions.
+                  </span>
+                </div>
+
+                <button
+                  onClick={resetToDemo}
+                  className="px-4 py-2 rounded-lg text-xs font-semibold text-[#171A1F] dark:text-[#F5F7FA] border border-[#E4E7EC] dark:border-[#26384C] bg-[#FFFFFF] dark:bg-[#122235] hover:bg-[#E4E7EC] dark:hover:bg-[#1B2E46] transition cursor-pointer shrink-0 min-h-[38px]"
+                >
+                  Reset Demo Benchmark
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

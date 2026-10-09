@@ -1,34 +1,33 @@
 import React from 'react';
 import { useApp } from '@/context/AppContext';
-import { Languages } from 'lucide-react';
 
 export function LanguageToggle() {
   const { language, setLanguage } = useApp();
 
   return (
     <div 
-      className="inline-flex items-center p-1 rounded-lg bg-slate-200/80 dark:bg-slate-800 border border-slate-300 dark:border-slate-700/80 shadow-xs"
+      className="inline-flex items-center p-1 rounded-lg bg-[#F7F8FA] dark:bg-[#07111C] border border-[#E4E7EC] dark:border-[#26384C]"
       role="group"
       aria-label="Language selection"
     >
       <button
         onClick={() => setLanguage('en')}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all min-h-[34px] cursor-pointer ${
+        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
           language === 'en'
-            ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-white shadow-xs border border-slate-200 dark:border-slate-700'
-            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            ? 'bg-[#FFFFFF] dark:bg-[#122235] text-[#16B878] font-bold shadow-xs border border-[#E4E7EC] dark:border-[#26384C]'
+            : 'text-[#667085] dark:text-[#A7B2C1] hover:text-[#171A1F] dark:hover:text-[#F5F7FA]'
         }`}
         title="Switch to English"
       >
-        <span>EN</span>
+        <span>English</span>
       </button>
 
       <button
         onClick={() => setLanguage('hi')}
-        className={`flex items-center gap-1 px-2.5 py-1.5 rounded-md text-xs font-semibold transition-all min-h-[34px] cursor-pointer ${
+        className={`px-3 py-1.5 rounded-md text-xs font-semibold transition-all cursor-pointer ${
           language === 'hi'
-            ? 'bg-emerald-500 text-slate-950 font-bold shadow-xs'
-            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+            ? 'bg-[#FFFFFF] dark:bg-[#122235] text-[#16B878] font-bold shadow-xs border border-[#E4E7EC] dark:border-[#26384C]'
+            : 'text-[#667085] dark:text-[#A7B2C1] hover:text-[#171A1F] dark:hover:text-[#F5F7FA]'
         }`}
         title="हिंदी में बदलें (Switch to Hindi)"
       >

@@ -15,62 +15,32 @@ export function StatusBadge({ status, size = 'md', showIcon = true }: StatusBadg
   const configs: Record<OperationalStatus, {
     label: string;
     icon: React.ComponentType<{ className?: string }>;
-    bgLight: string;
-    textLight: string;
-    borderLight: string;
-    bgDark: string;
-    textDark: string;
-    borderDark: string;
+    className: string;
   }> = {
     continue: {
       label: t?.statusContinue || 'CONTINUE',
       icon: CheckCircle2,
-      bgLight: 'bg-emerald-50',
-      textLight: 'text-emerald-800',
-      borderLight: 'border-emerald-300',
-      bgDark: 'dark:bg-emerald-950/50',
-      textDark: 'dark:text-emerald-300',
-      borderDark: 'dark:border-emerald-800'
+      className: 'bg-[#18A66A]/15 text-[#18A66A] border-[#18A66A]/30 dark:bg-[#18A66A]/20 dark:text-[#34D399] dark:border-[#18A66A]/40 font-semibold',
     },
     reschedule: {
       label: t?.statusReschedule || 'RESCHEDULE',
       icon: Clock,
-      bgLight: 'bg-amber-50',
-      textLight: 'text-amber-800',
-      borderLight: 'border-amber-300',
-      bgDark: 'dark:bg-amber-950/50',
-      textDark: 'dark:text-amber-300',
-      borderDark: 'dark:border-amber-800'
+      className: 'bg-[#D99A24]/15 text-[#D99A24] border-[#D99A24]/30 dark:bg-[#D99A24]/20 dark:text-[#FBBF24] dark:border-[#D99A24]/40 font-semibold',
     },
     protect: {
       label: t?.statusProtect || 'PROTECT',
       icon: ShieldAlert,
-      bgLight: 'bg-orange-50',
-      textLight: 'text-orange-800',
-      borderLight: 'border-orange-300',
-      bgDark: 'dark:bg-orange-950/50',
-      textDark: 'dark:text-orange-300',
-      borderDark: 'dark:border-orange-800'
+      className: 'bg-[#2F80ED]/15 text-[#2F80ED] border-[#2F80ED]/30 dark:bg-[#2F80ED]/20 dark:text-[#60A5FA] dark:border-[#2F80ED]/40 font-semibold',
     },
     restricted: {
       label: t?.statusRestricted || 'RESTRICTED',
       icon: AlertOctagon,
-      bgLight: 'bg-rose-50',
-      textLight: 'text-rose-800',
-      borderLight: 'border-rose-300',
-      bgDark: 'dark:bg-rose-950/50',
-      textDark: 'dark:text-rose-300',
-      borderDark: 'dark:border-rose-800'
+      className: 'bg-[#D94A4A]/15 text-[#D94A4A] border-[#D94A4A]/30 dark:bg-[#D94A4A]/20 dark:text-[#F87171] dark:border-[#D94A4A]/40 font-semibold',
     },
     manual_review: {
       label: t?.statusManualReview || 'MANUAL REVIEW',
       icon: HelpCircle,
-      bgLight: 'bg-purple-50',
-      textLight: 'text-purple-800',
-      borderLight: 'border-purple-300',
-      bgDark: 'dark:bg-purple-950/50',
-      textDark: 'dark:text-purple-300',
-      borderDark: 'dark:border-purple-800'
+      className: 'bg-[#6D28D9]/15 text-[#6D28D9] border-[#6D28D9]/30 dark:bg-[#6D28D9]/20 dark:text-[#C084FC] dark:border-[#6D28D9]/40 font-semibold',
     }
   };
 
@@ -78,9 +48,9 @@ export function StatusBadge({ status, size = 'md', showIcon = true }: StatusBadg
   const IconComponent = config.icon;
 
   const sizeClasses = {
-    sm: 'text-xs px-2.5 py-0.5 gap-1 font-semibold',
-    md: 'text-xs px-3 py-1 gap-1.5 font-bold tracking-wide',
-    lg: 'text-sm px-4 py-1.5 gap-2 font-bold tracking-wider'
+    sm: 'text-[11px] px-2 py-0.5 gap-1 font-semibold rounded',
+    md: 'text-xs px-2.5 py-0.5 gap-1.5 font-medium rounded-md',
+    lg: 'text-xs px-3 py-1 gap-2 font-semibold rounded-md'
   }[size];
 
   const iconSizes = {
@@ -91,11 +61,11 @@ export function StatusBadge({ status, size = 'md', showIcon = true }: StatusBadg
 
   return (
     <span 
-      className={`inline-flex items-center rounded-full border shadow-xs transition-colors select-none ${sizeClasses} ${config.bgLight} ${config.textLight} ${config.borderLight} ${config.bgDark} ${config.textDark} ${config.borderDark}`}
+      className={`inline-flex items-center border select-none leading-none tracking-tight ${sizeClasses} ${config.className}`}
       role="status"
       aria-label={`Status: ${config.label}`}
     >
-      {showIcon && <IconComponent className={`${iconSizes} shrink-0 stroke-[2.5]`} />}
+      {showIcon && <IconComponent className={`${iconSizes} shrink-0 stroke-[2]`} />}
       <span>{config.label}</span>
     </span>
   );

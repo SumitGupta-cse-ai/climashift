@@ -13,7 +13,7 @@ export function ThemeToggle() {
 
   return (
     <div 
-      className="inline-flex items-center p-1 rounded-lg bg-slate-200/70 dark:bg-slate-800 border border-slate-300 dark:border-slate-700/60"
+      className="inline-flex items-center p-1 rounded-lg bg-[#F7F8FA] dark:bg-[#07111C] border border-[#E4E7EC] dark:border-[#26384C]"
       role="radiogroup" 
       aria-label="Theme selection"
     >
@@ -26,13 +26,13 @@ export function ThemeToggle() {
             role="radio"
             aria-checked={isActive}
             aria-label={`${label} theme`}
-            className={`flex items-center justify-center p-2 sm:px-2.5 sm:py-1.5 rounded-md text-xs font-medium transition-all min-h-[36px] min-w-[36px] ${
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
               isActive
-                ? 'bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 shadow-sm border border-slate-200 dark:border-slate-700'
-                : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-200'
+                ? 'bg-[#FFFFFF] dark:bg-[#122235] text-[#16B878] font-semibold shadow-xs border border-[#E4E7EC] dark:border-[#26384C]'
+                : 'text-[#667085] dark:text-[#A7B2C1] hover:text-[#171A1F] dark:hover:text-[#F5F7FA]'
             }`}
           >
-            <Icon className="w-4 h-4 sm:mr-1.5" />
+            <Icon className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">{label}</span>
           </button>
         );

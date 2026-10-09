@@ -1,0 +1,56 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  ClimaShift - Environmental Work-Safety & Deterministic Scheduling Engine
+  Backend Serverless Stack (API Gateway + AWS Lambda + Amazon Bedrock)
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: nodejs20.x
+    Architectures:
+      - arm64
+
+Resources:
+  ClimaShiftApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'POST,OPTIONS,GET'"
+        AllowHeaders: "'Content-Type,Authorization,X-Api-Key'"
+        AllowOrigin: "'*'"
+
+  ParseWorkPlanFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: lambda/parseWorkPlan/
+      Handler: index.handler
+      Description: Parses raw shift notes into structured task objects via Amazon Bedrock Claude 3.5 Sonnet
+      Environment:
+        Variables:
+          BEDROCK_MODEL_ID: anthropic.claude-3-5-sonnet-20240620-v1:0
+      Policies:
+        - Statement:
+            - Effect: Allow
+              Action:
+                - bedrock:InvokeModel
+              Resource:
+                - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-5-sonnet-20240620-v1:0'
+                - !Sub 'arn:aws:bedrock:${AWS::Region}::foundation-model/anthropic.claude-3-haiku-20240307-v1:0'
+      Events:
+        ParseWorkPlanEvent:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ClimaShiftApi
+            Path: /api/parse-work-plan
+            Method: post
+
+Outputs:
+  ClimaShiftApiUrl:
+    Description: "API Gateway endpoint URL for ClimaShift Work Plan Intake"
+    Value: !Sub "https://${ClimaShiftApi}.execute-api.${AWS::Region}.amazonaws.com/prod/api/parse-work-plan"
+  ParseWorkPlanFunctionArn:
+    Description: "Lambda Function ARN"
+    Value: !GetAtt ParseWorkPlanFunction.Arn

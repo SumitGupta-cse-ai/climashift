@@ -33,6 +33,10 @@ export interface Translations {
   heroAdvisory: string;
   heroHeadline: string;
   heroDescription: string;
+  todayWorkDecision: string;
+  tasksEvaluatedLabel: string;
+  recommendedOutdoorWindow: string;
+  recommendedWindowTime: string;
   replanMyDay: string;
   editPlanBtn: string;
   todayScheduleTitle: string;
@@ -129,6 +133,10 @@ export const translations: Record<Language, Translations> = {
     statusManualReview: 'MANUAL REVIEW',
 
     heroAdvisory: 'Operational Risk Advisory',
+    todayWorkDecision: "TODAY'S WORK DECISION",
+    tasksEvaluatedLabel: 'TASKS EVALUATED',
+    recommendedOutdoorWindow: 'RECOMMENDED OUTDOOR WORK WINDOW',
+    recommendedWindowTime: '07:00 – 10:00 IST',
     heroHeadline: 'Morning outdoor window (07:30 – 10:30) recommended. Midday heat & particulate spike require immediate task shifts.',
     heroDescription: 'Severe AQI and peak heat index (41°C) create statutory curbs and biological stress for outdoor trades between 11:00 AM and 3:30 PM. ClimaShift automatically re-sequences tasks into safer hours.',
     replanMyDay: 'REPLAN MY DAY',
@@ -169,26 +177,26 @@ export const translations: Record<Language, Translations> = {
     replanHeaderSubtitle: 'Evaluated against active environmental exposure & statutory rules.',
     reviewNotifyBtn: 'Review & Notify Workers',
     editConstraintsBtn: 'Edit Constraints',
-    beforeTitle: 'Original Input Schedule (Before)',
-    afterTitle: 'Optimized Safety Schedule (After)',
-    whyMovedTitle: 'Deterministic Explainability Audit',
-    whyMovedSubtitle: 'Inspect mathematical trade-offs, environmental telemetry, and statutory citations.',
+    beforeTitle: 'ORIGINAL WORK PLAN',
+    afterTitle: 'OPTIMIZED WORK PLAN',
+    whyMovedTitle: 'WHY DID THIS MOVE?',
+    whyMovedSubtitle: 'Inspect environmental factor, task/exposure factor, and regulatory citations.',
     envFactor: 'Environmental Factor',
     taskFactor: 'Task & Exposure Factor',
     regFactor: 'Regulatory Rule Factor',
     mitigationImpact: 'Mitigation Impact',
 
-    impactHoursAvoided: 'High-Risk Worker-Hours Avoided',
+    impactHoursAvoided: 'High-Risk Worker-Hours Shifted',
     impactTasksRescheduled: 'Tasks Rescheduled',
     impactCurbsEnforced: 'Statutory Curbs Enforced',
-    impactWorkersProtected: 'Workers Protected',
+    impactWorkersProtected: 'Worker-Hours Shifted Out of Identified High-Risk Windows',
     impactDisruption: 'Schedule Disruption Score',
 
     approvalModalTitle: 'Supervisor Approval & Worker Notification',
-    approvalModalSubtitle: 'Explicit sign-off required prior to site broadcast dispatch.',
-    dispatchPreviewLabel: 'Site Dispatch Preview (SMS / WhatsApp / Radio Broadcast)',
+    approvalModalSubtitle: 'Explicit supervisor approval required prior to worker notification dispatch.',
+    dispatchPreviewLabel: 'NOTIFICATION PREVIEW (Worker Shift Advisory)',
     supervisorRemarksLabel: 'Supervisor Verification & Log Notes',
-    humanInLoopNotice: 'Human-in-the-loop Protocol: No schedule changes or worker messages are dispatched without supervisor confirmation.',
+    humanInLoopNotice: 'Human-in-the-loop Protocol: No schedule changes or worker messages are dispatched without supervisor approval.',
     approveBroadcastBtn: 'Approve & Notify Workers',
     backToEditBtn: 'Back to Edit Schedule',
   },
@@ -220,6 +228,10 @@ export const translations: Record<Language, Translations> = {
     statusManualReview: 'मैन्युअल समीक्षा (REVIEW)',
 
     heroAdvisory: 'कार्य-जोखिम परामर्श (Operational Advisory)',
+    todayWorkDecision: "आज का कार्य निर्णय (TODAY'S WORK DECISION)",
+    tasksEvaluatedLabel: 'कार्यों का मूल्यांकन (TASKS EVALUATED)',
+    recommendedOutdoorWindow: 'अनुशंसित आउटडोर कार्य समय',
+    recommendedWindowTime: '07:00 – 10:00 IST',
     heroHeadline: 'सुबह का समय (07:30 – 10:30) सुरक्षित है। दोपहर की अत्यधिक गर्मी व प्रदूषण के कारण कार्यों का समय बदलना अनिवार्य है।',
     heroDescription: 'गंभीर AQI और अत्यधिक हीट इंडेक्स (41°C) के कारण दोपहर 11:00 से 3:30 के बीच खुले में काम करने पर प्रतिबंध व जैविक जोखिम है। क्लाइमाशिफ्ट कार्यों को सुरक्षित समय पर स्वतः रीशेड्यूल करता है।',
     replanMyDay: 'आज का कार्य रीप्लान करें',
@@ -260,10 +272,10 @@ export const translations: Record<Language, Translations> = {
     replanHeaderSubtitle: 'पर्यावरणीय परिस्थितियों और कानूनी नियमों के अनुसार अनुकूलित।',
     reviewNotifyBtn: 'समीक्षा करें और श्रमिकों को सूचित करें',
     editConstraintsBtn: 'शर्तें संपादित करें',
-    beforeTitle: 'मूल योजना (पहले)',
-    afterTitle: 'सुरक्षित अनुकूलित योजना (बाद में)',
-    whyMovedTitle: 'स्पष्टीकरण: कार्य क्यों बदला गया?',
-    whyMovedSubtitle: 'प्रत्येक निर्णय के पीछे का सटीक गणित, मौसम डेटा और कानूनी नियम देखें।',
+    beforeTitle: 'मूल कार्य योजना (ORIGINAL WORK PLAN)',
+    afterTitle: 'अनुकूलित कार्य योजना (OPTIMIZED WORK PLAN)',
+    whyMovedTitle: 'यह कार्य क्यों बदला गया? (WHY DID THIS MOVE?)',
+    whyMovedSubtitle: 'प्रत्येक निर्णय के पीछे का सटीक पर्यावरण कारक, जोखिम और कानूनी नियम देखें।',
     envFactor: 'पर्यावरणीय कारक (AQI / गर्मी)',
     taskFactor: 'कार्य प्रकृति और श्रमिक जोखिम',
     regFactor: 'कानूनी नियम (CAQM / GRAP)',
@@ -272,14 +284,14 @@ export const translations: Record<Language, Translations> = {
     impactHoursAvoided: 'बचाए गए उच्च-जोखिम श्रमिक-घंटे',
     impactTasksRescheduled: 'बदले गए कार्य',
     impactCurbsEnforced: 'कानूनी रूप से रोके गए कार्य',
-    impactWorkersProtected: 'सुरक्षित श्रमिक',
+    impactWorkersProtected: 'उच्च-जोखिम से स्थानांतरित श्रमिक-घंटे',
     impactDisruption: 'शेड्यूल विचलन स्कोर',
 
     approvalModalTitle: 'पर्यवेक्षक अनुमोदन एवं श्रमिक सूचना',
-    approvalModalSubtitle: 'श्रमिकों को संदेश भेजने से पहले सुपरवाइजर की लिखित स्वीकृति अनिवार्य है।',
-    dispatchPreviewLabel: 'संदेश पूर्वावलोकन (SMS / WhatsApp / साइट वायरलेस)',
+    approvalModalSubtitle: 'श्रमिकों को संदेश भेजने से पहले सुपरवाइजर का स्पष्ट अनुमोदन अनिवार्य है।',
+    dispatchPreviewLabel: 'सूचना पूर्वावलोकन (NOTIFICATION PREVIEW)',
     supervisorRemarksLabel: 'पर्यवेक्षक टिप्पणी एवं अनुमोदन नोट',
-    humanInLoopNotice: 'सुरक्षा प्रोटोकॉल: आपके स्पष्ट अनुमोदन के बिना किसी श्रमिक का समय नहीं बदला जाएगा।',
+    humanInLoopNotice: 'सुरक्षा प्रोटोकॉल: पर्यवेक्षक अनुमोदन के बिना किसी श्रमिक का समय नहीं बदला जाएगा।',
     approveBroadcastBtn: 'स्वीकृत करें और श्रमिकों को भेजें',
     backToEditBtn: 'वापस जाएं और संपादित करें',
   }

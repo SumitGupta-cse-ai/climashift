@@ -1,52 +1,51 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { executeBedrockTaskParsing, getBedrockConfig } from '@/lib/bedrockService';
+
+export async function GET() {
+  const config = getBedrockConfig();
+  return NextResponse.json(config);
+}
 
 export async function POST(req: NextRequest) {
   try {
-    const { prompt } = await req.json();
+    let body: any = {};
+    const contentType = req.headers.get('content-type') || '';
 
-    if (!prompt || typeof prompt !== 'string') {
-      return NextResponse.json({ error: 'Missing prompt text' }, { status: 400 });
+    try {
+      if (contentType.includes('application/json')) {
+        body = await req.json();
+      } else {
+        const raw = await req.text();
+        try {
+          body = JSON.parse(raw);
+        } catch {
+          body = { text: raw };
+        }
+      }
+    } catch {
+      const raw = await req.text();
+      body = { text: raw };
     }
 
-    const awsRegion = process.env.AWS_REGION || 'ap-south-1';
-    const bedrockApiKey = process.env.AWS_BEDROCK_API_KEY;
+    const prompt = body.prompt || body.text;
 
-    // If actual AWS Bedrock API credentials are configured in server environment:
-    if (bedrockApiKey && process.env.AWS_ACCESS_KEY_ID) {
-      // Server-side Bedrock execution code path
-      // Structured JSON schema prompt
-      const systemPrompt = `You are ClimaShift's Construction Task Extractor. 
-Extract all work activities mentioned in the supervisor prompt into structured JSON.
-Return JSON format:
-{
-  "tasks": [
-    {
-      "name": string,
-      "location": string,
-      "workers": number,
-      "duration": number (hours),
-      "indoorOutdoor": "indoor" | "outdoor" | "semi-indoor",
-      "dustPotential": "none" | "low" | "moderate" | "high",
-      "intensity": "light" | "moderate" | "heavy",
-      "movable": boolean,
-      "priority": "low" | "normal" | "high" | "critical",
-      "preferredStartTime": "HH:MM"
-    }
-  ]
-}`;
-
-      // (In production, BedrockRuntimeClient.send(new InvokeModelCommand({...})) is called here)
-      // For this server route, if Bedrock call succeeds, return parsed payload.
+    if (!prompt || typeof prompt !== 'string' || prompt.trim().length === 0) {
+      return NextResponse.json(
+        { error: 'Missing prompt/text in request body' }, 
+        { status: 400 }
+      );
     }
 
-    // Standard resilient server response
-    return NextResponse.json({
-      status: 'success',
-      source: 'server-api-endpoint',
-      message: 'Bedrock API route active. Use client fallback when offline.'
-    });
+    const result = await executeBedrockTaskParsing(prompt);
+    return NextResponse.json(result);
   } catch (error: any) {
-    console.error('Bedrock parse API error:', error);
-    return NextResponse.json({ error: error.message || 'Internal error' }, { status: 500 });
+    console.error('API Error in /api/bedrock-parse:', error);
+    return NextResponse.json(
+      { 
+        status: 'error',
+        error: error.message || 'Internal server error processing work plan'
+      }, 
+      { status: 500 }
+    );
   }
 }
