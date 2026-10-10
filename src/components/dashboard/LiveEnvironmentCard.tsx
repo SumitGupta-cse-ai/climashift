@@ -87,18 +87,18 @@ export function LiveEnvironmentCard() {
   ];
 
   return (
-    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between transition-all">
+    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border-2 border-[#CBD5E1] dark:border-[#334155] rounded-2xl p-5 sm:p-6 shadow-tactile flex flex-col justify-between transition-all">
       {/* Top Header Row */}
       <div className="flex items-center justify-between gap-3 mb-3.5">
-        <div className="flex items-center gap-2">
-          <span className="p-1.5 rounded-lg bg-[#ECFDF5] dark:bg-[#064E3B]/40 text-[#10B981] dark:text-[#34D399] border border-[#A7F3D0] dark:border-[#047857]">
-            <Radio className="w-3.5 h-3.5 animate-pulse" />
+        <div className="flex items-center gap-2.5">
+          <span className="p-1.5 rounded-lg bg-[#FEF08A] dark:bg-[#422006] text-[#854D0E] dark:text-[#FACC15] border border-[#EAB308] dark:border-[#854D0E] shadow-xs">
+            <Radio className="w-4 h-4 animate-pulse stroke-[2.5]" />
           </span>
           <div>
-            <h2 className="text-sm font-bold text-[#0F172A] dark:text-[#F8FAFC]">
+            <h2 className="text-sm font-black text-[#0F172A] dark:text-[#F8FAFC]">
               {language === 'hi' ? 'लाइव पर्यावरणीय टेलीमेट्री' : 'Live Environmental Telemetry'}
             </h2>
-            <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">
+            <p className="text-[11px] font-medium text-[#475569] dark:text-[#94A3B8]">
               {siteProfile.dataSource || 'CPCB / DPCC Continuous Monitoring (CAAMS)'}
             </p>
           </div>
@@ -106,7 +106,7 @@ export function LiveEnvironmentCard() {
 
         <button
           onClick={() => setShowHourly(!showHourly)}
-          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/30 hover:bg-[#D1FAE5] dark:hover:bg-[#064E3B]/50 transition cursor-pointer shrink-0"
+          className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC] bg-[#FFFFFF] dark:bg-[#1E293B] border-2 border-[#CBD5E1] dark:border-[#475569] hover:bg-[#F8F9FA] dark:hover:bg-[#334155] transition cursor-pointer shrink-0 shadow-xs"
         >
           <span>{showHourly ? 'Hide Forecast' : 'Hourly Curve'}</span>
           {showHourly ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
@@ -115,19 +115,19 @@ export function LiveEnvironmentCard() {
 
       {/* Conditions Changed Alert Banner if active */}
       {conditionsChanged && (
-        <div className="mb-3.5 rounded-xl border border-[#FCA5A5] dark:border-[#7F1D1D] bg-[#FEF2F2] dark:bg-[#451A1A]/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="mb-3.5 rounded-xl border-2 border-[#FCA5A5] dark:border-[#7F1D1D] bg-[#FEF2F2] dark:bg-[#451A1A]/80 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 shadow-xs">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#DC2626] shrink-0" />
-            <span className="text-xs font-bold text-[#DC2626] dark:text-[#FCA5A5]">
+            <AlertTriangle className="w-4 h-4 text-[#DC2626] shrink-0 stroke-[2.5]" />
+            <span className="text-xs font-black text-[#DC2626] dark:text-[#FCA5A5]">
               Sensor Surge Detected: AQI jumped to {siteProfile.currentAQI}
             </span>
           </div>
           <button
             onClick={reevaluatePlan}
             disabled={isOptimizing}
-            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-white bg-[#DC2626] hover:bg-[#B91C1C] transition cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-black text-white bg-[#DC2626] hover:bg-[#B91C1C] transition cursor-pointer shrink-0 shadow-xs"
           >
-            <RefreshCw className={`w-3 h-3 ${isOptimizing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${isOptimizing ? 'animate-spin' : ''}`} />
             <span>Re-evaluate Shift</span>
           </button>
         </div>
@@ -140,23 +140,23 @@ export function LiveEnvironmentCard() {
           return (
             <div
               key={idx}
-              className="bg-[#F8FAFC] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B] rounded-xl p-3 flex flex-col justify-between hover:border-[#CBD5E1] dark:hover:border-[#334155] transition-colors"
+              className="bg-[#FFFFFF] dark:bg-[#07111C] border-2 border-[#CBD5E1] dark:border-[#334155] rounded-xl p-3 flex flex-col justify-between hover:border-[#CA8A04] dark:hover:border-[#FACC15] transition-colors shadow-xs"
             >
               <div>
-                <div className="flex items-center justify-between text-[#64748B] dark:text-[#94A3B8] mb-1">
-                  <span className="text-[10px] font-semibold uppercase tracking-wider truncate">{item.label}</span>
-                  <Icon className="w-3 h-3 shrink-0 opacity-70" />
+                <div className="flex items-center justify-between text-[#475569] dark:text-[#94A3B8] mb-1">
+                  <span className="text-[10px] font-black uppercase tracking-wider truncate">{item.label}</span>
+                  <Icon className="w-3.5 h-3.5 shrink-0 opacity-80" />
                 </div>
-                <div className="text-lg sm:text-xl font-bold font-mono tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
+                <div className="text-xl sm:text-2xl font-black font-mono tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
                   {item.value}
                 </div>
               </div>
 
               <div className="mt-2.5 flex items-center justify-between gap-1 flex-wrap">
-                <span className={`inline-block text-[10px] font-bold uppercase px-1.5 py-0.2 rounded border ${item.statusClass}`}>
+                <span className={`inline-block text-[10px] font-black uppercase px-1.5 py-0.5 rounded border shadow-xs ${item.statusClass}`}>
                   {item.status}
                 </span>
-                <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8] font-mono truncate">
+                <span className="text-[9px] text-[#475569] dark:text-[#94A3B8] font-mono font-bold truncate">
                   {item.sublabel}
                 </span>
               </div>

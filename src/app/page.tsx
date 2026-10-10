@@ -25,16 +25,16 @@ export default function HomePage() {
         <div className="space-y-4 max-w-7xl mx-auto">
           {/* APK-Style Segmented View Switcher */}
           <div className="flex items-center justify-between gap-3 flex-wrap pb-1">
-            <div className="flex items-center p-1 rounded-xl bg-[#F1F5F9] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B] text-xs font-semibold overflow-x-auto">
+            <div className="flex items-center p-1.5 rounded-xl bg-[#FFFFFF] dark:bg-[#0F172A] border border-[#CBD5E1] dark:border-[#334155] text-xs font-semibold overflow-x-auto shadow-xs">
               <button
                 onClick={() => setDashboardTab('overview')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0 ${
                   dashboardTab === 'overview'
-                    ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                    : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
+                    ? 'bg-[#FACC15] text-[#0F172A] font-extrabold shadow-lamy border border-[#EAB308]'
+                    : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <LayoutDashboard className="w-3.5 h-3.5" />
+                <LayoutDashboard className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{language === 'hi' ? 'अवलोकन' : 'Overview'}</span>
               </button>
 
@@ -42,11 +42,11 @@ export default function HomePage() {
                 onClick={() => setDashboardTab('schedule')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0 ${
                   dashboardTab === 'schedule'
-                    ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                    : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
+                    ? 'bg-[#FACC15] text-[#0F172A] font-extrabold shadow-lamy border border-[#EAB308]'
+                    : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Calendar className="w-3.5 h-3.5" />
+                <Calendar className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{language === 'hi' ? 'शिफ्ट कार्यक्रम' : 'Shift Schedule'}</span>
               </button>
 
@@ -54,11 +54,11 @@ export default function HomePage() {
                 onClick={() => setDashboardTab('telemetry')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0 ${
                   dashboardTab === 'telemetry'
-                    ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                    : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
+                    ? 'bg-[#FACC15] text-[#0F172A] font-extrabold shadow-lamy border border-[#EAB308]'
+                    : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Gauge className="w-3.5 h-3.5" />
+                <Gauge className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{language === 'hi' ? 'टेलीमेट्री' : 'Live Telemetry'}</span>
               </button>
 
@@ -66,11 +66,11 @@ export default function HomePage() {
                 onClick={() => setDashboardTab('compliance')}
                 className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg transition cursor-pointer shrink-0 ${
                   dashboardTab === 'compliance'
-                    ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                    : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
+                    ? 'bg-[#FACC15] text-[#0F172A] font-extrabold shadow-lamy border border-[#EAB308]'
+                    : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Scale className="w-3.5 h-3.5" />
+                <Scale className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{language === 'hi' ? 'नियम व निर्देश' : 'Compliance'}</span>
               </button>
 
@@ -78,11 +78,11 @@ export default function HomePage() {
                 onClick={() => setDashboardTab('all')}
                 className={`inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg transition cursor-pointer shrink-0 ${
                   dashboardTab === 'all'
-                    ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                    : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
+                    ? 'bg-[#FACC15] text-[#0F172A] font-extrabold shadow-lamy border border-[#EAB308]'
+                    : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-white'
                 }`}
               >
-                <Layers className="w-3.5 h-3.5" />
+                <Layers className="w-3.5 h-3.5 stroke-[2.5]" />
                 <span>{language === 'hi' ? 'सभी' : 'All Views'}</span>
               </button>
             </div>

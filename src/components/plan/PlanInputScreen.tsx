@@ -151,40 +151,40 @@ export function PlanInputScreen() {
       </div>
 
       {/* Natural Language Prompt Card */}
-      <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-5 sm:p-6 shadow-sm space-y-4">
+      <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border-2 border-[#CBD5E1] dark:border-[#334155] border-t-4 border-t-[#FACC15] rounded-2xl p-5 sm:p-6 shadow-tactile space-y-4">
         {/* Card Header */}
-        <div className="flex items-center justify-between border-b border-[#E4E7EC] dark:border-[#26384C] pb-4">
+        <div className="flex items-center justify-between border-b border-[#E2E8F0] dark:border-[#334155] pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#EBF8F2] dark:bg-[#0E3A31] flex items-center justify-center text-[#16B878]">
-              <Bot className="w-4 h-4" />
+            <div className="w-8 h-8 rounded-lg bg-[#FEF08A] dark:bg-[#422006] text-[#854D0E] dark:text-[#FACC15] border border-[#EAB308] flex items-center justify-center shadow-xs">
+              <Bot className="w-4 h-4 stroke-[2.5]" />
             </div>
             <div>
-              <h2 className="text-sm sm:text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">
+              <h2 className="text-sm sm:text-base font-black text-[#0F172A] dark:text-[#F8FAFC]">
                 {t.planIntakeTitle}
               </h2>
-              <p className="text-xs text-[#667085] dark:text-[#A7B2C1]">
+              <p className="text-xs font-medium text-[#475569] dark:text-[#94A3B8]">
                 {t.planIntakeSubtitle}
               </p>
             </div>
           </div>
-          <span className="text-xs font-mono font-medium px-2.5 py-1 rounded-md bg-[#F7F8FA] dark:bg-[#122235] text-[#667085] dark:text-[#A7B2C1] border border-[#E4E7EC] dark:border-[#26384C]">
+          <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-[#F8F9FA] dark:bg-[#122235] text-[#475569] dark:text-[#94A3B8] border border-[#CBD5E1] dark:border-[#334155] shadow-xs">
             Natural Language AI Intake
           </span>
         </div>
 
         {/* Truthful Connection Notice Banner if in fallback */}
         {!awsStatus?.configured && (
-          <div className="p-3.5 rounded-lg bg-[#FEF7EB] dark:bg-[#2C2214]/60 border border-[#FBE3B8] dark:border-[#4B3B24] text-xs text-[#171A1F] dark:text-[#F5F7FA] flex items-start gap-2.5">
-            <AlertCircle className="w-4 h-4 text-[#D99A24] shrink-0 mt-0.5" />
+          <div className="p-3.5 rounded-xl bg-[#FEF9C3] dark:bg-[#422006]/70 border-2 border-[#FDE047] dark:border-[#854D0E] text-xs text-[#0F172A] dark:text-[#F8FAFC] flex items-start gap-2.5 shadow-xs">
+            <AlertCircle className="w-4 h-4 text-[#854D0E] dark:text-[#FACC15] shrink-0 mt-0.5 stroke-[2.5]" />
             <div className="leading-relaxed">
-              <strong className="font-semibold text-[#D99A24] dark:text-[#F59E0B]">DEMO / FALLBACK MODE:</strong> Amazon Bedrock is operating in local demonstration mode. Work plans are parsed via ClimaShift&apos;s deterministic NLP engine. When deployed on AWS with IAM role permissions, requests flow natively to Amazon Bedrock (Claude Sonnet 4.6).
+              <strong className="font-black text-[#854D0E] dark:text-[#FACC15]">DEMO / FALLBACK MODE:</strong> Amazon Bedrock is operating in local demonstration mode. Work plans are parsed via ClimaShift&apos;s deterministic NLP engine. When deployed on AWS with IAM role permissions, requests flow natively to Amazon Bedrock (Claude Sonnet 4.6).
             </div>
           </div>
         )}
 
         {/* Transcript Textarea */}
         <div className="space-y-2">
-          <label className="text-xs font-bold text-[#667085] dark:text-[#A7B2C1] uppercase tracking-wider block">
+          <label className="text-xs font-black text-[#475569] dark:text-[#94A3B8] uppercase tracking-wider block">
             {t.supervisorTranscriptLabel}
           </label>
           <textarea
@@ -192,18 +192,18 @@ export function PlanInputScreen() {
             value={promptText}
             onChange={(e) => setPromptText(e.target.value)}
             placeholder="e.g., Tomorrow morning 8 workers will do exterior plastering on Tower B. After lunch they will do electrical conduit work in the basement."
-            className="w-full text-sm p-3.5 rounded-lg border border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C] text-[#171A1F] dark:text-[#F5F7FA] placeholder:text-[#667085] dark:placeholder:text-[#667085] focus:outline-none focus:border-[#16B878] focus:ring-1 focus:ring-[#16B878] leading-relaxed transition"
+            className="w-full text-sm p-3.5 rounded-xl border-2 border-[#CBD5E1] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#07111C] text-[#0F172A] dark:text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#CA8A04] leading-relaxed transition shadow-xs font-medium"
           />
         </div>
 
         {/* Preset Chips */}
         <div className="flex flex-wrap items-center gap-2 pt-1">
-          <span className="text-xs font-bold text-[#667085] dark:text-[#A7B2C1] uppercase tracking-wider">{t.loadDemoPlans}:</span>
+          <span className="text-xs font-black text-[#475569] dark:text-[#94A3B8] uppercase tracking-wider">{t.loadDemoPlans}:</span>
           {presetPlans.map((preset, idx) => (
             <button
               key={idx}
               onClick={() => setPromptText(preset.text)}
-              className="text-xs px-3 py-1.5 rounded-lg bg-[#F7F8FA] dark:bg-[#122235] hover:bg-[#E4E7EC] dark:hover:bg-[#1B2E46] text-[#171A1F] dark:text-[#F5F7FA] border border-[#E4E7EC] dark:border-[#26384C] transition font-medium cursor-pointer"
+              className="text-xs px-3 py-1.5 rounded-lg bg-[#FFFFFF] dark:bg-[#122235] hover:bg-[#FEF08A] hover:text-[#0F172A] dark:hover:bg-[#422006] dark:hover:text-[#FACC15] text-[#0F172A] dark:text-[#F8FAFC] border-2 border-[#CBD5E1] dark:border-[#334155] transition font-bold cursor-pointer shadow-xs"
             >
               {preset.title}
             </button>
@@ -211,9 +211,9 @@ export function PlanInputScreen() {
         </div>
 
         {/* Action Controls & Engine Info */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#E4E7EC] dark:border-[#26384C]">
-          <div className="flex items-center gap-2 text-xs text-[#667085] dark:text-[#A7B2C1]">
-            <span className="font-medium">{parserMeta.source}</span>
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-[#E2E8F0] dark:border-[#334155]">
+          <div className="flex items-center gap-2 text-xs text-[#475569] dark:text-[#94A3B8] font-semibold">
+            <span>{parserMeta.source}</span>
             {parserMeta.latency !== undefined && (
               <span className="font-mono">• {parserMeta.latency}ms</span>
             )}
@@ -223,16 +223,16 @@ export function PlanInputScreen() {
             <button
               onClick={handleParse}
               disabled={isParsing || !promptText.trim()}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg font-medium text-xs text-[#171A1F] dark:text-[#F5F7FA] bg-[#F7F8FA] dark:bg-[#122235] hover:bg-[#E4E7EC] dark:hover:bg-[#1B2E46] border border-[#E4E7EC] dark:border-[#26384C] transition cursor-pointer min-h-[40px] disabled:opacity-50"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-bold text-xs text-[#0F172A] dark:text-[#F8FAFC] bg-[#FFFFFF] dark:bg-[#122235] hover:bg-[#F8F9FA] dark:hover:bg-[#1B2E46] border-2 border-[#CBD5E1] dark:border-[#475569] transition cursor-pointer min-h-[40px] disabled:opacity-50 shadow-xs"
             >
               {isParsing ? (
                 <>
-                  <RefreshCw className="w-3.5 h-3.5 animate-spin" />
+                  <RefreshCw className="w-3.5 h-3.5 animate-spin text-[#CA8A04] dark:text-[#FACC15]" />
                   <span>{t.extractingBtn}</span>
                 </>
               ) : (
                 <>
-                  <Wand2 className="w-3.5 h-3.5 text-[#667085] dark:text-[#A7B2C1]" />
+                  <Wand2 className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
                   <span>{t.generatePlanBtn}</span>
                 </>
               )}
@@ -241,11 +241,11 @@ export function PlanInputScreen() {
             <button
               onClick={() => executeReplan()}
               disabled={isOptimizing || tasks.length === 0}
-              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-xs text-white bg-[#16B878] hover:bg-[#139c65] transition shadow-sm min-h-[40px] cursor-pointer disabled:opacity-50"
+              className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-black text-xs text-[#0F172A] bg-[#FACC15] hover:bg-[#EAB308] border-2 border-[#CA8A04] transition shadow-lamy min-h-[40px] cursor-pointer disabled:opacity-50"
             >
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>{t.replanMyDay}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-4 h-4 stroke-[2.5]" />
             </button>
           </div>
         </div>

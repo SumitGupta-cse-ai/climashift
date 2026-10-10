@@ -147,19 +147,22 @@ export function AppShell({ children }: AppShellProps) {
       )}
 
       {/* EXACT REFERENCE DESKTOP SIDEBAR */}
-      <aside className="hidden md:flex flex-col w-[260px] border-r border-[#E4E7EC] dark:border-[#1E3146] bg-[#FFFFFF] dark:bg-[#07111C] shrink-0 sticky top-0 h-screen overflow-y-auto select-none z-30">
+      <aside className="hidden md:flex flex-col w-[260px] border-r border-[#D8DEE4] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#07111C] shrink-0 sticky top-0 h-screen overflow-y-auto select-none z-30 shadow-sm">
         
         {/* Brand Header */}
-        <div className="p-4 border-b border-[#E4E7EC] dark:border-[#1E3146]">
+        <div className="p-4 border-b border-[#D8DEE4] dark:border-[#334155]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[#16B878]/15 text-[#16B878] border border-[#16B878]/30 flex items-center justify-center shrink-0">
-              <Leaf className="w-4.5 h-4.5" />
+            <div className="w-8 h-8 rounded-lg bg-[#FACC15] text-[#0F172A] border border-[#EAB308] flex items-center justify-center shrink-0 shadow-lamy">
+              <Leaf className="w-4.5 h-4.5 stroke-[2.5]" />
             </div>
             <div>
-              <div className="font-bold text-base tracking-tight text-[#171A1F] dark:text-[#F5F7FA]">
-                ClimaShift
+              <div className="font-extrabold text-base tracking-tight text-[#0F172A] dark:text-[#F8FAFC] flex items-center gap-1.5">
+                <span>ClimaShift</span>
+                <span className="text-[9px] font-mono font-bold px-1.5 py-0.2 rounded bg-[#FEF08A] text-[#854D0E] dark:bg-[#422006] dark:text-[#FACC15] border border-[#FDE047] dark:border-[#854D0E]">
+                  PRO APK
+                </span>
               </div>
-              <p className="text-[11px] text-[#667085] dark:text-[#A7B2C1] leading-none mt-0.5">
+              <p className="text-[11px] font-medium text-[#64748B] dark:text-[#94A3B8] leading-none mt-0.5">
                 Environmental Work-Safety
               </p>
             </div>
@@ -167,7 +170,7 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Active Site Selector Card */}
           <div className="mt-4 space-y-1">
-            <span className="text-[10px] font-bold uppercase tracking-wider text-[#667085] dark:text-[#A7B2C1]">
+            <span className="text-[10px] font-bold uppercase tracking-wider text-[#475569] dark:text-[#94A3B8]">
               ACTIVE PROJECT SITE
             </span>
             <div className="relative">
@@ -177,7 +180,7 @@ export function AppShell({ children }: AppShellProps) {
                   const found = sitesList.find(s => s.id === e.target.value);
                   if (found) setSiteProfile(found);
                 }}
-                className="w-full text-xs font-semibold bg-[#F9FAFB] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-lg py-2 pl-7 pr-7 text-[#171A1F] dark:text-[#F5F7FA] appearance-none focus:outline-none focus:border-[#16B878] cursor-pointer"
+                className="w-full text-xs font-semibold bg-[#F8FAFC] dark:bg-[#0D1B2A] border border-[#CBD5E1] dark:border-[#334155] rounded-lg py-2 pl-7 pr-7 text-[#0F172A] dark:text-[#F8FAFC] appearance-none focus:outline-none focus:border-[#CA8A04] cursor-pointer shadow-xs"
               >
                 {sitesList.map(s => (
                   <option key={s.id} value={s.id}>
@@ -185,8 +188,8 @@ export function AppShell({ children }: AppShellProps) {
                   </option>
                 ))}
               </select>
-              <MapPin className="w-3.5 h-3.5 text-[#16B878] absolute left-2.5 top-2.5 pointer-events-none" />
-              <ChevronDown className="w-3.5 h-3.5 text-[#A7B2C1] absolute right-2.5 top-2.5 pointer-events-none" />
+              <MapPin className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15] absolute left-2.5 top-2.5 pointer-events-none" />
+              <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8] absolute right-2.5 top-2.5 pointer-events-none" />
             </div>
           </div>
         </div>
@@ -195,7 +198,7 @@ export function AppShell({ children }: AppShellProps) {
         <nav className="flex-1 p-3 space-y-4">
           {/* Section 1: WORKSPACE */}
           <div className="space-y-1">
-            <div className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#667085] dark:text-[#A7B2C1] mb-1">
+            <div className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-[#94A3B8] mb-1">
               WORKSPACE
             </div>
             {workspaceNav.map((item) => {
@@ -206,18 +209,18 @@ export function AppShell({ children }: AppShellProps) {
                 <button
                   key={item.id}
                   onClick={() => setActiveNav(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer ${
                     isActive
-                      ? 'bg-[#E9F8F2] dark:bg-[#0E3A31]/60 text-[#087F5B] dark:text-[#16B878] font-semibold border-l-2 border-[#16B878]'
-                      : 'text-[#667085] dark:text-[#A7B2C1] hover:text-[#171A1F] dark:hover:text-[#F5F7FA] hover:bg-[#F9FAFB] dark:hover:bg-[#0D1B2A]'
+                      ? 'bg-[#FEF9C3] dark:bg-[#422006] text-[#0F172A] dark:text-[#FACC15] font-bold border-l-4 border-[#FACC15] shadow-xs'
+                      : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#0D1B2A]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#087F5B] dark:text-[#16B878]' : 'text-[#667085] dark:text-[#A7B2C1]'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#854D0E] dark:text-[#FACC15]' : 'text-[#64748B] dark:text-[#94A3B8]'}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
-                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#D99A24] text-white">
+                    <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-full bg-[#FACC15] text-[#0F172A] border border-[#EAB308]">
                       {item.badge}
                     </span>
                   )}
@@ -228,7 +231,7 @@ export function AppShell({ children }: AppShellProps) {
 
           {/* Section 2: SYSTEM */}
           <div className="space-y-1">
-            <div className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#667085] dark:text-[#A7B2C1] mb-1">
+            <div className="px-2.5 text-[10px] font-bold uppercase tracking-wider text-[#64748B] dark:text-[#94A3B8] mb-1">
               SYSTEM
             </div>
             {systemNav.map((item) => {
@@ -239,14 +242,14 @@ export function AppShell({ children }: AppShellProps) {
                 <button
                   key={item.id}
                   onClick={() => setActiveNav(item.id)}
-                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition cursor-pointer ${
+                  className={`w-full flex items-center justify-between px-3 py-2 rounded-lg text-xs font-semibold transition cursor-pointer ${
                     isActive
-                      ? 'bg-[#E9F8F2] dark:bg-[#0E3A31]/60 text-[#087F5B] dark:text-[#16B878] font-semibold border-l-2 border-[#16B878]'
-                      : 'text-[#667085] dark:text-[#A7B2C1] hover:text-[#171A1F] dark:hover:text-[#F5F7FA] hover:bg-[#F9FAFB] dark:hover:bg-[#0D1B2A]'
+                      ? 'bg-[#FEF9C3] dark:bg-[#422006] text-[#0F172A] dark:text-[#FACC15] font-bold border-l-4 border-[#FACC15] shadow-xs'
+                      : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A] dark:hover:text-[#F8FAFC] hover:bg-[#F1F5F9] dark:hover:bg-[#0D1B2A]'
                   }`}
                 >
                   <div className="flex items-center gap-2.5">
-                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#087F5B] dark:text-[#16B878]' : 'text-[#667085] dark:text-[#A7B2C1]'}`} />
+                    <Icon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#854D0E] dark:text-[#FACC15]' : 'text-[#64748B] dark:text-[#94A3B8]'}`} />
                     <span>{item.label}</span>
                   </div>
                 </button>
@@ -256,27 +259,27 @@ export function AppShell({ children }: AppShellProps) {
         </nav>
 
         {/* Sidebar Footer Controls */}
-        <div className="p-3 border-t border-[#E4E7EC] dark:border-[#1E3146] space-y-2.5">
-          <div className="flex items-center justify-between px-1 text-xs text-[#667085] dark:text-[#A7B2C1]">
-            <span className="text-[11px] font-medium">{t.languageLabel}</span>
+        <div className="p-3 border-t border-[#D8DEE4] dark:border-[#334155] space-y-2.5">
+          <div className="flex items-center justify-between px-1 text-xs text-[#475569] dark:text-[#94A3B8]">
+            <span className="text-[11px] font-semibold">{t.languageLabel}</span>
             <LanguageToggle />
           </div>
 
-          <div className="flex items-center justify-between px-1 text-xs text-[#667085] dark:text-[#A7B2C1]">
-            <span className="text-[11px] font-medium">{t.appearance}</span>
+          <div className="flex items-center justify-between px-1 text-xs text-[#475569] dark:text-[#94A3B8]">
+            <span className="text-[11px] font-semibold">{t.appearance}</span>
             <ThemeToggle />
           </div>
 
           {/* User / Demo Status Row */}
-          <div className="pt-2 border-t border-[#E4E7EC]/70 dark:border-[#1E3146] flex items-center justify-between px-1">
+          <div className="pt-2 border-t border-[#D8DEE4] dark:border-[#334155] flex items-center justify-between px-1">
             <div className="flex items-center gap-2">
-              <div className="w-7 h-7 rounded-full bg-[#2F80ED] text-white font-bold text-xs flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-full bg-[#0F172A] text-[#FACC15] font-black text-xs flex items-center justify-center shrink-0 border border-[#CA8A04]/40 shadow-xs">
                 SG
               </div>
-              <span className="text-xs font-medium text-[#171A1F] dark:text-[#F5F7FA]">Demo Mode</span>
+              <span className="text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC]">Demo Mode</span>
             </div>
-            <div className="flex items-center gap-1 text-[11px] text-[#16B878] font-medium">
-              <span className="w-1.5 h-1.5 rounded-full bg-[#16B878]"></span>
+            <div className="flex items-center gap-1.5 text-[11px] text-[#059669] dark:text-[#34D399] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
               <span>Online</span>
             </div>
           </div>
@@ -284,14 +287,19 @@ export function AppShell({ children }: AppShellProps) {
       </aside>
 
       {/* MOBILE TOP HEADER */}
-      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-3.5 py-2.5 bg-[#FFFFFF] dark:bg-[#07111C] border-b border-[#E4E7EC] dark:border-[#1E3146]">
+      <header className="md:hidden sticky top-0 z-30 flex items-center justify-between px-3.5 py-2.5 bg-[#FFFFFF] dark:bg-[#07111C] border-b border-[#D8DEE4] dark:border-[#334155] shadow-xs">
         <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded bg-[#16B878]/15 text-[#16B878] flex items-center justify-center shrink-0">
-            <Leaf className="w-4 h-4" />
+          <div className="w-7 h-7 rounded bg-[#FACC15] text-[#0F172A] border border-[#EAB308] flex items-center justify-center shrink-0 shadow-xs">
+            <Leaf className="w-4 h-4 stroke-[2.5]" />
           </div>
           <div>
-            <span className="font-bold text-xs text-[#171A1F] dark:text-[#F5F7FA]">ClimaShift</span>
-            <span className="block text-[10px] text-[#667085] dark:text-[#A7B2C1] truncate max-w-[130px]">{siteProfile.name}</span>
+            <div className="flex items-center gap-1.5">
+              <span className="font-extrabold text-xs text-[#0F172A] dark:text-[#F8FAFC]">ClimaShift</span>
+              <span className="text-[9px] font-mono font-bold px-1 py-0.2 rounded bg-[#FEF08A] text-[#854D0E] dark:bg-[#422006] dark:text-[#FACC15]">
+                APK
+              </span>
+            </div>
+            <span className="block text-[10px] text-[#475569] dark:text-[#94A3B8] font-medium truncate max-w-[130px]">{siteProfile.name}</span>
           </div>
         </div>
 
@@ -300,7 +308,7 @@ export function AppShell({ children }: AppShellProps) {
           <ThemeToggle />
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="p-1 rounded text-[#667085] dark:text-[#A7B2C1] hover:bg-[#F9FAFB] dark:hover:bg-[#0D1B2A] cursor-pointer"
+            className="p-1 rounded-lg text-[#475569] dark:text-[#94A3B8] hover:bg-[#F1F5F9] dark:hover:bg-[#0D1B2A] border border-[#D8DEE4] dark:border-[#334155] cursor-pointer"
             aria-label="Toggle navigation"
           >
             {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
@@ -310,7 +318,7 @@ export function AppShell({ children }: AppShellProps) {
 
       {/* MOBILE ACCORDION MENU */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-[#E4E7EC] dark:border-[#1E3146] bg-[#FFFFFF] dark:bg-[#07111C] px-3 py-2 space-y-1 z-20">
+        <div className="md:hidden border-b border-[#D8DEE4] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#07111C] px-3 py-2 space-y-1 z-20 shadow-md">
           {allNavItems.map((item) => {
             const Icon = item.icon;
             const isActive = activeNav === item.id;
@@ -321,10 +329,10 @@ export function AppShell({ children }: AppShellProps) {
                   setActiveNav(item.id);
                   setMobileMenuOpen(false);
                 }}
-                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-medium ${
+                className={`w-full flex items-center justify-between px-2.5 py-2 rounded-md text-xs font-semibold ${
                   isActive
-                    ? 'bg-[#E9F8F2] dark:bg-[#0E3A31]/60 text-[#087F5B] dark:text-[#16B878] font-semibold'
-                    : 'text-[#667085] dark:text-[#A7B2C1]'
+                    ? 'bg-[#FEF9C3] dark:bg-[#422006] text-[#0F172A] dark:text-[#FACC15] font-bold'
+                    : 'text-[#475569] dark:text-[#94A3B8]'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -332,7 +340,7 @@ export function AppShell({ children }: AppShellProps) {
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
-                  <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#D99A24] text-white">
+                  <span className="text-[10px] font-bold px-1.5 py-0.2 rounded bg-[#FACC15] text-[#0F172A]">
                     {item.badge}
                   </span>
                 )}
@@ -346,54 +354,54 @@ export function AppShell({ children }: AppShellProps) {
       <div className="flex-1 flex flex-col min-w-0 w-full">
         
         {/* EXACT REFERENCE DESKTOP TOP HEADER */}
-        <header className="hidden md:flex items-center justify-between px-6 py-3 border-b border-[#E4E7EC] dark:border-[#1E3146] bg-[#FFFFFF] dark:bg-[#07111C] sticky top-0 z-20">
+        <header className="hidden md:flex items-center justify-between px-6 py-3 border-b border-[#D8DEE4] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#07111C] sticky top-0 z-20 shadow-xs">
           {/* Search bar */}
           <div className="relative w-80 lg:w-96">
-            <Search className="w-4 h-4 text-[#A7B2C1] absolute left-3 top-2.5 pointer-events-none" />
+            <Search className="w-4 h-4 text-[#94A3B8] absolute left-3 top-2.5 pointer-events-none" />
             <input
               type="text"
               placeholder="Search tasks, decisions, or settings..."
-              className="w-full text-xs pl-9 pr-3 py-2 rounded-lg bg-[#F9FAFB] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] text-[#171A1F] dark:text-[#F5F7FA] placeholder:text-[#667085] dark:placeholder:text-[#A7B2C1]/60 focus:outline-none focus:border-[#16B878]"
+              className="w-full text-xs pl-9 pr-3 py-2 rounded-lg bg-[#F8F9FA] dark:bg-[#0D1B2A] border border-[#CBD5E1] dark:border-[#334155] text-[#0F172A] dark:text-[#F8FAFC] placeholder:text-[#64748B] dark:placeholder:text-[#94A3B8]/60 focus:outline-none focus:border-[#CA8A04] shadow-xs"
             />
           </div>
 
           {/* Right Tools */}
           <div className="flex items-center gap-3.5">
-            <div className="flex items-center gap-1.5 text-xs text-[#16B878] font-medium">
-              <span className="w-2 h-2 rounded-full bg-[#16B878] animate-pulse"></span>
-              <span>Live Data</span>
+            <div className="flex items-center gap-1.5 text-xs text-[#16A34A] dark:text-[#4ADE80] font-bold">
+              <span className="w-2 h-2 rounded-full bg-[#10B981] animate-pulse"></span>
+              <span>Live Telemetry</span>
             </div>
 
-            <span className="text-[11px] font-mono font-semibold px-2.5 py-1 rounded-md bg-[#D99A24]/15 border border-[#D99A24]/40 text-[#D99A24]">
+            <span className="text-[11px] font-mono font-bold px-2.5 py-1 rounded-md bg-[#FEF9C3] dark:bg-[#422006] border border-[#FDE047] dark:border-[#A16207] text-[#854D0E] dark:text-[#FACC15] shadow-xs">
               DEMO SCENARIO
             </span>
 
-            <div className="flex items-center gap-1.5 text-xs text-[#667085] dark:text-[#A7B2C1]">
-              <Clock className="w-3.5 h-3.5" />
+            <div className="flex items-center gap-1.5 text-xs text-[#475569] dark:text-[#94A3B8] font-medium">
+              <Clock className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
               <span>Last updated {siteProfile.lastUpdated || '07:15 IST'}</span>
             </div>
 
             {/* Notification Bell */}
-            <button className="relative p-1.5 rounded-lg text-[#667085] dark:text-[#A7B2C1] hover:bg-[#F9FAFB] dark:hover:bg-[#0D1B2A] transition cursor-pointer">
+            <button className="relative p-1.5 rounded-lg text-[#475569] dark:text-[#94A3B8] hover:bg-[#F1F5F9] dark:hover:bg-[#0D1B2A] border border-[#D8DEE4] dark:border-[#334155] transition cursor-pointer shadow-xs">
               <Bell className="w-4 h-4" />
-              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#D94A4A]"></span>
+              <span className="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#DC2626]"></span>
             </button>
 
             {/* Judge Mode Switch */}
             <button
               onClick={toggleJudgeMode}
-              className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium transition cursor-pointer border ${
+              className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold transition cursor-pointer border shadow-xs ${
                 judgeMode
-                  ? 'bg-[#FEF7EB] text-[#B7791F] border-[#FBE3B8] font-semibold dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]'
-                  : 'bg-[#F9FAFB] dark:bg-[#0D1B2A] text-[#667085] dark:text-[#A7B2C1] border-[#E4E7EC] dark:border-[#26384C] hover:border-[#16B878]'
+                  ? 'bg-[#FEF08A] text-[#854D0E] border-[#CA8A04] dark:bg-[#422006] dark:text-[#FACC15] dark:border-[#A16207]'
+                  : 'bg-[#F8F9FA] dark:bg-[#0D1B2A] text-[#475569] dark:text-[#94A3B8] border-[#CBD5E1] dark:border-[#334155] hover:border-[#CA8A04]'
               }`}
             >
-              <Award className="w-3.5 h-3.5 text-[#B7791F]" />
+              <Award className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
               <span>{judgeMode ? 'Judge ON' : 'Judge Mode'}</span>
             </button>
 
             {/* User Avatar */}
-            <div className="w-8 h-8 rounded-full bg-[#2F80ED] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs">
+            <div className="w-8 h-8 rounded-full bg-[#0F172A] text-[#FACC15] font-black text-xs flex items-center justify-center shrink-0 border border-[#CA8A04]/40 shadow-xs">
               SG
             </div>
           </div>
@@ -404,24 +412,24 @@ export function AppShell({ children }: AppShellProps) {
           <div className="px-4 sm:px-6 pt-5 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
             <div>
               <div className="flex items-center gap-2">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/40 px-2 py-0.5 rounded-md border border-[#A7F3D0] dark:border-[#047857]">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#854D0E] dark:text-[#FACC15] bg-[#FEF9C3] dark:bg-[#422006] px-2 py-0.5 rounded-md border border-[#FDE047] dark:border-[#A16207] shadow-xs">
                   Operational Console
                 </span>
-                <span className="text-xs text-[#64748B] dark:text-[#94A3B8]">
+                <span className="text-xs text-[#475569] dark:text-[#94A3B8] font-medium">
                   {siteProfile.jurisdiction || 'Delhi-NCR CAQM Jurisdiction'}
                 </span>
               </div>
-              <h1 className="text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-tight text-[#0F172A] dark:text-[#F8FAFC] mt-1">
+              <h1 className="text-xl sm:text-2xl lg:text-[26px] font-black tracking-tight text-[#0F172A] dark:text-[#F8FAFC] mt-1">
                 {siteProfile.name}
               </h1>
             </div>
 
             <div className="flex items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] text-xs shadow-xs">
-                <Calendar className="w-3.5 h-3.5 text-[#10B981]" />
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#CBD5E1] dark:border-[#334155] text-xs shadow-xs">
+                <Calendar className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
                 <div>
                   <div className="font-bold text-[#0F172A] dark:text-[#F8FAFC]">Tue, 8 Oct 2026</div>
-                  <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">Shift 07:00–19:00 IST</div>
+                  <div className="text-[10px] text-[#475569] dark:text-[#94A3B8] font-mono font-semibold">Shift 07:00–19:00 IST</div>
                 </div>
               </div>
             </div>
@@ -430,26 +438,26 @@ export function AppShell({ children }: AppShellProps) {
 
         {/* Judge Mode 3-Minute Story Walkthrough Bar */}
         {judgeMode && (
-          <div className="bg-[#FEF7EB] dark:bg-[#2C2214] border-b border-[#FBE3B8] dark:border-[#4B3B24] px-4 sm:px-6 py-2 overflow-x-auto">
+          <div className="bg-[#FEF9C3] dark:bg-[#422006]/80 border-b border-[#FDE047] dark:border-[#854D0E] px-4 sm:px-6 py-2 overflow-x-auto shadow-xs">
             <div className="flex items-center gap-1.5 min-w-max text-xs">
-              <span className="font-mono font-bold text-[#B7791F] dark:text-[#F59E0B] uppercase text-[10px] mr-1">
+              <span className="font-mono font-extrabold text-[#854D0E] dark:text-[#FACC15] uppercase text-[10px] mr-1">
                 DEMO STORY:
               </span>
               {demoSteps.map((step, i) => (
                 <React.Fragment key={step.num}>
                   <button
                     onClick={() => setActiveNav(step.nav)}
-                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-medium transition cursor-pointer ${
+                    className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-[11px] font-bold transition cursor-pointer shadow-xs ${
                       activeNav === step.nav 
-                        ? 'bg-[#B7791F] text-white font-semibold' 
-                        : 'bg-[#FFFFFF] dark:bg-[#122235] text-[#171A1F] dark:text-[#F5F7FA] border border-[#FBE3B8] dark:border-[#4B3B24] hover:bg-[#FEF7EB]'
+                        ? 'bg-[#0F172A] text-[#FACC15] border border-[#CA8A04]' 
+                        : 'bg-[#FFFFFF] dark:bg-[#122235] text-[#0F172A] dark:text-[#F8FAFC] border border-[#FDE047] dark:border-[#854D0E] hover:bg-[#FEF08A]'
                     }`}
                   >
                     <span className="font-mono text-[10px]">{step.num}.</span>
                     <span>{step.title}</span>
                   </button>
                   {i < demoSteps.length - 1 && (
-                    <ChevronRight className="w-3 h-3 text-[#B7791F]/50 shrink-0" />
+                    <ChevronRight className="w-3 h-3 text-[#854D0E]/60 dark:text-[#FACC15]/60 shrink-0" />
                   )}
                 </React.Fragment>
               ))}
@@ -463,7 +471,7 @@ export function AppShell({ children }: AppShellProps) {
         </main>
 
         {/* Mobile Bottom Navigation Bar */}
-        <div className="md:hidden sticky bottom-0 z-30 bg-[#FFFFFF] dark:bg-[#07111C] border-t border-[#E4E7EC] dark:border-[#1E3146] px-2 py-1 flex items-center justify-around">
+        <div className="md:hidden sticky bottom-0 z-30 bg-[#FFFFFF] dark:bg-[#07111C] border-t border-[#D8DEE4] dark:border-[#334155] px-2 py-1 flex items-center justify-around shadow-md">
           {workspaceNav.map((item) => {
             const Icon = item.icon;
             const isActive = activeNav === item.id;
@@ -471,23 +479,23 @@ export function AppShell({ children }: AppShellProps) {
               <button
                 key={item.id}
                 onClick={() => setActiveNav(item.id)}
-                className={`flex flex-col items-center justify-center p-1.5 rounded text-[11px] font-medium min-h-[44px] min-w-[50px] transition ${
+                className={`flex flex-col items-center justify-center p-1.5 rounded text-[11px] font-semibold min-h-[44px] min-w-[50px] transition ${
                   isActive
-                    ? 'text-[#16B878] font-semibold'
-                    : 'text-[#667085] dark:text-[#A7B2C1]'
+                    ? 'text-[#854D0E] dark:text-[#FACC15] font-bold'
+                    : 'text-[#475569] dark:text-[#94A3B8]'
                 }`}
               >
-                <Icon className="w-4 h-4 mb-0.5" />
+                <Icon className={`w-4 h-4 mb-0.5 ${isActive ? 'stroke-[2.5]' : ''}`} />
                 <span>{item.label}</span>
               </button>
             );
           })}
           <button
             onClick={() => setActiveNav('activity')}
-            className={`flex flex-col items-center justify-center p-1.5 rounded text-[11px] font-medium min-h-[44px] min-w-[50px] transition ${
+            className={`flex flex-col items-center justify-center p-1.5 rounded text-[11px] font-semibold min-h-[44px] min-w-[50px] transition ${
               activeNav === 'activity'
-                ? 'text-[#16B878] font-semibold'
-                : 'text-[#667085] dark:text-[#A7B2C1]'
+                ? 'text-[#854D0E] dark:text-[#FACC15] font-bold'
+                : 'text-[#475569] dark:text-[#94A3B8]'
             }`}
           >
             <History className="w-4 h-4 mb-0.5" />

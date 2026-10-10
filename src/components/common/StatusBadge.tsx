@@ -20,27 +20,27 @@ export function StatusBadge({ status, size = 'md', showIcon = true }: StatusBadg
     continue: {
       label: t?.statusContinue || 'CONTINUE',
       icon: CheckCircle2,
-      className: 'bg-[#18A66A]/15 text-[#18A66A] border-[#18A66A]/30 dark:bg-[#18A66A]/20 dark:text-[#34D399] dark:border-[#18A66A]/40 font-semibold',
+      className: 'bg-[#DCFCE7] text-[#166534] border-[#86EFAC] dark:bg-[#064E3B] dark:text-[#4ADE80] dark:border-[#047857] font-bold shadow-xs',
     },
     reschedule: {
       label: t?.statusReschedule || 'RESCHEDULE',
       icon: Clock,
-      className: 'bg-[#D99A24]/15 text-[#D99A24] border-[#D99A24]/30 dark:bg-[#D99A24]/20 dark:text-[#FBBF24] dark:border-[#D99A24]/40 font-semibold',
+      className: 'bg-[#FEF9C3] text-[#854D0E] border-[#FDE047] dark:bg-[#422006] dark:text-[#FACC15] dark:border-[#A16207] font-bold shadow-xs',
     },
     protect: {
       label: t?.statusProtect || 'PROTECT',
       icon: ShieldAlert,
-      className: 'bg-[#2F80ED]/15 text-[#2F80ED] border-[#2F80ED]/30 dark:bg-[#2F80ED]/20 dark:text-[#60A5FA] dark:border-[#2F80ED]/40 font-semibold',
+      className: 'bg-[#EFF6FF] text-[#1E40AF] border-[#93C5FD] dark:bg-[#1E3A8A] dark:text-[#93C5FD] dark:border-[#3B82F6] font-bold shadow-xs',
     },
     restricted: {
       label: t?.statusRestricted || 'RESTRICTED',
       icon: AlertOctagon,
-      className: 'bg-[#D94A4A]/15 text-[#D94A4A] border-[#D94A4A]/30 dark:bg-[#D94A4A]/20 dark:text-[#F87171] dark:border-[#D94A4A]/40 font-semibold',
+      className: 'bg-[#FEE2E2] text-[#991B1B] border-[#FCA5A5] dark:bg-[#451A1A] dark:text-[#F87171] dark:border-[#991B1B] font-bold shadow-xs',
     },
     manual_review: {
       label: t?.statusManualReview || 'MANUAL REVIEW',
       icon: HelpCircle,
-      className: 'bg-[#6D28D9]/15 text-[#6D28D9] border-[#6D28D9]/30 dark:bg-[#6D28D9]/20 dark:text-[#C084FC] dark:border-[#6D28D9]/40 font-semibold',
+      className: 'bg-[#F3E8FF] text-[#6B21A8] border-[#D8B4FE] dark:bg-[#3B0764] dark:text-[#D8B4FE] dark:border-[#7E22CE] font-bold shadow-xs',
     }
   };
 

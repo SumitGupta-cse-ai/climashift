@@ -95,24 +95,24 @@ export function BeforeAfterView() {
       )}
 
       {/* Optimization Header Banner */}
-      <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-5 sm:p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border-2 border-[#CBD5E1] dark:border-[#334155] border-t-4 border-t-[#FACC15] rounded-2xl p-5 sm:p-6 shadow-tactile flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div className="space-y-1.5">
           <div className="flex items-center gap-2.5 flex-wrap">
-            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#171A1F] dark:text-[#F5F7FA]">
+            <h1 className="text-xl sm:text-2xl font-black tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
               {t.replanHeaderTitle}
             </h1>
-            <span className={`text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-md uppercase tracking-wider border ${
+            <span className={`text-[11px] font-mono font-black px-2.5 py-0.5 rounded-md uppercase tracking-wider border shadow-xs ${
               replanResult.approvalStatus === 'approved'
-                ? 'bg-[#EBF8F2] dark:bg-[#0E3A31] text-[#18A66A] border-[#C3ECD8] dark:border-[#1E4B39]'
-                : 'bg-[#FEF7EB] dark:bg-[#2C2214] text-[#D99A24] dark:text-[#F59E0B] border-[#FBE3B8] dark:border-[#4B3B24]'
+                ? 'bg-[#DCFCE7] text-[#166534] border-[#86EFAC] dark:bg-[#064E3B] dark:text-[#4ADE80] dark:border-[#047857]'
+                : 'bg-[#FEF08A] text-[#854D0E] border-[#EAB308] dark:bg-[#422006] dark:text-[#FACC15] dark:border-[#854D0E]'
             }`}>
               {replanResult.approvalStatus === 'approved' ? 'STATUS: APPROVED' : 'STATUS: PROPOSED'}
             </span>
-            <span className="text-[11px] font-mono px-2.5 py-0.5 rounded-md bg-[#F7F8FA] dark:bg-[#122235] text-[#667085] dark:text-[#A7B2C1] border border-[#E4E7EC] dark:border-[#26384C]">
+            <span className="text-[11px] font-mono font-bold px-2.5 py-0.5 rounded-md bg-[#F8F9FA] dark:bg-[#122235] text-[#475569] dark:text-[#94A3B8] border border-[#CBD5E1] dark:border-[#334155]">
               {language === 'hi' ? 'सत्यापित' : 'Evaluated'} {replanResult.generatedAt}
             </span>
           </div>
-          <p className="text-xs text-[#667085] dark:text-[#A7B2C1]">
+          <p className="text-xs font-medium text-[#475569] dark:text-[#94A3B8]">
             {siteProfile.name} • {siteProfile.jurisdiction} • {siteProfile.grapStage.replace('_', ' ')}
           </p>
         </div>
@@ -120,16 +120,16 @@ export function BeforeAfterView() {
         <div className="flex items-center gap-3">
           <button
             onClick={() => setActiveNav('plan')}
-            className="px-4 py-2.5 rounded-lg text-xs font-medium text-[#171A1F] dark:text-[#F5F7FA] bg-[#F7F8FA] dark:bg-[#122235] border border-[#E4E7EC] dark:border-[#26384C] hover:bg-[#E4E7EC] dark:hover:bg-[#1B2E46] transition cursor-pointer min-h-[40px]"
+            className="px-4 py-2.5 rounded-xl text-xs font-bold text-[#0F172A] dark:text-[#F8FAFC] bg-[#FFFFFF] dark:bg-[#122235] border-2 border-[#CBD5E1] dark:border-[#475569] hover:bg-[#F8F9FA] dark:hover:bg-[#1B2E46] transition cursor-pointer min-h-[40px] shadow-xs"
           >
             {t.editConstraintsBtn}
           </button>
 
           <button
             onClick={() => setShowApprovalModal(true)}
-            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg font-semibold text-xs text-white bg-[#16B878] hover:bg-[#139c65] transition shadow-sm min-h-[40px] cursor-pointer"
+            className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl font-black text-xs text-[#0F172A] bg-[#FACC15] hover:bg-[#EAB308] border-2 border-[#CA8A04] transition shadow-lamy min-h-[40px] cursor-pointer"
           >
-            <Send className="w-3.5 h-3.5" />
+            <Send className="w-3.5 h-3.5 stroke-[2.5]" />
             <span>{t.reviewNotifyBtn}</span>
           </button>
         </div>
@@ -337,7 +337,7 @@ export function BeforeAfterView() {
                   {/* Multi-Action Decision Options */}
                   {options.length > 0 && (
                     <div className="pt-2 border-t border-[#E4E7EC] dark:border-[#26384C]/60 space-y-1.5" onClick={(e) => e.stopPropagation()}>
-                      <div className="text-[10px] font-bold uppercase tracking-wider text-[#667085] dark:text-[#A7B2C1]">
+                      <div className="text-[10px] font-black uppercase tracking-wider text-[#475569] dark:text-[#94A3B8]">
                         Operational Action Options:
                       </div>
                       <div className="grid grid-cols-1 gap-1.5">
@@ -350,27 +350,27 @@ export function BeforeAfterView() {
                             <button
                               key={opt.actionType}
                               onClick={() => selectTaskAction(task.id, opt.actionType)}
-                              className={`w-full text-left p-2 rounded-lg border text-xs flex items-center justify-between transition cursor-pointer ${
+                              className={`w-full text-left p-2.5 rounded-xl border-2 text-xs flex items-center justify-between transition cursor-pointer shadow-xs ${
                                 isOptionActive
-                                  ? 'bg-[#EBF8F2] dark:bg-[#0E3A31] border-[#16B878] text-[#171A1F] dark:text-[#F5F7FA]'
-                                  : 'bg-[#FFFFFF] dark:bg-[#0D1B2A] border-[#E4E7EC] dark:border-[#26384C] text-[#667085] dark:text-[#A7B2C1] hover:border-[#16B878]/40'
+                                  ? 'bg-[#FEF9C3] dark:bg-[#422006] border-[#CA8A04] dark:border-[#FACC15] text-[#0F172A] dark:text-[#F8FAFC]'
+                                  : 'bg-[#FFFFFF] dark:bg-[#0D1B2A] border-[#CBD5E1] dark:border-[#334155] text-[#475569] dark:text-[#94A3B8] hover:border-[#CA8A04]/60'
                               }`}
                             >
                               <div className="space-y-0.5">
-                                <div className="font-semibold flex items-center gap-1.5">
+                                <div className="font-black flex items-center gap-1.5 text-xs">
                                   <span>{opt.label}</span>
                                   {opt.isRecommended && (
-                                    <span className="text-[9px] font-bold uppercase px-1.5 py-0.2 rounded bg-[#16B878] text-white">
+                                    <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded bg-[#FACC15] text-[#0F172A] border border-[#CA8A04]">
                                       Recommended
                                     </span>
                                   )}
                                 </div>
-                                <div className="text-[10px] text-[#667085] dark:text-[#A7B2C1]">
+                                <div className="text-[10px] font-medium text-[#475569] dark:text-[#94A3B8]">
                                   {opt.recommendationReason}
                                 </div>
                               </div>
                               {isOptionActive && (
-                                <Check className="w-4 h-4 text-[#16B878] shrink-0 ml-2" />
+                                <Check className="w-4 h-4 text-[#CA8A04] dark:text-[#FACC15] stroke-[3] shrink-0 ml-2" />
                               )}
                             </button>
                           );

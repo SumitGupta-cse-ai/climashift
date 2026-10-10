@@ -32,14 +32,14 @@ export function TodayTimeline() {
   };
 
   return (
-    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] rounded-2xl shadow-sm overflow-hidden transition-all">
+    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border-2 border-[#CBD5E1] dark:border-[#334155] rounded-2xl shadow-tactile overflow-hidden transition-all">
       {/* Top Header & View Controls */}
-      <div className="p-4 sm:p-5 border-b border-[#F1F5F9] dark:border-[#1E293B] flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+      <div className="p-4 sm:p-5 border-b border-[#E2E8F0] dark:border-[#334155] flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
         <div className="flex items-center gap-2.5">
-          <h3 className="text-base font-bold text-[#0F172A] dark:text-[#F8FAFC]">
+          <h3 className="text-base font-black text-[#0F172A] dark:text-[#F8FAFC]">
             {language === 'hi' ? 'आज का कार्य कार्यक्रम' : "Today's Shift Schedule"}
           </h3>
-          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] dark:bg-[#064E3B] text-[#059669] dark:text-[#34D399] border border-[#A7F3D0] dark:border-[#047857]">
+          <span className="text-xs font-black px-2.5 py-0.5 rounded-full bg-[#FEF08A] text-[#854D0E] dark:bg-[#422006] dark:text-[#FACC15] border border-[#EAB308] dark:border-[#854D0E] shadow-xs">
             {filteredTasks.length} {filteredTasks.length === 1 ? 'Task' : 'Tasks'}
           </span>
         </div>
@@ -54,54 +54,54 @@ export function TodayTimeline() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Filter tasks..."
-              className="text-xs pl-8 pr-2.5 py-1.5 rounded-lg bg-[#F8FAFC] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#10B981] w-36 sm:w-44"
+              className="text-xs pl-8 pr-2.5 py-1.5 rounded-lg bg-[#FFFFFF] dark:bg-[#07111C] border-2 border-[#CBD5E1] dark:border-[#334155] text-[#0F172A] dark:text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#CA8A04] w-36 sm:w-44 shadow-xs"
             />
           </div>
 
           {/* Toggle Button Group */}
-          <div className="flex items-center p-0.5 rounded-lg bg-[#F1F5F9] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B]">
+          <div className="flex items-center p-0.5 rounded-lg bg-[#F8F9FA] dark:bg-[#07111C] border-2 border-[#CBD5E1] dark:border-[#334155] shadow-xs">
             <button
               onClick={() => setViewMode('cards')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-black transition cursor-pointer ${
                 viewMode === 'cards'
-                  ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A]'
+                  ? 'bg-[#FACC15] text-[#0F172A] border border-[#CA8A04] shadow-xs'
+                  : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A]'
               }`}
             >
-              <LayoutGrid className="w-3.5 h-3.5" />
+              <LayoutGrid className="w-3.5 h-3.5 stroke-[2.5]" />
               <span className="hidden sm:inline">Cards</span>
             </button>
             <button
               onClick={() => setViewMode('table')}
-              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-black transition cursor-pointer ${
                 viewMode === 'table'
-                  ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
-                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A]'
+                  ? 'bg-[#FACC15] text-[#0F172A] border border-[#CA8A04] shadow-xs'
+                  : 'text-[#475569] dark:text-[#94A3B8] hover:text-[#0F172A]'
               }`}
             >
-              <TableIcon className="w-3.5 h-3.5" />
+              <TableIcon className="w-3.5 h-3.5 stroke-[2.5]" />
               <span className="hidden sm:inline">Table</span>
             </button>
           </div>
 
           <button
             onClick={() => setActiveNav('replan')}
-            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/40 hover:bg-[#D1FAE5] dark:hover:bg-[#064E3B]/60 transition cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-black text-[#0F172A] bg-[#FACC15] hover:bg-[#EAB308] border border-[#CA8A04] transition cursor-pointer shrink-0 shadow-xs"
           >
             <span>{language === 'hi' ? 'रीप्लान देखें' : 'View Replan'}</span>
-            <ArrowRight className="w-3.5 h-3.5" />
+            <ArrowRight className="w-3.5 h-3.5 stroke-[2.5]" />
           </button>
         </div>
       </div>
 
       {/* Filter Tabs Bar */}
-      <div className="px-4 py-2 bg-[#F8FAFC]/70 dark:bg-[#07111C]/40 border-b border-[#F1F5F9] dark:border-[#1E293B] flex items-center gap-1.5 overflow-x-auto text-xs">
+      <div className="px-4 py-2 bg-[#F8F9FA] dark:bg-[#07111C] border-b border-[#E2E8F0] dark:border-[#334155] flex items-center gap-1.5 overflow-x-auto text-xs">
         <button
           onClick={() => setFilterStatus('all')}
-          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+          className={`px-2.5 py-1 rounded-lg text-[11px] font-black transition cursor-pointer shrink-0 shadow-xs ${
             filterStatus === 'all'
-              ? 'bg-[#0F172A] text-white dark:bg-[#38BDF8] dark:text-[#0F172A]'
-              : 'text-[#64748B] dark:text-[#94A3B8] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B]'
+              ? 'bg-[#0F172A] text-white dark:bg-[#FACC15] dark:text-[#0F172A]'
+              : 'text-[#475569] dark:text-[#94A3B8] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B]'
           }`}
         >
           All Tasks ({counts.all})
@@ -109,10 +109,10 @@ export function TodayTimeline() {
         {counts.reschedule > 0 && (
           <button
             onClick={() => setFilterStatus('reschedule')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-black transition cursor-pointer shrink-0 shadow-xs ${
               filterStatus === 'reschedule'
-                ? 'bg-[#D97706] text-white'
-                : 'text-[#D97706] bg-[#FEF3C7] dark:bg-[#3D2E0B] border border-[#FDE68A] dark:border-[#78350F]'
+                ? 'bg-[#FACC15] text-[#0F172A] border border-[#CA8A04]'
+                : 'text-[#854D0E] bg-[#FEF08A] dark:bg-[#422006] dark:text-[#FACC15] border border-[#EAB308] dark:border-[#854D0E]'
             }`}
           >
             Rescheduled ({counts.reschedule})
@@ -121,10 +121,10 @@ export function TodayTimeline() {
         {counts.restricted > 0 && (
           <button
             onClick={() => setFilterStatus('restricted')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-black transition cursor-pointer shrink-0 shadow-xs ${
               filterStatus === 'restricted'
                 ? 'bg-[#DC2626] text-white'
-                : 'text-[#DC2626] bg-[#FEE2E2] dark:bg-[#451A1A] border border-[#FECACA] dark:border-[#7F1D1D]'
+                : 'text-[#991B1B] bg-[#FEE2E2] dark:bg-[#451A1A] border border-[#FCA5A5] dark:border-[#7F1D1D]'
             }`}
           >
             Restricted ({counts.restricted})
@@ -133,10 +133,10 @@ export function TodayTimeline() {
         {counts.continue > 0 && (
           <button
             onClick={() => setFilterStatus('continue')}
-            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-black transition cursor-pointer shrink-0 shadow-xs ${
               filterStatus === 'continue'
                 ? 'bg-[#16A34A] text-white'
-                : 'text-[#16A34A] bg-[#DCFCE7] dark:bg-[#064E3B] border border-[#BBF7D0] dark:border-[#065F46]'
+                : 'text-[#166534] bg-[#DCFCE7] dark:bg-[#064E3B] border border-[#86EFAC] dark:border-[#065F46]'
             }`}
           >
             Continue ({counts.continue})
@@ -154,27 +154,27 @@ export function TodayTimeline() {
             return (
               <div
                 key={task.id}
-                className="p-4 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-[#FFFFFF] dark:bg-[#07111C] hover:border-[#CBD5E1] dark:hover:border-[#334155] transition-all flex flex-col justify-between space-y-3"
+                className="p-4 rounded-xl border-2 border-[#CBD5E1] dark:border-[#334155] bg-[#FFFFFF] dark:bg-[#07111C] hover:border-[#CA8A04] dark:hover:border-[#FACC15] transition-all flex flex-col justify-between space-y-3 shadow-xs"
               >
                 {/* Header: Title + Status Pill */}
                 <div className="flex items-start justify-between gap-3">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-sm text-[#0F172A] dark:text-[#F8FAFC]">
+                      <span className="font-black text-sm text-[#0F172A] dark:text-[#F8FAFC]">
                         {task.name}
                       </span>
-                      <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md bg-[#F1F5F9] dark:bg-[#1E293B] text-[#475569] dark:text-[#94A3B8]">
+                      <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-md bg-[#F1F5F9] dark:bg-[#1E293B] text-[#334155] dark:text-[#94A3B8] border border-[#CBD5E1] dark:border-[#475569]">
                         {task.indoorOutdoor}
                       </span>
                     </div>
 
-                    <div className="flex items-center gap-3 text-xs text-[#64748B] dark:text-[#94A3B8]">
+                    <div className="flex items-center gap-3 text-xs text-[#475569] dark:text-[#94A3B8] font-medium">
                       <span className="flex items-center gap-1">
-                        <MapPin className="w-3 h-3 text-[#94A3B8]" />
+                        <MapPin className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
                         <span>{task.location}</span>
                       </span>
                       <span className="flex items-center gap-1">
-                        <Users className="w-3 h-3 text-[#94A3B8]" />
+                        <Users className="w-3.5 h-3.5 text-[#64748B] dark:text-[#94A3B8]" />
                         <span>{task.workers} crew</span>
                       </span>
                       <span>• {task.duration}h</span>
@@ -187,24 +187,24 @@ export function TodayTimeline() {
                 </div>
 
                 {/* Timing Bar / Slot Pill */}
-                <div className="p-2.5 rounded-lg bg-[#F8FAFC] dark:bg-[#0B1522] border border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono">
-                  <div className="flex items-center gap-1.5 text-[#64748B] dark:text-[#94A3B8]">
-                    <Clock className="w-3.5 h-3.5" />
+                <div className="p-2.5 rounded-lg bg-[#F8F9FA] dark:bg-[#0B1522] border-2 border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-1.5 text-[#475569] dark:text-[#94A3B8] font-semibold">
+                    <Clock className="w-3.5 h-3.5 text-[#CA8A04] dark:text-[#FACC15]" />
                     <span>Planned: {task.originalStartTime}–{task.originalEndTime}</span>
                   </div>
 
                   <div>
                     {isRestricted ? (
-                      <span className="text-xs font-bold text-[#DC2626] dark:text-[#F87171] uppercase">
+                      <span className="text-xs font-black text-[#DC2626] dark:text-[#F87171] uppercase">
                         STANDBY (CURBED)
                       </span>
                     ) : isShifted ? (
-                      <span className="inline-flex items-center gap-1 text-xs font-bold text-[#D97706] dark:text-[#FBBF24]">
+                      <span className="inline-flex items-center gap-1 text-xs font-black px-2 py-0.5 rounded bg-[#FEF08A] text-[#854D0E] dark:bg-[#422006] dark:text-[#FACC15] border border-[#EAB308] dark:border-[#854D0E]">
                         <span>Shifted:</span>
-                        <span className="underline">{task.recommendedStartTime}–{task.recommendedEndTime}</span>
+                        <span>{task.recommendedStartTime}–{task.recommendedEndTime}</span>
                       </span>
                     ) : (
-                      <span className="text-xs font-bold text-[#16A34A] dark:text-[#4ADE80]">
+                      <span className="text-xs font-black text-[#166534] dark:text-[#4ADE80]">
                         Confirmed: {task.originalStartTime}–{task.originalEndTime}
                       </span>
                     )}
