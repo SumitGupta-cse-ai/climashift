@@ -1,128 +1,272 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { StatusBadge } from '@/components/common/StatusBadge';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, LayoutGrid, Table as TableIcon, Users, Clock, MapPin, Search, Filter } from 'lucide-react';
 
 export function TodayTimeline() {
   const { tasks, replanResult, setActiveNav, language } = useApp();
+
+  const [viewMode, setViewMode] = useState<'cards' | 'table'>('cards');
+  const [filterStatus, setFilterStatus] = useState<string>('all');
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   const displayTasks = tasks.map(t => {
     const rec = replanResult?.recommendedTasks.find(r => r.id === t.id);
     return rec || t;
   });
 
+  const filteredTasks = displayTasks.filter(t => {
+    if (filterStatus !== 'all' && t.status !== filterStatus) return false;
+    if (searchQuery.trim() && !t.name.toLowerCase().includes(searchQuery.toLowerCase()) && !t.location.toLowerCase().includes(searchQuery.toLowerCase())) {
+      return false;
+    }
+    return true;
+  });
+
+  const counts = {
+    all: displayTasks.length,
+    reschedule: displayTasks.filter(t => t.status === 'reschedule').length,
+    restricted: displayTasks.filter(t => t.status === 'restricted').length,
+    continue: displayTasks.filter(t => t.status === 'continue').length,
+    protect: displayTasks.filter(t => t.status === 'protect').length
+  };
+
   return (
-    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl shadow-sm overflow-hidden">
-      {/* Table Header Row */}
-      <div className="p-5 sm:p-6 border-b border-[#E4E7EC] dark:border-[#26384C] flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
-          <h3 className="text-base sm:text-lg font-bold text-[#171A1F] dark:text-[#F5F7FA]">
-            {language === 'hi' ? "आज का कार्य कार्यक्रम" : "Today's Work Schedule"}
+    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] rounded-2xl shadow-sm overflow-hidden transition-all">
+      {/* Top Header & View Controls */}
+      <div className="p-4 sm:p-5 border-b border-[#F1F5F9] dark:border-[#1E293B] flex flex-col sm:flex-row sm:items-center justify-between gap-3.5">
+        <div className="flex items-center gap-2.5">
+          <h3 className="text-base font-bold text-[#0F172A] dark:text-[#F8FAFC]">
+            {language === 'hi' ? 'आज का कार्य कार्यक्रम' : "Today's Shift Schedule"}
           </h3>
-          <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#EBF8F2] dark:bg-[#0E3A31] text-[#16B878] border border-[#C3ECD8] dark:border-[#1E4B39]">
-            {displayTasks.length} {language === 'hi' ? 'कार्य' : 'Tasks'}
+          <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-[#ECFDF5] dark:bg-[#064E3B] text-[#059669] dark:text-[#34D399] border border-[#A7F3D0] dark:border-[#047857]">
+            {filteredTasks.length} {filteredTasks.length === 1 ? 'Task' : 'Tasks'}
           </span>
         </div>
 
-        <button
-          onClick={() => setActiveNav('replan')}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#16B878] hover:text-[#139c65] transition cursor-pointer"
-        >
-          <span>{language === 'hi' ? 'पूरी योजना देखें' : 'View Full Plan'}</span>
-          <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        {/* View Switcher & Actions */}
+        <div className="flex items-center gap-2 flex-wrap">
+          {/* Search */}
+          <div className="relative">
+            <Search className="w-3.5 h-3.5 text-[#94A3B8] absolute left-2.5 top-2.5 pointer-events-none" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Filter tasks..."
+              className="text-xs pl-8 pr-2.5 py-1.5 rounded-lg bg-[#F8FAFC] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] placeholder:text-[#94A3B8] focus:outline-none focus:border-[#10B981] w-36 sm:w-44"
+            />
+          </div>
+
+          {/* Toggle Button Group */}
+          <div className="flex items-center p-0.5 rounded-lg bg-[#F1F5F9] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B]">
+            <button
+              onClick={() => setViewMode('cards')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
+                viewMode === 'cards'
+                  ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A]'
+              }`}
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Cards</span>
+            </button>
+            <button
+              onClick={() => setViewMode('table')}
+              className={`flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition cursor-pointer ${
+                viewMode === 'table'
+                  ? 'bg-white dark:bg-[#1E293B] text-[#0F172A] dark:text-[#F8FAFC] shadow-xs'
+                  : 'text-[#64748B] dark:text-[#94A3B8] hover:text-[#0F172A]'
+              }`}
+            >
+              <TableIcon className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Table</span>
+            </button>
+          </div>
+
+          <button
+            onClick={() => setActiveNav('replan')}
+            className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-semibold text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/40 hover:bg-[#D1FAE5] dark:hover:bg-[#064E3B]/60 transition cursor-pointer shrink-0"
+          >
+            <span>{language === 'hi' ? 'रीप्लान देखें' : 'View Replan'}</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
-      {/* Enterprise Data Table */}
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-xs sm:text-sm">
-          <thead>
-            <tr className="border-b border-[#E4E7EC] dark:border-[#26384C] bg-[#F7F8FA] dark:bg-[#07111C]/60 text-[#667085] dark:text-[#A7B2C1] text-[11px] font-semibold uppercase tracking-wider">
-              <th className="py-3 px-4 w-12 text-center">#</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'कार्य' : 'Task'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'स्थान' : 'Location'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'श्रमिक' : 'Workers'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'अवधि' : 'Duration'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'मूल समय' : 'Original Time'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'अनुशंसित समय' : 'Recommended Time'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'निर्णय' : 'Decision'}</th>
-              <th className="py-3 px-4">{language === 'hi' ? 'जोखिम' : 'Risk'}</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-[#E4E7EC] dark:divide-[#26384C]">
-            {displayTasks.map((task, idx) => {
-              const isRestricted = task.status === 'restricted';
-              const isShifted = task.recommendedStartTime && task.recommendedStartTime !== task.originalStartTime;
-              const hasRec = Boolean(task.recommendedStartTime && task.recommendedEndTime);
+      {/* Filter Tabs Bar */}
+      <div className="px-4 py-2 bg-[#F8FAFC]/70 dark:bg-[#07111C]/40 border-b border-[#F1F5F9] dark:border-[#1E293B] flex items-center gap-1.5 overflow-x-auto text-xs">
+        <button
+          onClick={() => setFilterStatus('all')}
+          className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+            filterStatus === 'all'
+              ? 'bg-[#0F172A] text-white dark:bg-[#38BDF8] dark:text-[#0F172A]'
+              : 'text-[#64748B] dark:text-[#94A3B8] hover:bg-[#E2E8F0] dark:hover:bg-[#1E293B]'
+          }`}
+        >
+          All Tasks ({counts.all})
+        </button>
+        {counts.reschedule > 0 && (
+          <button
+            onClick={() => setFilterStatus('reschedule')}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+              filterStatus === 'reschedule'
+                ? 'bg-[#D97706] text-white'
+                : 'text-[#D97706] bg-[#FEF3C7] dark:bg-[#3D2E0B] border border-[#FDE68A] dark:border-[#78350F]'
+            }`}
+          >
+            Rescheduled ({counts.reschedule})
+          </button>
+        )}
+        {counts.restricted > 0 && (
+          <button
+            onClick={() => setFilterStatus('restricted')}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+              filterStatus === 'restricted'
+                ? 'bg-[#DC2626] text-white'
+                : 'text-[#DC2626] bg-[#FEE2E2] dark:bg-[#451A1A] border border-[#FECACA] dark:border-[#7F1D1D]'
+            }`}
+          >
+            Restricted ({counts.restricted})
+          </button>
+        )}
+        {counts.continue > 0 && (
+          <button
+            onClick={() => setFilterStatus('continue')}
+            className={`px-2.5 py-1 rounded-lg text-[11px] font-semibold transition cursor-pointer shrink-0 ${
+              filterStatus === 'continue'
+                ? 'bg-[#16A34A] text-white'
+                : 'text-[#16A34A] bg-[#DCFCE7] dark:bg-[#064E3B] border border-[#BBF7D0] dark:border-[#065F46]'
+            }`}
+          >
+            Continue ({counts.continue})
+          </button>
+        )}
+      </div>
 
-              let riskColor = 'text-[#18A66A]';
-              let riskLabel = 'Low';
-              if (task.status === 'restricted' || task.status === 'reschedule') {
-                riskColor = 'text-[#D94A4A]';
-                riskLabel = 'High';
-              } else if (task.status === 'protect') {
-                riskColor = 'text-[#D99A24]';
-                riskLabel = 'Medium';
-              }
+      {/* VIEW MODE 1: APP CARDS (DEFAULT OPERATIONAL APK FEEL) */}
+      {viewMode === 'cards' && (
+        <div className="p-4 grid grid-cols-1 md:grid-cols-2 gap-3">
+          {filteredTasks.map((task) => {
+            const isRestricted = task.status === 'restricted';
+            const isShifted = Boolean(task.recommendedStartTime && task.recommendedStartTime !== task.originalStartTime);
 
-              return (
-                <tr 
-                  key={task.id}
-                  className="hover:bg-[#F7F8FA]/60 dark:hover:bg-[#122235]/40 transition-colors"
-                >
-                  <td className="py-3.5 px-4 font-mono text-xs text-center text-[#667085] dark:text-[#A7B2C1]">
-                    {idx + 1}
-                  </td>
-                  <td className="py-3.5 px-4 font-semibold text-[#171A1F] dark:text-[#F5F7FA]">
-                    <div className="flex items-center gap-2">
-                      <span>{task.name}</span>
-                      <span className="text-[10px] font-mono uppercase px-1.5 py-0.5 rounded bg-[#F7F8FA] dark:bg-[#07111C] border border-[#E4E7EC] dark:border-[#26384C] text-[#667085] dark:text-[#A7B2C1]">
+            return (
+              <div
+                key={task.id}
+                className="p-4 rounded-xl border border-[#E2E8F0] dark:border-[#1E293B] bg-[#FFFFFF] dark:bg-[#07111C] hover:border-[#CBD5E1] dark:hover:border-[#334155] transition-all flex flex-col justify-between space-y-3"
+              >
+                {/* Header: Title + Status Pill */}
+                <div className="flex items-start justify-between gap-3">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-bold text-sm text-[#0F172A] dark:text-[#F8FAFC]">
+                        {task.name}
+                      </span>
+                      <span className="text-[10px] font-semibold uppercase px-2 py-0.5 rounded-md bg-[#F1F5F9] dark:bg-[#1E293B] text-[#475569] dark:text-[#94A3B8]">
                         {task.indoorOutdoor}
                       </span>
                     </div>
-                  </td>
-                  <td className="py-3.5 px-4 text-[#667085] dark:text-[#A7B2C1]">
-                    {task.location}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-[#171A1F] dark:text-[#F5F7FA]">
-                    {task.workers} crew
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-[#667085] dark:text-[#A7B2C1]">
-                    {task.duration}h
-                  </td>
-                  <td className="py-3.5 px-4 font-mono text-[#667085] dark:text-[#A7B2C1]">
-                    {task.originalStartTime} – {task.originalEndTime}
-                  </td>
-                  <td className="py-3.5 px-4 font-mono font-semibold">
-                    {isRestricted ? (
-                      <span className="text-[#D94A4A] dark:text-[#F87171] text-xs uppercase tracking-wide">
-                        STANDBY
+
+                    <div className="flex items-center gap-3 text-xs text-[#64748B] dark:text-[#94A3B8]">
+                      <span className="flex items-center gap-1">
+                        <MapPin className="w-3 h-3 text-[#94A3B8]" />
+                        <span>{task.location}</span>
                       </span>
-                    ) : hasRec ? (
-                      <span className="text-[#16B878]">
-                        {task.recommendedStartTime} – {task.recommendedEndTime}
+                      <span className="flex items-center gap-1">
+                        <Users className="w-3 h-3 text-[#94A3B8]" />
+                        <span>{task.workers} crew</span>
+                      </span>
+                      <span>• {task.duration}h</span>
+                    </div>
+                  </div>
+
+                  <div className="shrink-0">
+                    <StatusBadge status={task.status} size="sm" />
+                  </div>
+                </div>
+
+                {/* Timing Bar / Slot Pill */}
+                <div className="p-2.5 rounded-lg bg-[#F8FAFC] dark:bg-[#0B1522] border border-[#E2E8F0] dark:border-[#1E293B] flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-1.5 text-[#64748B] dark:text-[#94A3B8]">
+                    <Clock className="w-3.5 h-3.5" />
+                    <span>Planned: {task.originalStartTime}–{task.originalEndTime}</span>
+                  </div>
+
+                  <div>
+                    {isRestricted ? (
+                      <span className="text-xs font-bold text-[#DC2626] dark:text-[#F87171] uppercase">
+                        STANDBY (CURBED)
+                      </span>
+                    ) : isShifted ? (
+                      <span className="inline-flex items-center gap-1 text-xs font-bold text-[#D97706] dark:text-[#FBBF24]">
+                        <span>Shifted:</span>
+                        <span className="underline">{task.recommendedStartTime}–{task.recommendedEndTime}</span>
                       </span>
                     ) : (
-                      <span className="text-[#16B878]">
-                        {task.originalStartTime} – {task.originalEndTime}
+                      <span className="text-xs font-bold text-[#16A34A] dark:text-[#4ADE80]">
+                        Confirmed: {task.originalStartTime}–{task.originalEndTime}
                       </span>
                     )}
-                  </td>
-                  <td className="py-3.5 px-4">
-                    <StatusBadge status={task.status} size="sm" />
-                  </td>
-                  <td className="py-3.5 px-4 font-medium text-xs">
-                    <span className="flex items-center gap-1.5">
-                      <span className={`w-2 h-2 rounded-full ${riskLabel === 'High' ? 'bg-[#D94A4A]' : riskLabel === 'Medium' ? 'bg-[#D99A24]' : 'bg-[#18A66A]'}`}></span>
-                      <span className={riskColor}>{riskLabel}</span>
-                    </span>
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
+                  </div>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      {/* VIEW MODE 2: ENTERPRISE DATA TABLE */}
+      {viewMode === 'table' && (
+        <div className="overflow-x-auto">
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="border-b border-[#E2E8F0] dark:border-[#1E293B] bg-[#F8FAFC] dark:bg-[#07111C] text-[#64748B] dark:text-[#94A3B8] font-semibold uppercase tracking-wider text-[11px]">
+                <th className="py-3 px-4">Task</th>
+                <th className="py-3 px-4">Location</th>
+                <th className="py-3 px-4">Crew</th>
+                <th className="py-3 px-4">Planned Slot</th>
+                <th className="py-3 px-4">Optimized Slot</th>
+                <th className="py-3 px-4">Status</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-[#E2E8F0] dark:divide-[#1E293B]">
+              {filteredTasks.map((task) => {
+                const isRestricted = task.status === 'restricted';
+                const isShifted = Boolean(task.recommendedStartTime && task.recommendedStartTime !== task.originalStartTime);
+
+                return (
+                  <tr key={task.id} className="hover:bg-[#F8FAFC] dark:hover:bg-[#0B1522] transition-colors">
+                    <td className="py-3 px-4 font-semibold text-[#0F172A] dark:text-[#F8FAFC]">
+                      <div className="flex items-center gap-2">
+                        <span>{task.name}</span>
+                        <span className="text-[10px] uppercase font-mono px-1.5 py-0.2 rounded bg-[#F1F5F9] dark:bg-[#1E293B] text-[#64748B]">
+                          {task.indoorOutdoor}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="py-3 px-4 text-[#64748B] dark:text-[#94A3B8]">{task.location}</td>
+                    <td className="py-3 px-4 font-mono text-[#0F172A] dark:text-[#F8FAFC]">{task.workers} workers</td>
+                    <td className="py-3 px-4 font-mono text-[#64748B] dark:text-[#94A3B8]">{task.originalStartTime}–{task.originalEndTime}</td>
+                    <td className="py-3 px-4 font-mono font-semibold">
+                      {isRestricted ? (
+                        <span className="text-[#DC2626]">STANDBY</span>
+                      ) : isShifted ? (
+                        <span className="text-[#D97706]">{task.recommendedStartTime}–{task.recommendedEndTime}</span>
+                      ) : (
+                        <span className="text-[#16A34A]">{task.originalStartTime}–{task.originalEndTime}</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <StatusBadge status={task.status} size="sm" />
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

@@ -399,24 +399,30 @@ export function AppShell({ children }: AppShellProps) {
           </div>
         </header>
 
-        {/* GREETING & CONTEXT HEADER ON DASHBOARD */}
+        {/* OPERATIONAL CONTEXT HEADER ON DASHBOARD */}
         {activeNav === 'dashboard' && (
-          <div className="px-4 sm:px-6 pt-5 pb-1 flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
+          <div className="px-4 sm:px-6 pt-5 pb-2 flex flex-col sm:flex-row sm:items-center justify-between gap-3 w-full">
             <div>
-              <h1 className="text-2xl lg:text-[28px] font-bold tracking-tight text-[#171A1F] dark:text-[#F5F7FA] flex items-center gap-2">
-                <span>Good morning, Supervisor</span>
-                <span>👋</span>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/40 px-2 py-0.5 rounded-md border border-[#A7F3D0] dark:border-[#047857]">
+                  Operational Console
+                </span>
+                <span className="text-xs text-[#64748B] dark:text-[#94A3B8]">
+                  {siteProfile.jurisdiction || 'Delhi-NCR CAQM Jurisdiction'}
+                </span>
+              </div>
+              <h1 className="text-xl sm:text-2xl lg:text-[26px] font-extrabold tracking-tight text-[#0F172A] dark:text-[#F8FAFC] mt-1">
+                {siteProfile.name}
               </h1>
-              <p className="text-sm text-[#667085] dark:text-[#A7B2C1] mt-0.5">
-                {"Here's today's work decision and environmental overview"}
-              </p>
             </div>
 
-            <div className="flex items-center gap-2.5 p-2 px-3 rounded-lg bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] text-xs shadow-xs">
-              <Calendar className="w-4 h-4 text-[#16B878]" />
-              <div>
-                <div className="font-semibold text-[#171A1F] dark:text-[#F5F7FA]">Tue, 8 Oct 2026</div>
-                <div className="text-[11px] text-[#667085] dark:text-[#A7B2C1]">{siteProfile.name}</div>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] text-xs shadow-xs">
+                <Calendar className="w-3.5 h-3.5 text-[#10B981]" />
+                <div>
+                  <div className="font-bold text-[#0F172A] dark:text-[#F8FAFC]">Tue, 8 Oct 2026</div>
+                  <div className="text-[10px] text-[#64748B] dark:text-[#94A3B8] font-mono">Shift 07:00–19:00 IST</div>
+                </div>
               </div>
             </div>
           </div>

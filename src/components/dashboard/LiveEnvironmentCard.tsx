@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
-import { ArrowRight, ChevronDown, ChevronUp, AlertTriangle, RefreshCw } from 'lucide-react';
+import { ArrowRight, ChevronDown, ChevronUp, AlertTriangle, RefreshCw, Radio, Wind, Thermometer, Droplets, Gauge } from 'lucide-react';
 
 export function LiveEnvironmentCard() {
   const { 
@@ -13,37 +13,38 @@ export function LiveEnvironmentCard() {
     language 
   } = useApp();
 
-  const [showDetails, setShowDetails] = useState(false);
+  const [showHourly, setShowHourly] = useState(false);
 
   const currentWindow = environmentalWindows.find(w => w.hour === 11) || environmentalWindows[0];
 
   const aqi = siteProfile.currentAQI;
   let aqiStatus = 'Very Poor';
-  let aqiBadgeStyle = 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]';
+  let aqiBadgeStyle = 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]';
 
   if (aqi <= 50) {
     aqiStatus = language === 'hi' ? 'अच्छा' : 'Good';
-    aqiBadgeStyle = 'text-[#18A66A] bg-[#EBF8F2] border-[#C3ECD8] dark:bg-[#132B22] dark:text-[#18A66A] dark:border-[#1E4B39]';
+    aqiBadgeStyle = 'text-[#16A34A] bg-[#DCFCE7] border-[#BBF7D0] dark:bg-[#064E3B] dark:text-[#4ADE80] dark:border-[#065F46]';
   } else if (aqi <= 100) {
     aqiStatus = language === 'hi' ? 'संतोषजनक' : 'Satisfactory';
-    aqiBadgeStyle = 'text-[#18A66A] bg-[#EBF8F2] border-[#C3ECD8] dark:bg-[#132B22] dark:text-[#18A66A] dark:border-[#1E4B39]';
+    aqiBadgeStyle = 'text-[#16A34A] bg-[#DCFCE7] border-[#BBF7D0] dark:bg-[#064E3B] dark:text-[#4ADE80] dark:border-[#065F46]';
   } else if (aqi <= 200) {
     aqiStatus = language === 'hi' ? 'मध्यम' : 'Moderate';
-    aqiBadgeStyle = 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]';
+    aqiBadgeStyle = 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]';
   } else if (aqi <= 300) {
     aqiStatus = language === 'hi' ? 'खराब' : 'Poor';
-    aqiBadgeStyle = 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]';
+    aqiBadgeStyle = 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]';
   } else if (aqi <= 400) {
     aqiStatus = language === 'hi' ? 'बहुत खराब' : 'Very Poor';
-    aqiBadgeStyle = 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]';
+    aqiBadgeStyle = 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]';
   } else {
     aqiStatus = language === 'hi' ? 'गंभीर' : 'Severe';
-    aqiBadgeStyle = 'text-[#D94A4A] bg-[#FEEFEF] border-[#FBC8C8] dark:bg-[#2D1818] dark:text-[#F87171] dark:border-[#4E2424]';
+    aqiBadgeStyle = 'text-[#DC2626] bg-[#FEE2E2] border-[#FECACA] dark:bg-[#451A1A] dark:text-[#F87171] dark:border-[#7F1D1D]';
   }
 
   const metrics = [
     {
-      label: 'AQI',
+      label: 'Air Quality (AQI)',
+      icon: Gauge,
       value: aqi.toString(),
       status: aqiStatus,
       statusClass: aqiBadgeStyle,
@@ -51,139 +52,152 @@ export function LiveEnvironmentCard() {
     },
     {
       label: 'Temperature',
+      icon: Thermometer,
       value: `${siteProfile.currentTemp}°C`,
       status: siteProfile.currentTemp >= 35 ? 'High' : 'Moderate',
-      statusClass: 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]',
-      sublabel: 'Peak 41°C'
+      statusClass: 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]',
+      sublabel: 'Solar Peak 41°C'
     },
     {
       label: 'Heat Index',
+      icon: Thermometer,
       value: `${currentWindow.heatIndex}°C`,
       status: currentWindow.heatRisk === 'Danger' ? 'Danger' : 'Caution',
       statusClass: currentWindow.heatRisk === 'Danger'
-        ? 'text-[#D94A4A] bg-[#FEEFEF] border-[#FBC8C8] dark:bg-[#2D1818] dark:text-[#F87171] dark:border-[#4E2424]'
-        : 'text-[#D99A24] bg-[#FEF7EB] border-[#FBE3B8] dark:bg-[#2C2214] dark:text-[#F59E0B] dark:border-[#4B3B24]',
-      sublabel: 'Solar peak 13:00'
+        ? 'text-[#DC2626] bg-[#FEE2E2] border-[#FECACA] dark:bg-[#451A1A] dark:text-[#F87171] dark:border-[#7F1D1D]'
+        : 'text-[#D97706] bg-[#FEF3C7] border-[#FDE68A] dark:bg-[#3D2E0B] dark:text-[#FBBF24] dark:border-[#78350F]',
+      sublabel: 'Midday Inversion'
     },
     {
       label: 'Humidity',
+      icon: Droplets,
       value: `${siteProfile.currentHumidity}%`,
       status: 'Normal',
-      statusClass: 'text-[#18A66A] bg-[#EBF8F2] border-[#C3ECD8] dark:bg-[#132B22] dark:text-[#18A66A] dark:border-[#1E4B39]',
+      statusClass: 'text-[#16A34A] bg-[#DCFCE7] border-[#BBF7D0] dark:bg-[#064E3B] dark:text-[#4ADE80] dark:border-[#065F46]',
       sublabel: `Wind ${currentWindow.windSpeed} km/h`
     },
     {
-      label: 'Regulatory',
+      label: 'Curbs & Directives',
+      icon: Wind,
       value: siteProfile.grapStage.replace('_', ' '),
-      status: 'Active Curbs',
-      statusClass: 'text-[#D94A4A] bg-[#FEEFEF] border-[#FBC8C8] dark:bg-[#2D1818] dark:text-[#F87171] dark:border-[#4E2424]',
-      sublabel: 'CAQM Dir 79'
+      status: 'Mandatory',
+      statusClass: 'text-[#DC2626] bg-[#FEE2E2] border-[#FECACA] dark:bg-[#451A1A] dark:text-[#F87171] dark:border-[#7F1D1D]',
+      sublabel: 'CAQM Protocol'
     }
   ];
 
   return (
-    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E4E7EC] dark:border-[#26384C] rounded-xl p-5 sm:p-6 shadow-sm flex flex-col">
-      {/* Top Header */}
-      <div className="flex items-start justify-between gap-4 mb-4">
-        <div>
-          <h2 className="text-sm sm:text-base font-bold text-[#171A1F] dark:text-[#F5F7FA]">
-            {language === 'hi' ? 'लाइव पर्यावरणीय स्थितियां' : 'Live Environmental Conditions'}
-          </h2>
-          <p className="text-xs text-[#667085] dark:text-[#A7B2C1] mt-0.5">
-            {language === 'hi' ? 'डीपीसीसी सीएएएमएस स्टेशन से रीयल-टाइम डेटा' : 'Real-time readings from DPCC CAAMS Station'}
-          </p>
+    <div className="bg-[#FFFFFF] dark:bg-[#0D1B2A] border border-[#E2E8F0] dark:border-[#1E293B] rounded-2xl p-5 sm:p-6 shadow-sm flex flex-col justify-between transition-all">
+      {/* Top Header Row */}
+      <div className="flex items-center justify-between gap-3 mb-3.5">
+        <div className="flex items-center gap-2">
+          <span className="p-1.5 rounded-lg bg-[#ECFDF5] dark:bg-[#064E3B]/40 text-[#10B981] dark:text-[#34D399] border border-[#A7F3D0] dark:border-[#047857]">
+            <Radio className="w-3.5 h-3.5 animate-pulse" />
+          </span>
+          <div>
+            <h2 className="text-sm font-bold text-[#0F172A] dark:text-[#F8FAFC]">
+              {language === 'hi' ? 'लाइव पर्यावरणीय टेलीमेट्री' : 'Live Environmental Telemetry'}
+            </h2>
+            <p className="text-[11px] text-[#64748B] dark:text-[#94A3B8]">
+              {siteProfile.dataSource || 'CPCB / DPCC Continuous Monitoring (CAAMS)'}
+            </p>
+          </div>
         </div>
 
         <button
-          onClick={() => setShowDetails(!showDetails)}
-          className="inline-flex items-center gap-1 text-xs font-semibold text-[#16B878] hover:text-[#139c65] transition cursor-pointer shrink-0"
+          onClick={() => setShowHourly(!showHourly)}
+          className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold text-[#10B981] dark:text-[#34D399] bg-[#ECFDF5] dark:bg-[#064E3B]/30 hover:bg-[#D1FAE5] dark:hover:bg-[#064E3B]/50 transition cursor-pointer shrink-0"
         >
-          <span>{language === 'hi' ? 'विवरण देखें' : 'View Details'}</span>
-          {showDetails ? <ChevronUp className="w-3.5 h-3.5" /> : <ArrowRight className="w-3.5 h-3.5" />}
+          <span>{showHourly ? 'Hide Forecast' : 'Hourly Curve'}</span>
+          {showHourly ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
         </button>
       </div>
 
       {/* Conditions Changed Alert Banner if active */}
       {conditionsChanged && (
-        <div className="mb-4 rounded-lg border border-[#D94A4A] bg-[#FEEFEF] dark:bg-[#2D1818] p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+        <div className="mb-3.5 rounded-xl border border-[#FCA5A5] dark:border-[#7F1D1D] bg-[#FEF2F2] dark:bg-[#451A1A]/60 p-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
           <div className="flex items-center gap-2">
-            <AlertTriangle className="w-4 h-4 text-[#D94A4A] shrink-0" />
-            <span className="text-xs font-semibold text-[#D94A4A] dark:text-[#F87171]">
-              Sensor Surge: AQI spiked to {siteProfile.currentAQI}
+            <AlertTriangle className="w-4 h-4 text-[#DC2626] shrink-0" />
+            <span className="text-xs font-bold text-[#DC2626] dark:text-[#FCA5A5]">
+              Sensor Surge Detected: AQI jumped to {siteProfile.currentAQI}
             </span>
           </div>
           <button
             onClick={reevaluatePlan}
             disabled={isOptimizing}
-            className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded text-xs font-semibold text-white bg-[#D94A4A] hover:bg-[#b93838] transition cursor-pointer shrink-0"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg text-xs font-bold text-white bg-[#DC2626] hover:bg-[#B91C1C] transition cursor-pointer shrink-0"
           >
             <RefreshCw className={`w-3 h-3 ${isOptimizing ? 'animate-spin' : ''}`} />
-            <span>Re-evaluate</span>
+            <span>Re-evaluate Shift</span>
           </button>
         </div>
       )}
 
-      {/* 5 Column Metric Grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-        {metrics.map((item, idx) => (
-          <div
-            key={idx}
-            className="bg-[#F7F8FA] dark:bg-[#07111C] border border-[#E4E7EC] dark:border-[#26384C] rounded-lg p-3.5 flex flex-col justify-between"
-          >
-            <div>
-              <div className="text-xl sm:text-2xl font-bold font-mono tracking-tight text-[#171A1F] dark:text-[#F5F7FA]">
-                {item.value}
+      {/* 5 Column Modern Metric Strip */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5">
+        {metrics.map((item, idx) => {
+          const Icon = item.icon;
+          return (
+            <div
+              key={idx}
+              className="bg-[#F8FAFC] dark:bg-[#07111C] border border-[#E2E8F0] dark:border-[#1E293B] rounded-xl p-3 flex flex-col justify-between hover:border-[#CBD5E1] dark:hover:border-[#334155] transition-colors"
+            >
+              <div>
+                <div className="flex items-center justify-between text-[#64748B] dark:text-[#94A3B8] mb-1">
+                  <span className="text-[10px] font-semibold uppercase tracking-wider truncate">{item.label}</span>
+                  <Icon className="w-3 h-3 shrink-0 opacity-70" />
+                </div>
+                <div className="text-lg sm:text-xl font-bold font-mono tracking-tight text-[#0F172A] dark:text-[#F8FAFC]">
+                  {item.value}
+                </div>
               </div>
-              <div className="text-xs font-medium text-[#667085] dark:text-[#A7B2C1] mt-0.5">
-                {item.label}
-              </div>
-            </div>
 
-            <div className="mt-3">
-              <span className={`inline-block text-[10px] font-semibold uppercase px-2 py-0.5 rounded border ${item.statusClass}`}>
-                {item.status}
-              </span>
+              <div className="mt-2.5 flex items-center justify-between gap-1 flex-wrap">
+                <span className={`inline-block text-[10px] font-bold uppercase px-1.5 py-0.2 rounded border ${item.statusClass}`}>
+                  {item.status}
+                </span>
+                <span className="text-[9px] text-[#64748B] dark:text-[#94A3B8] font-mono truncate">
+                  {item.sublabel}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {/* Expandable Deep Diurnal Strip */}
-      {showDetails && (
-        <div className="mt-5 pt-4 border-t border-[#E4E7EC] dark:border-[#26384C] space-y-3">
-          <div className="flex items-center justify-between text-xs text-[#667085] dark:text-[#A7B2C1]">
-            <span className="font-semibold uppercase tracking-wider text-[11px]">
-              Diurnal Exposure Window (07:00 – 19:00 IST)
-            </span>
-            <button
-              onClick={triggerConditionsChanged}
-              className="text-[11px] text-[#D99A24] hover:underline cursor-pointer"
-            >
-              Simulate Surge
-            </button>
+      {/* Expandable Diurnal Forecast Bar Chart */}
+      {showHourly && (
+        <div className="mt-4 pt-3.5 border-t border-[#F1F5F9] dark:border-[#1E293B] space-y-2">
+          <div className="flex items-center justify-between text-xs font-semibold text-[#475569] dark:text-[#94A3B8]">
+            <span>Today&apos;s Diurnal Exposure Windows (07:00 – 19:00 IST)</span>
+            <span className="text-[10px] text-[#10B981] font-mono">Green = Safe Window</span>
           </div>
-
-          <div className="grid grid-cols-13 gap-1 pt-1">
-            {environmentalWindows.map((w) => {
-              const isHigh = w.environmentalRiskScore >= 65;
-              const isMed = w.environmentalRiskScore >= 50 && w.environmentalRiskScore < 65;
-              const barFill = isHigh ? 'bg-[#D94A4A]' : isMed ? 'bg-[#D99A24]' : 'bg-[#18A66A]';
-              const barBg = isHigh ? 'bg-[#FEEFEF] dark:bg-[#2D1818]' : isMed ? 'bg-[#FEF7EB] dark:bg-[#2C2214]' : 'bg-[#EBF8F2] dark:bg-[#132B22]';
-
+          <div className="grid grid-cols-6 sm:grid-cols-13 gap-1">
+            {environmentalWindows.slice(0, 13).map((w) => {
+              const isMorningSafe = w.hour >= 7 && w.hour <= 10;
+              const isPeakDanger = w.hour >= 12 && w.hour <= 16;
               return (
-                <div key={w.hour} className="flex flex-col items-center">
-                  <div 
-                    className={`w-full h-8 rounded border border-[#E4E7EC] dark:border-[#26384C] flex flex-col justify-end p-0.5 ${barBg}`}
-                    title={`${w.timeLabel}: AQI ${w.aqi}, Heat Index ${w.heatIndex}°C, Risk: ${w.environmentalRiskScore}/100`}
-                  >
-                    <div 
-                      className={`w-full rounded-xs ${barFill}`} 
-                      style={{ height: `${Math.max(25, w.environmentalRiskScore)}%` }}
-                    />
+                <div 
+                  key={w.hour}
+                  className={`p-1.5 rounded-lg border text-center transition-all ${
+                    isMorningSafe
+                      ? 'bg-[#ECFDF5] border-[#A7F3D0] dark:bg-[#064E3B]/40 dark:border-[#047857]'
+                      : isPeakDanger
+                      ? 'bg-[#FEF2F2] border-[#FECACA] dark:bg-[#451A1A]/40 dark:border-[#7F1D1D]'
+                      : 'bg-[#F8FAFC] border-[#E2E8F0] dark:bg-[#0B1522] dark:border-[#1E293B]'
+                  }`}
+                >
+                  <div className="text-[9px] font-mono text-[#64748B] dark:text-[#94A3B8]">
+                    {w.timeLabel?.split(':')[0] || `${w.hour}`}h
                   </div>
-                  <span className="text-[9px] font-mono font-medium text-[#171A1F] dark:text-[#F5F7FA] mt-1">
-                    {w.timeLabel.split(':')[0]}h
-                  </span>
+                  <div className={`text-[11px] font-bold font-mono ${
+                    isMorningSafe ? 'text-[#059669] dark:text-[#34D399]' : isPeakDanger ? 'text-[#DC2626] dark:text-[#F87171]' : 'text-[#475569] dark:text-[#CBD5E1]'
+                  }`}>
+                    {w.aqi}
+                  </div>
+                  <div className="text-[8px] text-[#94A3B8] font-mono">
+                    {w.temperature}°
+                  </div>
                 </div>
               );
             })}

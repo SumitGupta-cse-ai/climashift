@@ -37,7 +37,7 @@ export function PlanInputScreen() {
         configured: false,
         mode: 'demo_fallback',
         region: 'us-east-1',
-        modelId: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+        modelId: 'us.anthropic.claude-sonnet-4-6',
         message: 'Demo / fallback mode — AWS Bedrock is not currently connected.'
       });
     } finally {
@@ -177,7 +177,7 @@ export function PlanInputScreen() {
           <div className="p-3.5 rounded-lg bg-[#FEF7EB] dark:bg-[#2C2214]/60 border border-[#FBE3B8] dark:border-[#4B3B24] text-xs text-[#171A1F] dark:text-[#F5F7FA] flex items-start gap-2.5">
             <AlertCircle className="w-4 h-4 text-[#D99A24] shrink-0 mt-0.5" />
             <div className="leading-relaxed">
-              <strong className="font-semibold text-[#D99A24] dark:text-[#F59E0B]">DEMO / FALLBACK MODE:</strong> Amazon Bedrock is operating in local demonstration mode. Work plans are parsed via ClimaShift&apos;s deterministic NLP engine. When deployed on AWS with IAM role permissions, requests flow natively to Amazon Bedrock (Claude 3.5 Sonnet).
+              <strong className="font-semibold text-[#D99A24] dark:text-[#F59E0B]">DEMO / FALLBACK MODE:</strong> Amazon Bedrock is operating in local demonstration mode. Work plans are parsed via ClimaShift&apos;s deterministic NLP engine. When deployed on AWS with IAM role permissions, requests flow natively to Amazon Bedrock (Claude Sonnet 4.6).
             </div>
           </div>
         )}
