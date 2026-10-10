@@ -8,7 +8,7 @@ import { runDeterministicScheduler, calculateTransparentImpactMetrics } from '@/
 import { Language, translations, Translations } from '@/lib/i18n';
 
 export type ThemeMode = 'light' | 'dark' | 'system';
-export type AppNavView = 'dashboard' | 'plan' | 'replan' | 'activity' | 'architecture' | 'settings';
+export type AppNavView = 'dashboard' | 'telemetry' | 'schedule' | 'plan' | 'replan' | 'safety' | 'compliance' | 'activity' | 'architecture' | 'settings';
 
 export interface DecisionLogEntry {
   id: string;

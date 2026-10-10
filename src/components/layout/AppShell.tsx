@@ -24,7 +24,10 @@ import {
   ChevronDown,
   Calendar,
   Leaf,
-  Clock
+  Clock,
+  Radio,
+  HardHat,
+  Scale
 } from 'lucide-react';
 
 interface AppShellProps {
@@ -59,6 +62,8 @@ export function AppShell({ children }: AppShellProps) {
 
   const workspaceNav: NavItem[] = [
     { id: 'dashboard' as AppNavView, label: t.navDashboard, icon: LayoutDashboard },
+    { id: 'telemetry' as AppNavView, label: t.navTelemetry, icon: Radio },
+    { id: 'schedule' as AppNavView, label: t.navSchedule, icon: Calendar },
     { id: 'plan' as AppNavView, label: t.navPlan, icon: CalendarClock },
     { 
       id: 'replan' as AppNavView, 
@@ -66,6 +71,8 @@ export function AppShell({ children }: AppShellProps) {
       icon: Sparkles, 
       badge: '2'
     },
+    { id: 'safety' as AppNavView, label: t.navSafety, icon: HardHat },
+    { id: 'compliance' as AppNavView, label: t.navCompliance, icon: Scale },
     { id: 'activity' as AppNavView, label: t.navActivity, icon: History },
   ];
 
@@ -77,13 +84,13 @@ export function AppShell({ children }: AppShellProps) {
   const allNavItems: NavItem[] = [...workspaceNav, ...systemNav];
 
   const demoSteps = [
-    { num: '1', title: 'Diurnal AQI', nav: 'dashboard' as AppNavView },
-    { num: '2', title: 'Work Plan', nav: 'plan' as AppNavView },
+    { num: '1', title: 'Live Telemetry', nav: 'telemetry' as AppNavView },
+    { num: '2', title: 'Shift Schedule', nav: 'schedule' as AppNavView },
     { num: '3', title: 'Bedrock Intake', nav: 'plan' as AppNavView },
     { num: '4', title: 'Dual Optimizer', nav: 'replan' as AppNavView },
-    { num: '5', title: 'Multi-Action & Provenance', nav: 'replan' as AppNavView },
-    { num: '6', title: 'Supervisor Approval', nav: 'replan' as AppNavView },
-    { num: '7', title: 'Decision Replay', nav: 'activity' as AppNavView },
+    { num: '5', title: 'Safety Passes', nav: 'safety' as AppNavView },
+    { num: '6', title: 'GRAP Curbs', nav: 'compliance' as AppNavView },
+    { num: '7', title: 'Decision Audit', nav: 'activity' as AppNavView },
     { num: '8', title: 'Real AWS Cloud', nav: 'architecture' as AppNavView }
   ];
 
@@ -93,6 +100,26 @@ export function AppShell({ children }: AppShellProps) {
         return {
           title: t.navDashboard,
           subtitle: language === 'hi' ? 'आज का परिचालन निर्णय एवं पर्यावरणीय स्थिति' : "Today's work decision & environmental risk overview"
+        };
+      case 'telemetry':
+        return {
+          title: t.navTelemetry,
+          subtitle: language === 'hi' ? 'लाइव मौसम सेंसर, AQI एवं तापमान टेलीमेट्री' : "Continuous IoT micro-climate weather monitoring & live forecast"
+        };
+      case 'schedule':
+        return {
+          title: t.navSchedule,
+          subtitle: language === 'hi' ? 'दैनिक शिफ्ट कार्य कार्यक्रम एवं व्यापार आवंटन' : "Full shift schedule, trade timelines & planned vs recommended slots"
+        };
+      case 'safety':
+        return {
+          title: t.navSafety,
+          subtitle: language === 'hi' ? 'श्रमिक स्वास्थ्य, डिजिटल पास एवं सुरक्षा प्रोटोकॉल' : "Worker protection passes, mandatory PPE checklists & heat stress tracking"
+        };
+      case 'compliance':
+        return {
+          title: t.navCompliance,
+          subtitle: language === 'hi' ? 'सीएक्यूएम ग्रैप-III वैधानिक निर्देश व कानूनी साक्ष्य' : "CAQM GRAP-III statutory curbs, dust enforcement & legal affidavit"
         };
       case 'plan':
         return {

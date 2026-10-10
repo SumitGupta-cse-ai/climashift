@@ -15,8 +15,12 @@ export interface Translations {
 
   // Nav
   navDashboard: string;
+  navTelemetry: string;
+  navSchedule: string;
   navPlan: string;
   navReplan: string;
+  navSafety: string;
+  navCompliance: string;
   navActivity: string;
   navArchitecture: string;
   navSettings: string;
@@ -119,8 +123,12 @@ export const translations: Record<Language, Translations> = {
     updatedLabel: 'Updated',
 
     navDashboard: 'Dashboard',
+    navTelemetry: 'Live Telemetry',
+    navSchedule: 'Shift Schedule',
     navPlan: 'Work Plan',
     navReplan: 'Replan Engine',
+    navSafety: 'Crew Safety Passes',
+    navCompliance: 'GRAP Compliance',
     navActivity: 'Decision Log',
     navArchitecture: 'AWS Architecture',
     navSettings: 'Settings',
@@ -214,8 +222,12 @@ export const translations: Record<Language, Translations> = {
     updatedLabel: 'अपडेटेड',
 
     navDashboard: 'डैशबोर्ड (Dashboard)',
+    navTelemetry: 'लाइव टेलीमेट्री (Telemetry)',
+    navSchedule: 'शिफ्ट कार्यक्रम (Schedule)',
     navPlan: 'कार्य योजना (Work Plan)',
     navReplan: 'रीप्लान इंजन (Replan)',
+    navSafety: 'श्रमिक सुरक्षा पास (Safety Passes)',
+    navCompliance: 'GRAP अनुपालन (Compliance)',
     navActivity: 'निर्णय लॉग (Decision Log)',
     navArchitecture: 'AWS क्लाउड (Architecture)',
     navSettings: 'सेटिंग्स (Settings)',
