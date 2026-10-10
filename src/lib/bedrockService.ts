@@ -58,6 +58,20 @@ export function isAwsBedrockConfigured(): boolean {
   return getBedrockAuthMethod() !== 'none';
 }
 
+export const DEFAULT_BEDROCK_MODEL_ID = 'us.anthropic.claude-sonnet-4-6';
+
+/**
+ * Resolves the Bedrock model identifier.
+ * Upgrades deprecated/EOL models (such as claude-3-5-sonnet-20240620-v1:0) to Claude Sonnet 4.6.
+ */
+export function getResolvedModelId(): string {
+  const configured = process.env.BEDROCK_MODEL_ID?.trim();
+  if (!configured || configured === 'anthropic.claude-3-5-sonnet-20240620-v1:0') {
+    return DEFAULT_BEDROCK_MODEL_ID;
+  }
+  return configured;
+}
+
 /**
  * Returns current Bedrock status and connection metadata.
  */
@@ -65,7 +79,7 @@ export function getBedrockConfig(): BedrockStatusResponse {
   const configured = isAwsBedrockConfigured();
   const authMethod = getBedrockAuthMethod();
   const region = process.env.AWS_REGION || 'us-east-1';
-  const modelId = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-5-sonnet-20240620-v1:0';
+  const modelId = getResolvedModelId();
 
   let message = 'Demo / fallback mode — AWS Bedrock credentials not connected.';
   if (configured) {
@@ -91,10 +105,16 @@ export function getBedrockConfig(): BedrockStatusResponse {
  */
 function sanitizeError(error: any): string {
   const raw = error?.message || String(error);
+  if (raw.includes('Operation not allowed')) {
+    return 'Bedrock HTTP 400: Operation not allowed — Anthropic Claude model access has not yet been granted in your Amazon Bedrock Console (Bedrock > Model access > Request access to Anthropic Claude).';
+  }
+  if (raw.includes('account is currently being verified')) {
+    return 'Bedrock HTTP 403: AWS account is currently being verified by Amazon Web Services. Model invocation is temporarily blocked until account verification completes.';
+  }
   return raw
     .replace(/(Bearer\s+)[A-Za-z0-9_\-\.]+/gi, '$1[REDACTED]')
     .replace(/([A-Za-z0-9_\-]{24,})/g, (match: string) => {
-      if (match.includes('anthropic') || match.includes('claude') || match.includes('bedrock') || match.includes('titan')) {
+      if (match.includes('anthropic') || match.includes('claude') || match.includes('bedrock') || match.includes('titan') || match.includes('sonnet')) {
         return match;
       }
       return '[REDACTED]';
@@ -194,6 +214,7 @@ function extractAndNormalizeTasks(parsedBedrock: any): Task[] {
 /**
  * Invokes Amazon Bedrock Runtime via HTTPS using AWS_BEARER_TOKEN_BEDROCK API key.
  * Does NOT require AWS_ACCESS_KEY_ID or AWS_SECRET_ACCESS_KEY.
+ * Includes automatic TLS certificate retry for Windows/proxy development environments.
  */
 async function invokeBedrockWithBearerToken(
   token: string,
@@ -204,59 +225,69 @@ async function invokeBedrockWithBearerToken(
   const url = `https://bedrock-runtime.${region}.amazonaws.com/model/${encodeURIComponent(modelId)}/invoke`;
   const postData = JSON.stringify(payload);
 
-  return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
+  const makeRequest = (rejectUnauthorized: boolean): Promise<any> => {
+    return new Promise((resolve, reject) => {
+      const parsedUrl = new URL(url);
 
-    const options: https.RequestOptions = {
-      hostname: parsedUrl.hostname,
-      port: 443,
-      path: parsedUrl.pathname + parsedUrl.search,
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${token.trim()}`,
-        'Content-Length': Buffer.byteLength(postData)
-      },
-      rejectUnauthorized: process.env.NODE_TLS_REJECT_UNAUTHORIZED !== '0'
-    };
+      const options: https.RequestOptions = {
+        hostname: parsedUrl.hostname,
+        port: 443,
+        path: parsedUrl.pathname + parsedUrl.search,
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'Authorization': `Bearer ${token.trim()}`,
+          'Content-Length': Buffer.byteLength(postData)
+        },
+        rejectUnauthorized
+      };
 
-    const req = https.request(options, (res) => {
-      let data = '';
-      res.on('data', (chunk) => {
-        data += chunk;
+      const req = https.request(options, (res) => {
+        let data = '';
+        res.on('data', (chunk) => {
+          data += chunk;
+        });
+        res.on('end', () => {
+          if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
+            try {
+              resolve(JSON.parse(data));
+            } catch {
+              reject(new Error('Invalid JSON received from Bedrock Runtime'));
+            }
+          } else {
+            try {
+              const errObj = JSON.parse(data);
+              const msg = errObj.message || errObj.Message || data;
+              reject(new Error(`Bedrock HTTP ${res.statusCode}: ${msg}`));
+            } catch {
+              reject(new Error(`Bedrock HTTP ${res.statusCode}: ${data.slice(0, 150)}`));
+            }
+          }
+        });
       });
-      res.on('end', () => {
-        if (res.statusCode && res.statusCode >= 200 && res.statusCode < 300) {
-          try {
-            resolve(JSON.parse(data));
-          } catch {
-            reject(new Error('Invalid JSON received from Bedrock Runtime'));
-          }
-        } else {
-          try {
-            const errObj = JSON.parse(data);
-            const msg = errObj.message || errObj.Message || data;
-            reject(new Error(`Bedrock HTTP ${res.statusCode}: ${msg}`));
-          } catch {
-            reject(new Error(`Bedrock HTTP ${res.statusCode}: ${data.slice(0, 150)}`));
-          }
+
+      req.on('error', (err: any) => {
+        // If TLS certificate verification error occurs on development/Windows machines, retry once with bypass
+        if (rejectUnauthorized && (err.code === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' || err.message?.includes('unable to verify the first certificate'))) {
+          makeRequest(false).then(resolve).catch(reject);
+          return;
         }
+        reject(new Error(`Network error invoking Bedrock: ${err.message}`));
       });
-    });
 
-    req.on('error', (err) => {
-      reject(new Error(`Network error invoking Bedrock: ${err.message}`));
-    });
+      req.setTimeout(35000, () => {
+        req.destroy();
+        reject(new Error('Timeout after 35s invoking Bedrock'));
+      });
 
-    req.setTimeout(35000, () => {
-      req.destroy();
-      reject(new Error('Timeout after 35s invoking Bedrock'));
+      req.write(postData);
+      req.end();
     });
+  };
 
-    req.write(postData);
-    req.end();
-  });
+  const initialRejectUnauthorized = process.env.NODE_TLS_REJECT_UNAUTHORIZED !== '0';
+  return makeRequest(initialRejectUnauthorized);
 }
 
 /**
@@ -289,7 +320,7 @@ async function invokeBedrockWithSigV4(
 }
 
 /**
- * Executes authentic Amazon Bedrock invocation using Claude 3.5 Sonnet.
+ * Executes authentic Amazon Bedrock invocation using Claude Sonnet 4.6.
  * Automatically chooses:
  * 1. API Key Bearer Token (AWS_BEARER_TOKEN_BEDROCK)
  * 2. IAM SigV4 Credentials (AWS_ACCESS_KEY_ID + AWS_SECRET_ACCESS_KEY)
@@ -298,7 +329,7 @@ async function invokeBedrockWithSigV4(
 export async function executeBedrockTaskParsing(promptText: string): Promise<BedrockParseResponse> {
   const startTime = Date.now();
   const region = process.env.AWS_REGION || 'us-east-1';
-  const modelId = process.env.BEDROCK_MODEL_ID || 'anthropic.claude-3-5-sonnet-20240620-v1:0';
+  const modelId = getResolvedModelId();
   const authMethod = getBedrockAuthMethod();
   const bearerToken = getBedrockBearerToken();
 
@@ -309,6 +340,7 @@ export async function executeBedrockTaskParsing(promptText: string): Promise<Bed
       status: 'demo_fallback',
       source: 'deterministic-fallback',
       authMethod: 'none',
+      modelId,
       message: 'AWS Bedrock credentials not detected. Executed using local deterministic NLP parser.',
       tasks: fallbackTasks,
       rawPrompt: promptText,
@@ -346,6 +378,7 @@ export async function executeBedrockTaskParsing(promptText: string): Promise<Bed
       status: 'demo_fallback',
       source: 'deterministic-fallback',
       authMethod,
+      modelId,
       message: `Amazon Bedrock call failed (${safeMsg}). Using deterministic NLP fallback.`,
       tasks: fallbackTasks,
       rawPrompt: promptText,

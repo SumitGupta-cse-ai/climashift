@@ -38,7 +38,7 @@ export async function checkAwsBedrockStatus(): Promise<AwsBedrockStatus> {
     mode: 'demo_fallback',
     authMethod: 'none',
     region: 'us-east-1',
-    modelId: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+    modelId: 'us.anthropic.claude-sonnet-4-6',
     message: 'Demo / fallback mode — AWS Bedrock is not currently connected.'
   };
 }
@@ -70,9 +70,9 @@ export async function parseWorkPlanPrompt(promptText: string): Promise<ParseResu
           source: 'amazon-bedrock-claude',
           rawPrompt: promptText,
           parsingLatencyMs: data.latencyMs || (Date.now() - startTime),
-          modelId: data.modelId || 'anthropic.claude-3-5-sonnet-20240620-v1:0',
+          modelId: data.modelId || 'us.anthropic.claude-sonnet-4-6',
           isDemoFallback: false,
-          statusMessage: 'Structured by Amazon Bedrock (Claude 3.5 Sonnet)'
+          statusMessage: 'Structured by Amazon Bedrock (Claude Sonnet 4.6)'
         };
       }
 

@@ -78,7 +78,7 @@ export function PlanInputScreen() {
       const result = await parseWorkPlanPrompt(promptText);
       setTasks(result.tasks);
       setParserMeta({
-        source: result.source === 'amazon-bedrock-claude' ? 'Amazon Bedrock (Claude 3.5 Sonnet)' : 'Deterministic NLP Fallback',
+        source: result.source === 'amazon-bedrock-claude' ? 'Amazon Bedrock (Claude Sonnet 4.6)' : 'Deterministic NLP Fallback',
         isDemoFallback: result.isDemoFallback,
         latency: result.parsingLatencyMs,
         statusMessage: result.statusMessage

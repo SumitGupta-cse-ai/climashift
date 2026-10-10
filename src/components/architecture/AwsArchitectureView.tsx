@@ -217,7 +217,7 @@ export function AwsArchitectureView() {
                     AWS SERVICE
                   </span>
                 </div>
-                <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1] font-mono">Anthropic Claude 3.5 Sonnet</span>
+                <span className="text-[11px] text-[#667085] dark:text-[#A7B2C1] font-mono">Anthropic Claude Sonnet 4.6</span>
               </div>
             </div>
             <span className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded border ${
@@ -295,7 +295,7 @@ export function AwsArchitectureView() {
                   <Cpu className="w-4 h-4 text-[#2F80ED]" />
                   <span>Amazon Bedrock</span>
                 </td>
-                <td className="py-3 px-4 text-[#667085] dark:text-[#A7B2C1]">Natural-language work description structuring (Claude 3.5 Sonnet)</td>
+                <td className="py-3 px-4 text-[#667085] dark:text-[#A7B2C1]">Natural-language work description structuring (Claude Sonnet 4.6)</td>
                 <td className="py-3 px-4 font-mono text-[#667085] dark:text-[#A7B2C1] text-[11px]">@aws-sdk/client-bedrock-runtime</td>
                 <td className="py-3 px-4">
                   <span className={`inline-block font-mono font-bold text-[10px] px-2 py-0.5 rounded border ${

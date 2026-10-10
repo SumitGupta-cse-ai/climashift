@@ -2,7 +2,7 @@ import { runDeterministicScheduler, calculateTransparentImpactMetrics } from '..
 import { generateHourlyEnvironmentalWindows, DEFAULT_SITE_PROFILE } from '../src/data/mockEnvironment';
 import { OFFICIAL_REGULATORY_RULES } from '../src/data/regulatoryRules';
 import { Task, SiteProfile } from '../src/types';
-import { getBedrockAuthMethod, isAwsBedrockConfigured, getBedrockBearerToken } from '../src/lib/bedrockService';
+import { getBedrockAuthMethod, isAwsBedrockConfigured, getBedrockBearerToken, getResolvedModelId } from '../src/lib/bedrockService';
 import { parseWithDeterministicNLP } from '../src/lib/deterministicNlp';
 
 console.log('========================================================');
@@ -276,7 +276,10 @@ process.env.AWS_BEARER_TOKEN_BEDROCK = 'bedrock-api-key-test-token-12345';
 console.assert(getBedrockBearerToken() === 'bedrock-api-key-test-token-12345', 'Feature 6 Failed: Bearer token retrieval');
 console.assert(getBedrockAuthMethod() === 'api_key_bearer', 'Feature 6 Failed: Expected authMethod api_key_bearer');
 console.assert(isAwsBedrockConfigured() === true, 'Feature 6 Failed: Bedrock should report configured with API key');
+console.assert(getResolvedModelId() === 'us.anthropic.claude-sonnet-4-6', 'Feature 6 Failed: Expected resolved model us.anthropic.claude-sonnet-4-6');
 console.log('✓ PASS: Bedrock bearer token recognized; AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are not required.');
+console.log('✓ PASS: Bedrock model resolves to Claude Sonnet 4.6 (us.anthropic.claude-sonnet-4-6).');
+
 
 // Test 6B: Local deterministic fallback when no credentials configured
 delete process.env.AWS_BEARER_TOKEN_BEDROCK;
