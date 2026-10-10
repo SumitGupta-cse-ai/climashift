@@ -14,6 +14,7 @@ export interface ParseResult {
 export interface AwsBedrockStatus {
   configured: boolean;
   mode: 'live' | 'demo_fallback';
+  authMethod?: 'api_key_bearer' | 'iam_sigv4' | 'none';
   region: string;
   modelId: string;
   message: string;
@@ -35,6 +36,7 @@ export async function checkAwsBedrockStatus(): Promise<AwsBedrockStatus> {
   return {
     configured: false,
     mode: 'demo_fallback',
+    authMethod: 'none',
     region: 'us-east-1',
     modelId: 'anthropic.claude-3-5-sonnet-20240620-v1:0',
     message: 'Demo / fallback mode — AWS Bedrock is not currently connected.'

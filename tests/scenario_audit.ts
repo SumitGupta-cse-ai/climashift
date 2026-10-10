@@ -2,6 +2,8 @@ import { runDeterministicScheduler, calculateTransparentImpactMetrics } from '..
 import { generateHourlyEnvironmentalWindows, DEFAULT_SITE_PROFILE } from '../src/data/mockEnvironment';
 import { OFFICIAL_REGULATORY_RULES } from '../src/data/regulatoryRules';
 import { Task, SiteProfile } from '../src/types';
+import { getBedrockAuthMethod, isAwsBedrockConfigured, getBedrockBearerToken } from '../src/lib/bedrockService';
+import { parseWithDeterministicNLP } from '../src/lib/deterministicNlp';
 
 console.log('========================================================');
 console.log('CLIMASHIFT VERIFICATION AUDIT — SCENARIOS 1 THROUGH 7');
@@ -259,10 +261,39 @@ console.log(`Disclaimer: ${expLoad.disclaimer}`);
 console.assert(expLoad.beforeLoad > expLoad.afterLoad, 'Feature 5 Failed: After load should be strictly less than before load');
 console.assert(expLoad.percentReduction > 0, 'Feature 5 Failed: Expected positive percent reduction');
 console.assert(expLoad.disclaimer.toLowerCase().includes('not a medical'), 'Feature 5 Failed: Disclaimer must explicitly disclaim medical certainty');
-console.log('✓ PASS: Operational Exposure Load accurately calculated from duration, crew, and exposure factor.\n');
+// FEATURE 6 AUDIT: AWS Bedrock API Key (Bearer Token) Integration
+console.log('--- FEATURE 6 AUDIT: AWS Bedrock API Key & Fallback Verification ---');
+// Save original environment
+const originalToken = process.env.AWS_BEARER_TOKEN_BEDROCK;
+const originalKeyId = process.env.AWS_ACCESS_KEY_ID;
+const originalSecret = process.env.AWS_SECRET_ACCESS_KEY;
+
+// Test 6A: API Key (Bearer Token) authentication without IAM Access Keys
+delete process.env.AWS_ACCESS_KEY_ID;
+delete process.env.AWS_SECRET_ACCESS_KEY;
+process.env.AWS_BEARER_TOKEN_BEDROCK = 'bedrock-api-key-test-token-12345';
+
+console.assert(getBedrockBearerToken() === 'bedrock-api-key-test-token-12345', 'Feature 6 Failed: Bearer token retrieval');
+console.assert(getBedrockAuthMethod() === 'api_key_bearer', 'Feature 6 Failed: Expected authMethod api_key_bearer');
+console.assert(isAwsBedrockConfigured() === true, 'Feature 6 Failed: Bedrock should report configured with API key');
+console.log('✓ PASS: Bedrock bearer token recognized; AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY are not required.');
+
+// Test 6B: Local deterministic fallback when no credentials configured
+delete process.env.AWS_BEARER_TOKEN_BEDROCK;
+console.assert(getBedrockAuthMethod() === 'none', 'Feature 6 Failed: Expected authMethod none');
+const fallbackParsed = parseWithDeterministicNLP('Roof waterproofing 6 workers tower B 12:00 to 15:00');
+console.assert(fallbackParsed.length > 0, 'Feature 6 Failed: Fallback parser should return tasks');
+console.log('✓ PASS: Deterministic fallback successfully parses tasks when credentials are not configured.');
+
+// Restore environment
+if (originalToken !== undefined) process.env.AWS_BEARER_TOKEN_BEDROCK = originalToken;
+if (originalKeyId !== undefined) process.env.AWS_ACCESS_KEY_ID = originalKeyId;
+if (originalSecret !== undefined) process.env.AWS_SECRET_ACCESS_KEY = originalSecret;
+console.log('✓ PASS: AWS Bedrock API key authentication and fallback verified.\n');
 
 console.log('========================================================');
 console.log('ALL ADVANCED WINNER FEATURES VERIFIED AND PASSING 100%!');
 console.log('========================================================');
+
 
 
